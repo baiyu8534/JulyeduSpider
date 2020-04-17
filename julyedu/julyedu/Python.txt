@@ -1,0 +1,1170 @@
+# Python
+## 请用python编写函数find_string，从文本中搜索并打印内容，要求支持通配符星号和问号。
+例子：
+ >>>find_string('hello\nworld\n','wor')
+['wor']
+>>>find_string('hello\nworld\n','l*d')
+['ld']
+>>>find_string('hello\nworld\n','o.')
+['or']
+def find_string(str_in,pat):
+ import re
+ return re.findall(pat,str_in,re.I) 
+## 看你T恤上印着：人生苦短，我用Python，你可否说说Python到底是什么样的语言？你可以比较其他技术或者语言来回答你的问题。
+这里是一些关键点：Python是解释型语言。这意味着不像C和其他语言，Python运行前不需要编译。其他解释型语言包括PHP和Ruby。
+
+1.Python是动态类型的，这意味着你不需要在声明变量时指定类型。你可以先定义x=111，然后 x=”I’m a string”。
+2.Python是面向对象语言，所有允许定义类并且可以继承和组合。Python没有访问访问标识如在C++中的public, private, 这就非常信任程序员的素质，相信每个程序员都是“成人”了~
+3.在Python中，函数是一等公民。这就意味着它们可以被赋值，从其他函数返回值，并且传递函数对象。类不是一等公民。
+4.写Python代码很快，但是跑起来会比编译型语言慢。幸运的是，Python允许使用C扩展写程序，所以瓶颈可以得到处理。Numpy库就是一个很好例子，因为很多代码不是Python直接写的，所以运行很快。
+5.Python使用场景很多 – web应用开发、大数据应用、数据科学、人工智能等等。它也经常被看做“胶水”语言，使得不同语言间可以衔接上。
+6.Python能够简化工作  ，使得程序员能够关心如何重写代码而不是详细看一遍底层实现。
+
+本题解析来源：@David 9，链接：http://nooverfit.com/wp/15 
+
+@July：Python目前早已成为AI时代的第一语言，为帮助大家更好的学习Python语言、数据分析、爬虫等相关知识，七月在线特开一系列Python课程（链接：https://www.julyedu.com/category/index/26），有需要的亲们可以看下，比如《Python数据分析集训营》（链接：http://www.julyedu.com/weekend/python）。
+## 请写出一段Python代码实现删除一个list里面的重复元素。
+1,使用set函数，set(list)
+
+2，使用字典函数，
+>>>a=[1,2,4,2,4,5,6,5,7,8,9,0]
+>>> b={}
+>>>b=b.fromkeys(a)
+>>>c=list(b.keys())
+>>> c
+
+本题解析来源：@Tom_junsong，链接：http://www.cnblogs.com/tom-gao/p/6645859.html
+## a=[1,2,4,2,4,5,7,10,5,5,7,8,9,0,3]，编程用 sort 进行排序，然后从最后一个元素开始判断？
+a.sort()
+last=a[-1]
+for i inrange(len(a)-2,-1,-1):
+if last==a[i]:
+del a[i]
+else:last=a[i]
+print(a)
+
+本题解析来源：@Tom_junsong，链接：http://www.cnblogs.com/tom-gao/p/6645859.html
+## Python里面如何生成随机数？
+random模块
+随机整数：random.randint(a,b)：返回随机整数x,a
+## Python是如何进行内存管理的？
+从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制
+
+一、对象的引用计数机制
+Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。
+
+引用计数增加的情况：
+1，一个对象分配一个新名称
+2，将其放入一个容器中（如列表、元组或字典）
+
+引用计数减少的情况：
+1，使用del语句对对象别名显示的销毁
+2，引用超出作用域或被重新赋值
+sys.getrefcount( )函数可以获得对象的当前引用计数
+多数情况下，引用计数比你猜测得要大得多。对于不可变数据（如数字和字符串），解释器会在程序的不同部分共享内存，以便节约内存。
+
+二、垃圾回收
+1，当一个对象的引用计数归零时，它将被垃圾收集机制处理掉。
+2，当两个对象a和b相互引用时，del语句可以减少a和b的引用计数，并销毁用于引用底层对象的名称。然而由于每个对象都包含一个对其他对象的应用，因此引用计数不会归零，对象也不会销毁。（从而导致内存泄露）。为解决这一问题，解释器会定期执行一个循环检测器，搜索不可访问对象的循环并删除它们。
+
+三、内存池机制
+Python提供了对内存的垃圾收集机制，但是它将不用的内存放到内存池而不是返回给操作系统。
+1，Pymalloc机制。为了加速Python的执行效率，Python引入了一个内存池机制，用于管理对小块内存的申请和释放。
+2，Python中所有小于256个字节的对象都使用pymalloc实现的分配器，而大的对象则使用系统的malloc。
+3，对于Python对象，如整数，浮点数和List，都有其独立的私有内存池，对象间不共享他们的内存池。也就是说如果你分配又释放了大量的整数，用于缓存这些整数的内存就不能再分配给浮点数。
+ 
+## 什么是lambda函数？它有什么好处?
+lambda 表达式，通常是在需要一个函数，但是又不想费神去命名一个函数的场合下使用，也就是指匿名函数
+lambda函数：首要用途是指点短小的回调函数
+lambda [arguments]:expression
+>>> a=lambdax,y:x+y
+>>> a(3,11)
+## Python里面如何实现tuple和list的转换？
+直接使用tuple和list函数就行了，type()可以判断对象的类型
+## 请写出一段Python代码实现删除一个list里面的重复元素
+1,使用set函数，set(list)
+2，使用字典函数，
+>>>a=[1,2,4,2,4,5,6,5,7,8,9,0]
+>>> b={}
+>>>b=b.fromkeys(a)
+>>>c=list(b.keys())
+>>> c
+## Python里面如何拷贝一个对象？（赋值，浅拷贝，深拷贝的区别）
+赋值（=），就是创建了对象的一个新的引用，修改其中任意一个变量都会影响到另一个。
+
+浅拷贝：创建一个新的对象，但它包含的是对原始对象中包含项的引用（如果用引用的方式修改其中一个对象，另外一个也会修改改变）{1,完全切片方法；2，工厂函数，如list()；3，copy模块的copy()函数}
+
+深拷贝：创建一个新的对象，并且递归的复制它所包含的对象（修改其中一个，另外一个不会改变）{copy模块的deep.deepcopy()函数}
+## 输入一个字符串返回满足以下条件的字符串
+ 找出与字符串的第一个字母相同的字母，把它们替换成 '*'，除了第一个字母本身以外
+ 例如: 输入'babble'， 返回 'ba**le'
+s=input('input:')
+
+for i in range(1,len(s)):
+    print(i)
+    if s[0]==s[i]:
+        s=s[:i]+'*'+s[i+1:]
+print(s)
+## - 输入一个字符串 返回满足以下条件的字符串
+
+ - 由字符串的最前面两个字母和最后两个字母组成的字符串。
+ - 例如： 'spring' 返回 'spng'， 'is' 返回 'is’
+ - 当输入的字符串长度小于2时，返回空字符串
+s=input('input:')
+l=len(s)
+if l3:
+        s=s[:2]+s[-2:]
+    print(s)
+## - 输入一个字符串，把字符串拆分成两个等分
+
+ - 如果字符串长度是偶数，前一半和后一半的长度是相同的
+ - 如果字符串长度是奇数，则多出的一个字符加到前一半，如：'abcde'，前一半是'abc'，后一半是'de'
+s=input('input:')
+l=len(s)
+m=l//2
+if l%2>0:m+=1
+print(s[:m],s[m:])
+## - 判断是否为回文
+ - 提示：回文：62426是回文数字
+回文：所谓回文数。就是正着读和反着读,都是一样的。
+
+s=input('pls input a string of numbes:')
+s_=s[::-1]
+answer='isn\'t'
+if s_==s:
+    answer='is'
+print(s,answer,'Palindrome number')
+## - 求两个数字之间的素数
+ - 素数：只能被1及自己整除的数，如3，7，13，23等
+for i in range(6,33+1):
+    for j in range(2,i+1):
+        if i%j==0 and j
+## 统计字符串字符个数，空格字符个数，数字字符个数，其他字符个数 1星
+import string
+s=input('please input string:')
+letters = 0
+space = 0
+digit = 0
+others =0
+for ch in s:
+    #是否为字母
+    if ch.isalpha():
+        letters += 1
+    #是否为空格
+    elif ch.isspace():
+        space += 1
+    #是否为数字
+    elif ch.isdigit():
+        digit += 1
+    else:
+        others += 1
+print(letters, space , digit, others)
+
+选择判断语句
+isalpha() 是否为字母
+isspace() 是否为空格
+isdigit() 是否为数字
+
+## 把每个合数分解成几个质数相乘的形式，例如：100=2*2*5*5，并把代码封装成函数的形式
+def f(n):
+    result = []
+    i = 2
+    str1 = str(n) + '='
+    while n > 1:
+        if n % i == 0:
+            n /= i
+            result.append(str(i))
+            i -= 1
+        i += 1
+    str1 += '*'.join(result)
+    return str1
+
+
+if __name__ == '__main__':
+    for i in range(100, 120):
+        print(f(i))
+
+对n进行分解质因数，应先找到一个最小的质数k，然后按下述步骤完成：
+(1)如果这个质数恰等于n，则说明分解质因数的过程已经结束，打印出即可。
+(2)如果nk，但n能被k整除，则应打印出k的值，并用n除以k的商,作为新的正整数你n,重复执行第一步。
+(3)如果n不能被k整除，则用k+1作为k的值,重复执行第一步。
+
+## 编写函数，获得目录下所有的文件名。
+import os
+
+# 要检查的文件类型
+dict_filetype = ["cpp", "c", "h"]
+
+# brief : 递归获得所有文件名
+# param : path 起始目录，要检查的根目录
+# param : allfile 填空即可
+# return: 列表 所有与 dict_filetype 对应的文件名
+
+def get_filename(path, allfile):
+    filelist = os.listdir(path)
+    for filename in filelist:
+        filepath = os.path.join(path, filename)
+        # 判断文件夹
+        if os.path.isdir(filepath):
+            # 文件夹继续递归
+            get_filename(filepath, allfile)
+        else:
+            # 文件，判断文件类型
+            for filetype in dict_filetype:
+                temp_file_type = filepath.split(".")
+                #print(temp_file_type)
+                #print(temp_file_type[-1:][0])
+                if filetype == temp_file_type[-1:][0]:
+                    allfile.append(filepath)
+                    break
+            # 展示所有非code文件
+            else:
+                print("the file is not code : %s" %filepath )
+
+    return allfile
+
+os.listdir() 方法用于返回指定的文件夹包含的文件或文件夹的名字的列表。这个列表以字母顺序。 它不包括 '.' 和'..' 即使它在文件夹中。
+os.path.join() 合并传入的路径
+os.path.isdir()判断传入的路径是否为文件夹
+
+## 请用Python手写实现冒泡排序
+冒泡排序的原理不难，假定要将被排序的数组R[1..n]从大到小垂直排列，每个数字R可以看作是重量为R.key的气泡。
+
+根据轻气泡在上、重气泡在上的原则，从下往上扫描数组R:凡扫描到违反本原则的轻气泡，则使其向上"飘浮"。如此反复进行，直到最后任何两个气泡都是轻者在上、重者在下为止。
+然后将所有气泡逆序，就实现了数组从小到大的排序。
+
+步骤：
+1 比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+2 对第0个到第n-1个数据做同样的工作。这时，最大的数就到了数组最后的位置上。
+3 针对所有的元素重复以上的步骤，除了最后一个。
+4 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+
+Python实现
+
+def bubble_sort(arry):
+    #获得数组的长度
+    n = len(arry)                   
+    for i in range(n):
+        for j in range(1,n-i):
+            #如果前者比后者大
+            if  arry[j-1] > arry[j] :  
+                #则交换两者     
+                arry[j-1],arry[j] = arry[j],arry[j-1]      
+    return arry
+## 请用Python手写实现选择排序
+选择排序(Selection sort)是一种简单直观的排序算法。
+
+它的工作原理如下。首先在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到排序序列第二个位置。以此类推，直到所有元素均排序完毕。
+
+Python实现
+
+def select_sort(ary):
+    n = len(ary)
+    for i in range(0,n):
+        #最小元素下标标记
+        min = i                             
+        for j in range(i+1,n):
+            if ary[j] < ary[min] :
+                #找到最小值的下标
+                min = j
+        #交换两者                     
+        ary[min],ary[i] = ary[i],ary[min]   
+    return ary
+## 请用Python手写实现插入排序
+插入排序（Insertion Sort）的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+
+算法执行步骤：
+1 从第一个元素开始，该元素可以认为已经被排序
+2 取出下一个元素，在已经排序的元素序列中从后向前扫描
+3 如果被扫描的元素（已排序）大于新元素，则将被扫描元素后移一位
+4 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置
+5 将新元素插入到该位置后
+6 重复步骤2~5
+
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517379760_484.gif'/>
+
+Python实现
+
+def insert_sort(ary):
+    n = len(ary)
+    for i in range(1,n):
+        if ary[i] < ary[i-1]:
+            temp = ary[i]
+
+            #待插入的下标
+            index = i           
+            #从i-1 循环到 0 (包括0)
+            for j in range(i-1,-1,-1):  
+                if ary[j] > temp :
+                    ary[j+1] = ary[j]
+                    #记录待插入下标
+                    index = j   
+                else :
+                    break
+            ary[index] = temp
+    return ary
+## 请用Python手写实现快速排序
+步骤：
+
+1 从数列中挑出一个元素，称为 “基准”（pivot），
+2 重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作。
+3 递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+
+换言之
+快速排序时基于分治模式处理的，
+对一个典型子数组A[p...r]排序的分治过程为三个步骤：
+1.分解：
+A[p..r]被划分为俩个（可能空）的子数组A[p ..q-1]和A[q+1 ..r]，使得
+A[p ..q-1] 
+## 请用Python手写实现堆排序
+堆排序在 top K 问题中使用比较频繁。堆排序是采用二叉堆的数据结构来实现的，虽然实质上还是一维数组。二叉堆是一个近似完全二叉树 。
+
+二叉堆具有以下性质：
+
+父节点的键值总是大于或等于（小于或等于）任何一个子节点的键值。
+每个节点的左右子树都是一个二叉堆（都是最大堆或最小堆）。
+
+步骤：
+1 构造最大堆（Build_Max_Heap）：若数组下标范围为0~n，考虑到单独一个元素是大根堆，则从下标n/2开始的元素均为大根堆。于是只要从n/2-1开始，向前依次构造大根堆，这样就能保证，构造到某个节点时，它的左右子树都已经是大根堆。
+
+2 堆排序（HeapSort）：由于堆是用数组模拟的。得到一个大根堆后，数组内部并不是有序的。因此需要将堆化数组有序化。思想是移除根节点，并做最大堆调整的递归运算。第一次将heap[0]与heap[n-1]交换，再对heap[0...n-2]做最大堆调整。第二次将heap[0]与heap[n-2]交换，再对heap[0...n-3]做最大堆调整。重复该操作直至heap[0]和heap[1]交换。由于每次都是将最大的数并入到后面的有序区间，故操作完后整个数组就是有序的了。
+
+3 最大堆调整（Max_Heapify）：该方法是提供给上述两个过程调用的。目的是将堆的末端子节点作调整，使得子节点永远小于父节点。
+
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517383109_209.gif'/>
+
+Python实现
+def heap_sort(ary) :
+    n = len(ary)
+    #最后一个非叶子节点
+    first = int(n/2-1)       
+    #构造大根堆
+    for start in range(first,-1,-1) :     
+        max_heapify(ary,start,n-1)
+
+    #堆排，将大根堆转换成有序数组
+    for end in range(n-1,0,-1):           
+        ary[end],ary[0] = ary[0],ary[end]
+        max_heapify(ary,0,end-1)
+    return ary
+
+#最大堆调整：将堆的末端子节点作调整，使得子节点永远小于父节点
+#start为当前需要调整最大堆的位置，end为调整边界
+def max_heapify(ary,start,end):
+    root = start
+    while True :
+        #调整节点的子节点
+        child = root*2 +1               
+        if child > end : break
+        if child+1 
+## 请用Python手写实现归并排序
+归并排序是采用分治法的一个非常典型的应用。归并排序的思想就是先递归分解数组，再合并数组。
+
+先考虑合并两个有序数组，基本思路是比较两个数组的最前面的数，谁小就先取谁，取了后相应的指针就往后移一位。然后再比较，直至一个数组为空，最后把另一个数组的剩余部分复制过来即可。
+
+再考虑递归分解，基本思路是将数组分解成left和right，如果这两个数组内部数据是有序的，那么就可以用上面合并数组的方法将这两个数组合并排序。如何让这两个数组内部是有序的？可以再二分，直至分解出的小组只含有一个元素时为止，此时认为该小组内部已有序。然后合并排序相邻二个小组即可。
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517382470_410.gif'/>
+
+Python实现
+
+def merge_sort(ary):
+    if len(ary) 
+## 请创建一个函数检查一个词是否具有回文结构，使用 Python 进行编写。
+回文结构即一个字符串的倒序与其本身相同，使用python编写判定函数如下：
+
+方法一：
+def huiwen1(str):
+    if len(str) < 2:  # 字符串长度小于2：空串和单个字符都属于回文串
+        return True
+    else:
+        return str[0]==str[-1] and huiwen1(str[1:-1]) 
+        # 字符串长度大于等于2：首尾字符相同且中间字符串也是回文串，则原字符串属于回文串
+
+方法二：
+def huiwen2(str):
+    return str==str[::-1] 
+    # 根据回文串定义：字符串倒序和本身相同则为回文串。其中str[::-1]是切片操作，表示str的倒序
+
+运行测试：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64157028912866969520.png'/>
+
+# Python
+## 请用python编写函数find_string，从文本中搜索并打印内容，要求支持通配符星号和问号。
+例子：
+ >>>find_string('hello\nworld\n','wor')
+['wor']
+>>>find_string('hello\nworld\n','l*d')
+['ld']
+>>>find_string('hello\nworld\n','o.')
+['or']
+def find_string(str_in,pat):
+ import re
+ return re.findall(pat,str_in,re.I) 
+## 看你T恤上印着：人生苦短，我用Python，你可否说说Python到底是什么样的语言？你可以比较其他技术或者语言来回答你的问题。
+这里是一些关键点：Python是解释型语言。这意味着不像C和其他语言，Python运行前不需要编译。其他解释型语言包括PHP和Ruby。
+
+1.Python是动态类型的，这意味着你不需要在声明变量时指定类型。你可以先定义x=111，然后 x=”I’m a string”。
+2.Python是面向对象语言，所有允许定义类并且可以继承和组合。Python没有访问访问标识如在C++中的public, private, 这就非常信任程序员的素质，相信每个程序员都是“成人”了~
+3.在Python中，函数是一等公民。这就意味着它们可以被赋值，从其他函数返回值，并且传递函数对象。类不是一等公民。
+4.写Python代码很快，但是跑起来会比编译型语言慢。幸运的是，Python允许使用C扩展写程序，所以瓶颈可以得到处理。Numpy库就是一个很好例子，因为很多代码不是Python直接写的，所以运行很快。
+5.Python使用场景很多 – web应用开发、大数据应用、数据科学、人工智能等等。它也经常被看做“胶水”语言，使得不同语言间可以衔接上。
+6.Python能够简化工作  ，使得程序员能够关心如何重写代码而不是详细看一遍底层实现。
+
+本题解析来源：@David 9，链接：http://nooverfit.com/wp/15 
+
+@July：Python目前早已成为AI时代的第一语言，为帮助大家更好的学习Python语言、数据分析、爬虫等相关知识，七月在线特开一系列Python课程（链接：https://www.julyedu.com/category/index/26），有需要的亲们可以看下，比如《Python数据分析集训营》（链接：http://www.julyedu.com/weekend/python）。
+## 请写出一段Python代码实现删除一个list里面的重复元素。
+1,使用set函数，set(list)
+
+2，使用字典函数，
+>>>a=[1,2,4,2,4,5,6,5,7,8,9,0]
+>>> b={}
+>>>b=b.fromkeys(a)
+>>>c=list(b.keys())
+>>> c
+
+本题解析来源：@Tom_junsong，链接：http://www.cnblogs.com/tom-gao/p/6645859.html
+## a=[1,2,4,2,4,5,7,10,5,5,7,8,9,0,3]，编程用 sort 进行排序，然后从最后一个元素开始判断？
+a.sort()
+last=a[-1]
+for i inrange(len(a)-2,-1,-1):
+if last==a[i]:
+del a[i]
+else:last=a[i]
+print(a)
+
+本题解析来源：@Tom_junsong，链接：http://www.cnblogs.com/tom-gao/p/6645859.html
+## Python里面如何生成随机数？
+random模块
+随机整数：random.randint(a,b)：返回随机整数x,a
+## Python是如何进行内存管理的？
+从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制
+
+一、对象的引用计数机制
+Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。
+
+引用计数增加的情况：
+1，一个对象分配一个新名称
+2，将其放入一个容器中（如列表、元组或字典）
+
+引用计数减少的情况：
+1，使用del语句对对象别名显示的销毁
+2，引用超出作用域或被重新赋值
+sys.getrefcount( )函数可以获得对象的当前引用计数
+多数情况下，引用计数比你猜测得要大得多。对于不可变数据（如数字和字符串），解释器会在程序的不同部分共享内存，以便节约内存。
+
+二、垃圾回收
+1，当一个对象的引用计数归零时，它将被垃圾收集机制处理掉。
+2，当两个对象a和b相互引用时，del语句可以减少a和b的引用计数，并销毁用于引用底层对象的名称。然而由于每个对象都包含一个对其他对象的应用，因此引用计数不会归零，对象也不会销毁。（从而导致内存泄露）。为解决这一问题，解释器会定期执行一个循环检测器，搜索不可访问对象的循环并删除它们。
+
+三、内存池机制
+Python提供了对内存的垃圾收集机制，但是它将不用的内存放到内存池而不是返回给操作系统。
+1，Pymalloc机制。为了加速Python的执行效率，Python引入了一个内存池机制，用于管理对小块内存的申请和释放。
+2，Python中所有小于256个字节的对象都使用pymalloc实现的分配器，而大的对象则使用系统的malloc。
+3，对于Python对象，如整数，浮点数和List，都有其独立的私有内存池，对象间不共享他们的内存池。也就是说如果你分配又释放了大量的整数，用于缓存这些整数的内存就不能再分配给浮点数。
+ 
+## 什么是lambda函数？它有什么好处?
+lambda 表达式，通常是在需要一个函数，但是又不想费神去命名一个函数的场合下使用，也就是指匿名函数
+lambda函数：首要用途是指点短小的回调函数
+lambda [arguments]:expression
+>>> a=lambdax,y:x+y
+>>> a(3,11)
+## Python里面如何实现tuple和list的转换？
+直接使用tuple和list函数就行了，type()可以判断对象的类型
+## 请写出一段Python代码实现删除一个list里面的重复元素
+1,使用set函数，set(list)
+2，使用字典函数，
+>>>a=[1,2,4,2,4,5,6,5,7,8,9,0]
+>>> b={}
+>>>b=b.fromkeys(a)
+>>>c=list(b.keys())
+>>> c
+## Python里面如何拷贝一个对象？（赋值，浅拷贝，深拷贝的区别）
+赋值（=），就是创建了对象的一个新的引用，修改其中任意一个变量都会影响到另一个。
+
+浅拷贝：创建一个新的对象，但它包含的是对原始对象中包含项的引用（如果用引用的方式修改其中一个对象，另外一个也会修改改变）{1,完全切片方法；2，工厂函数，如list()；3，copy模块的copy()函数}
+
+深拷贝：创建一个新的对象，并且递归的复制它所包含的对象（修改其中一个，另外一个不会改变）{copy模块的deep.deepcopy()函数}
+## 输入一个字符串返回满足以下条件的字符串
+ 找出与字符串的第一个字母相同的字母，把它们替换成 '*'，除了第一个字母本身以外
+ 例如: 输入'babble'， 返回 'ba**le'
+s=input('input:')
+
+for i in range(1,len(s)):
+    print(i)
+    if s[0]==s[i]:
+        s=s[:i]+'*'+s[i+1:]
+print(s)
+## - 输入一个字符串 返回满足以下条件的字符串
+
+ - 由字符串的最前面两个字母和最后两个字母组成的字符串。
+ - 例如： 'spring' 返回 'spng'， 'is' 返回 'is’
+ - 当输入的字符串长度小于2时，返回空字符串
+s=input('input:')
+l=len(s)
+if l3:
+        s=s[:2]+s[-2:]
+    print(s)
+## - 输入一个字符串，把字符串拆分成两个等分
+
+ - 如果字符串长度是偶数，前一半和后一半的长度是相同的
+ - 如果字符串长度是奇数，则多出的一个字符加到前一半，如：'abcde'，前一半是'abc'，后一半是'de'
+s=input('input:')
+l=len(s)
+m=l//2
+if l%2>0:m+=1
+print(s[:m],s[m:])
+## - 判断是否为回文
+ - 提示：回文：62426是回文数字
+回文：所谓回文数。就是正着读和反着读,都是一样的。
+
+s=input('pls input a string of numbes:')
+s_=s[::-1]
+answer='isn\'t'
+if s_==s:
+    answer='is'
+print(s,answer,'Palindrome number')
+## - 求两个数字之间的素数
+ - 素数：只能被1及自己整除的数，如3，7，13，23等
+for i in range(6,33+1):
+    for j in range(2,i+1):
+        if i%j==0 and j
+## 统计字符串字符个数，空格字符个数，数字字符个数，其他字符个数 1星
+import string
+s=input('please input string:')
+letters = 0
+space = 0
+digit = 0
+others =0
+for ch in s:
+    #是否为字母
+    if ch.isalpha():
+        letters += 1
+    #是否为空格
+    elif ch.isspace():
+        space += 1
+    #是否为数字
+    elif ch.isdigit():
+        digit += 1
+    else:
+        others += 1
+print(letters, space , digit, others)
+
+选择判断语句
+isalpha() 是否为字母
+isspace() 是否为空格
+isdigit() 是否为数字
+
+## 把每个合数分解成几个质数相乘的形式，例如：100=2*2*5*5，并把代码封装成函数的形式
+def f(n):
+    result = []
+    i = 2
+    str1 = str(n) + '='
+    while n > 1:
+        if n % i == 0:
+            n /= i
+            result.append(str(i))
+            i -= 1
+        i += 1
+    str1 += '*'.join(result)
+    return str1
+
+
+if __name__ == '__main__':
+    for i in range(100, 120):
+        print(f(i))
+
+对n进行分解质因数，应先找到一个最小的质数k，然后按下述步骤完成：
+(1)如果这个质数恰等于n，则说明分解质因数的过程已经结束，打印出即可。
+(2)如果nk，但n能被k整除，则应打印出k的值，并用n除以k的商,作为新的正整数你n,重复执行第一步。
+(3)如果n不能被k整除，则用k+1作为k的值,重复执行第一步。
+
+## 编写函数，获得目录下所有的文件名。
+import os
+
+# 要检查的文件类型
+dict_filetype = ["cpp", "c", "h"]
+
+# brief : 递归获得所有文件名
+# param : path 起始目录，要检查的根目录
+# param : allfile 填空即可
+# return: 列表 所有与 dict_filetype 对应的文件名
+
+def get_filename(path, allfile):
+    filelist = os.listdir(path)
+    for filename in filelist:
+        filepath = os.path.join(path, filename)
+        # 判断文件夹
+        if os.path.isdir(filepath):
+            # 文件夹继续递归
+            get_filename(filepath, allfile)
+        else:
+            # 文件，判断文件类型
+            for filetype in dict_filetype:
+                temp_file_type = filepath.split(".")
+                #print(temp_file_type)
+                #print(temp_file_type[-1:][0])
+                if filetype == temp_file_type[-1:][0]:
+                    allfile.append(filepath)
+                    break
+            # 展示所有非code文件
+            else:
+                print("the file is not code : %s" %filepath )
+
+    return allfile
+
+os.listdir() 方法用于返回指定的文件夹包含的文件或文件夹的名字的列表。这个列表以字母顺序。 它不包括 '.' 和'..' 即使它在文件夹中。
+os.path.join() 合并传入的路径
+os.path.isdir()判断传入的路径是否为文件夹
+
+## 请用Python手写实现冒泡排序
+冒泡排序的原理不难，假定要将被排序的数组R[1..n]从大到小垂直排列，每个数字R可以看作是重量为R.key的气泡。
+
+根据轻气泡在上、重气泡在上的原则，从下往上扫描数组R:凡扫描到违反本原则的轻气泡，则使其向上"飘浮"。如此反复进行，直到最后任何两个气泡都是轻者在上、重者在下为止。
+然后将所有气泡逆序，就实现了数组从小到大的排序。
+
+步骤：
+1 比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+2 对第0个到第n-1个数据做同样的工作。这时，最大的数就到了数组最后的位置上。
+3 针对所有的元素重复以上的步骤，除了最后一个。
+4 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+
+Python实现
+
+def bubble_sort(arry):
+    #获得数组的长度
+    n = len(arry)                   
+    for i in range(n):
+        for j in range(1,n-i):
+            #如果前者比后者大
+            if  arry[j-1] > arry[j] :  
+                #则交换两者     
+                arry[j-1],arry[j] = arry[j],arry[j-1]      
+    return arry
+## 请用Python手写实现选择排序
+选择排序(Selection sort)是一种简单直观的排序算法。
+
+它的工作原理如下。首先在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到排序序列第二个位置。以此类推，直到所有元素均排序完毕。
+
+Python实现
+
+def select_sort(ary):
+    n = len(ary)
+    for i in range(0,n):
+        #最小元素下标标记
+        min = i                             
+        for j in range(i+1,n):
+            if ary[j] < ary[min] :
+                #找到最小值的下标
+                min = j
+        #交换两者                     
+        ary[min],ary[i] = ary[i],ary[min]   
+    return ary
+## 请用Python手写实现插入排序
+插入排序（Insertion Sort）的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+
+算法执行步骤：
+1 从第一个元素开始，该元素可以认为已经被排序
+2 取出下一个元素，在已经排序的元素序列中从后向前扫描
+3 如果被扫描的元素（已排序）大于新元素，则将被扫描元素后移一位
+4 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置
+5 将新元素插入到该位置后
+6 重复步骤2~5
+
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517379760_484.gif'/>
+
+Python实现
+
+def insert_sort(ary):
+    n = len(ary)
+    for i in range(1,n):
+        if ary[i] < ary[i-1]:
+            temp = ary[i]
+
+            #待插入的下标
+            index = i           
+            #从i-1 循环到 0 (包括0)
+            for j in range(i-1,-1,-1):  
+                if ary[j] > temp :
+                    ary[j+1] = ary[j]
+                    #记录待插入下标
+                    index = j   
+                else :
+                    break
+            ary[index] = temp
+    return ary
+## 请用Python手写实现快速排序
+步骤：
+
+1 从数列中挑出一个元素，称为 “基准”（pivot），
+2 重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作。
+3 递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+
+换言之
+快速排序时基于分治模式处理的，
+对一个典型子数组A[p...r]排序的分治过程为三个步骤：
+1.分解：
+A[p..r]被划分为俩个（可能空）的子数组A[p ..q-1]和A[q+1 ..r]，使得
+A[p ..q-1] 
+## 请用Python手写实现堆排序
+堆排序在 top K 问题中使用比较频繁。堆排序是采用二叉堆的数据结构来实现的，虽然实质上还是一维数组。二叉堆是一个近似完全二叉树 。
+
+二叉堆具有以下性质：
+
+父节点的键值总是大于或等于（小于或等于）任何一个子节点的键值。
+每个节点的左右子树都是一个二叉堆（都是最大堆或最小堆）。
+
+步骤：
+1 构造最大堆（Build_Max_Heap）：若数组下标范围为0~n，考虑到单独一个元素是大根堆，则从下标n/2开始的元素均为大根堆。于是只要从n/2-1开始，向前依次构造大根堆，这样就能保证，构造到某个节点时，它的左右子树都已经是大根堆。
+
+2 堆排序（HeapSort）：由于堆是用数组模拟的。得到一个大根堆后，数组内部并不是有序的。因此需要将堆化数组有序化。思想是移除根节点，并做最大堆调整的递归运算。第一次将heap[0]与heap[n-1]交换，再对heap[0...n-2]做最大堆调整。第二次将heap[0]与heap[n-2]交换，再对heap[0...n-3]做最大堆调整。重复该操作直至heap[0]和heap[1]交换。由于每次都是将最大的数并入到后面的有序区间，故操作完后整个数组就是有序的了。
+
+3 最大堆调整（Max_Heapify）：该方法是提供给上述两个过程调用的。目的是将堆的末端子节点作调整，使得子节点永远小于父节点。
+
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517383109_209.gif'/>
+
+Python实现
+def heap_sort(ary) :
+    n = len(ary)
+    #最后一个非叶子节点
+    first = int(n/2-1)       
+    #构造大根堆
+    for start in range(first,-1,-1) :     
+        max_heapify(ary,start,n-1)
+
+    #堆排，将大根堆转换成有序数组
+    for end in range(n-1,0,-1):           
+        ary[end],ary[0] = ary[0],ary[end]
+        max_heapify(ary,0,end-1)
+    return ary
+
+#最大堆调整：将堆的末端子节点作调整，使得子节点永远小于父节点
+#start为当前需要调整最大堆的位置，end为调整边界
+def max_heapify(ary,start,end):
+    root = start
+    while True :
+        #调整节点的子节点
+        child = root*2 +1               
+        if child > end : break
+        if child+1 
+## 请用Python手写实现归并排序
+归并排序是采用分治法的一个非常典型的应用。归并排序的思想就是先递归分解数组，再合并数组。
+
+先考虑合并两个有序数组，基本思路是比较两个数组的最前面的数，谁小就先取谁，取了后相应的指针就往后移一位。然后再比较，直至一个数组为空，最后把另一个数组的剩余部分复制过来即可。
+
+再考虑递归分解，基本思路是将数组分解成left和right，如果这两个数组内部数据是有序的，那么就可以用上面合并数组的方法将这两个数组合并排序。如何让这两个数组内部是有序的？可以再二分，直至分解出的小组只含有一个元素时为止，此时认为该小组内部已有序。然后合并排序相邻二个小组即可。
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517382470_410.gif'/>
+
+Python实现
+
+def merge_sort(ary):
+    if len(ary) 
+## 请创建一个函数检查一个词是否具有回文结构，使用 Python 进行编写。
+回文结构即一个字符串的倒序与其本身相同，使用python编写判定函数如下：
+
+方法一：
+def huiwen1(str):
+    if len(str) < 2:  # 字符串长度小于2：空串和单个字符都属于回文串
+        return True
+    else:
+        return str[0]==str[-1] and huiwen1(str[1:-1]) 
+        # 字符串长度大于等于2：首尾字符相同且中间字符串也是回文串，则原字符串属于回文串
+
+方法二：
+def huiwen2(str):
+    return str==str[::-1] 
+    # 根据回文串定义：字符串倒序和本身相同则为回文串。其中str[::-1]是切片操作，表示str的倒序
+
+运行测试：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64157028912866969520.png'/>
+
+# Python
+## 1.请用python编写函数find_string，从文本中搜索并打印内容，要求支持通配符星号和问号。
+例子：
+ >>>find_string('hello\nworld\n','wor')
+['wor']
+>>>find_string('hello\nworld\n','l*d')
+['ld']
+>>>find_string('hello\nworld\n','o.')
+['or']
+def find_string(str_in,pat):
+ import re
+ return re.findall(pat,str_in,re.I) 
+## 2.看你T恤上印着：人生苦短，我用Python，你可否说说Python到底是什么样的语言？你可以比较其他技术或者语言来回答你的问题。
+这里是一些关键点：Python是解释型语言。这意味着不像C和其他语言，Python运行前不需要编译。其他解释型语言包括PHP和Ruby。
+
+1.Python是动态类型的，这意味着你不需要在声明变量时指定类型。你可以先定义x=111，然后 x=”I’m a string”。
+2.Python是面向对象语言，所有允许定义类并且可以继承和组合。Python没有访问访问标识如在C++中的public, private, 这就非常信任程序员的素质，相信每个程序员都是“成人”了~
+3.在Python中，函数是一等公民。这就意味着它们可以被赋值，从其他函数返回值，并且传递函数对象。类不是一等公民。
+4.写Python代码很快，但是跑起来会比编译型语言慢。幸运的是，Python允许使用C扩展写程序，所以瓶颈可以得到处理。Numpy库就是一个很好例子，因为很多代码不是Python直接写的，所以运行很快。
+5.Python使用场景很多 – web应用开发、大数据应用、数据科学、人工智能等等。它也经常被看做“胶水”语言，使得不同语言间可以衔接上。
+6.Python能够简化工作  ，使得程序员能够关心如何重写代码而不是详细看一遍底层实现。
+
+本题解析来源：@David 9，链接：http://nooverfit.com/wp/15 
+
+@July：Python目前早已成为AI时代的第一语言，为帮助大家更好的学习Python语言、数据分析、爬虫等相关知识，七月在线特开一系列Python课程（链接：https://www.julyedu.com/category/index/26），有需要的亲们可以看下，比如《Python数据分析集训营》（链接：http://www.julyedu.com/weekend/python）。
+## 3.请写出一段Python代码实现删除一个list里面的重复元素。
+1,使用set函数，set(list)
+
+2，使用字典函数，
+>>>a=[1,2,4,2,4,5,6,5,7,8,9,0]
+>>> b={}
+>>>b=b.fromkeys(a)
+>>>c=list(b.keys())
+>>> c
+
+本题解析来源：@Tom_junsong，链接：http://www.cnblogs.com/tom-gao/p/6645859.html
+## 4.a=[1,2,4,2,4,5,7,10,5,5,7,8,9,0,3]，编程用 sort 进行排序，然后从最后一个元素开始判断？
+a.sort()
+last=a[-1]
+for i inrange(len(a)-2,-1,-1):
+if last==a[i]:
+del a[i]
+else:last=a[i]
+print(a)
+
+本题解析来源：@Tom_junsong，链接：http://www.cnblogs.com/tom-gao/p/6645859.html
+## 5.Python里面如何生成随机数？
+random模块
+随机整数：random.randint(a,b)：返回随机整数x,a
+## 6.Python是如何进行内存管理的？
+从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制
+
+一、对象的引用计数机制
+Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。
+
+引用计数增加的情况：
+1，一个对象分配一个新名称
+2，将其放入一个容器中（如列表、元组或字典）
+
+引用计数减少的情况：
+1，使用del语句对对象别名显示的销毁
+2，引用超出作用域或被重新赋值
+sys.getrefcount( )函数可以获得对象的当前引用计数
+多数情况下，引用计数比你猜测得要大得多。对于不可变数据（如数字和字符串），解释器会在程序的不同部分共享内存，以便节约内存。
+
+二、垃圾回收
+1，当一个对象的引用计数归零时，它将被垃圾收集机制处理掉。
+2，当两个对象a和b相互引用时，del语句可以减少a和b的引用计数，并销毁用于引用底层对象的名称。然而由于每个对象都包含一个对其他对象的应用，因此引用计数不会归零，对象也不会销毁。（从而导致内存泄露）。为解决这一问题，解释器会定期执行一个循环检测器，搜索不可访问对象的循环并删除它们。
+
+三、内存池机制
+Python提供了对内存的垃圾收集机制，但是它将不用的内存放到内存池而不是返回给操作系统。
+1，Pymalloc机制。为了加速Python的执行效率，Python引入了一个内存池机制，用于管理对小块内存的申请和释放。
+2，Python中所有小于256个字节的对象都使用pymalloc实现的分配器，而大的对象则使用系统的malloc。
+3，对于Python对象，如整数，浮点数和List，都有其独立的私有内存池，对象间不共享他们的内存池。也就是说如果你分配又释放了大量的整数，用于缓存这些整数的内存就不能再分配给浮点数。
+ 
+## 7.什么是lambda函数？它有什么好处?
+lambda 表达式，通常是在需要一个函数，但是又不想费神去命名一个函数的场合下使用，也就是指匿名函数
+lambda函数：首要用途是指点短小的回调函数
+lambda [arguments]:expression
+>>> a=lambdax,y:x+y
+>>> a(3,11)
+## 8.Python里面如何实现tuple和list的转换？
+直接使用tuple和list函数就行了，type()可以判断对象的类型
+## 9.请写出一段Python代码实现删除一个list里面的重复元素
+1,使用set函数，set(list)
+2，使用字典函数，
+>>>a=[1,2,4,2,4,5,6,5,7,8,9,0]
+>>> b={}
+>>>b=b.fromkeys(a)
+>>>c=list(b.keys())
+>>> c
+## 10.Python里面如何拷贝一个对象？（赋值，浅拷贝，深拷贝的区别）
+赋值（=），就是创建了对象的一个新的引用，修改其中任意一个变量都会影响到另一个。
+
+浅拷贝：创建一个新的对象，但它包含的是对原始对象中包含项的引用（如果用引用的方式修改其中一个对象，另外一个也会修改改变）{1,完全切片方法；2，工厂函数，如list()；3，copy模块的copy()函数}
+
+深拷贝：创建一个新的对象，并且递归的复制它所包含的对象（修改其中一个，另外一个不会改变）{copy模块的deep.deepcopy()函数}
+## 11.输入一个字符串返回满足以下条件的字符串
+ 找出与字符串的第一个字母相同的字母，把它们替换成 '*'，除了第一个字母本身以外
+ 例如: 输入'babble'， 返回 'ba**le'
+s=input('input:')
+
+for i in range(1,len(s)):
+    print(i)
+    if s[0]==s[i]:
+        s=s[:i]+'*'+s[i+1:]
+print(s)
+## 12.- 输入一个字符串 返回满足以下条件的字符串
+
+ - 由字符串的最前面两个字母和最后两个字母组成的字符串。
+ - 例如： 'spring' 返回 'spng'， 'is' 返回 'is’
+ - 当输入的字符串长度小于2时，返回空字符串
+s=input('input:')
+l=len(s)
+if l3:
+        s=s[:2]+s[-2:]
+    print(s)
+## 13.- 输入一个字符串，把字符串拆分成两个等分
+
+ - 如果字符串长度是偶数，前一半和后一半的长度是相同的
+ - 如果字符串长度是奇数，则多出的一个字符加到前一半，如：'abcde'，前一半是'abc'，后一半是'de'
+s=input('input:')
+l=len(s)
+m=l//2
+if l%2>0:m+=1
+print(s[:m],s[m:])
+## 14.- 判断是否为回文
+ - 提示：回文：62426是回文数字
+回文：所谓回文数。就是正着读和反着读,都是一样的。
+
+s=input('pls input a string of numbes:')
+s_=s[::-1]
+answer='isn\'t'
+if s_==s:
+    answer='is'
+print(s,answer,'Palindrome number')
+## 15.- 求两个数字之间的素数
+ - 素数：只能被1及自己整除的数，如3，7，13，23等
+for i in range(6,33+1):
+    for j in range(2,i+1):
+        if i%j==0 and j
+## 16.统计字符串字符个数，空格字符个数，数字字符个数，其他字符个数 1星
+import string
+s=input('please input string:')
+letters = 0
+space = 0
+digit = 0
+others =0
+for ch in s:
+    #是否为字母
+    if ch.isalpha():
+        letters += 1
+    #是否为空格
+    elif ch.isspace():
+        space += 1
+    #是否为数字
+    elif ch.isdigit():
+        digit += 1
+    else:
+        others += 1
+print(letters, space , digit, others)
+
+选择判断语句
+isalpha() 是否为字母
+isspace() 是否为空格
+isdigit() 是否为数字
+
+## 17.把每个合数分解成几个质数相乘的形式，例如：100=2*2*5*5，并把代码封装成函数的形式
+def f(n):
+    result = []
+    i = 2
+    str1 = str(n) + '='
+    while n > 1:
+        if n % i == 0:
+            n /= i
+            result.append(str(i))
+            i -= 1
+        i += 1
+    str1 += '*'.join(result)
+    return str1
+
+
+if __name__ == '__main__':
+    for i in range(100, 120):
+        print(f(i))
+
+对n进行分解质因数，应先找到一个最小的质数k，然后按下述步骤完成：
+(1)如果这个质数恰等于n，则说明分解质因数的过程已经结束，打印出即可。
+(2)如果nk，但n能被k整除，则应打印出k的值，并用n除以k的商,作为新的正整数你n,重复执行第一步。
+(3)如果n不能被k整除，则用k+1作为k的值,重复执行第一步。
+
+## 18.编写函数，获得目录下所有的文件名。
+import os
+
+# 要检查的文件类型
+dict_filetype = ["cpp", "c", "h"]
+
+# brief : 递归获得所有文件名
+# param : path 起始目录，要检查的根目录
+# param : allfile 填空即可
+# return: 列表 所有与 dict_filetype 对应的文件名
+
+def get_filename(path, allfile):
+    filelist = os.listdir(path)
+    for filename in filelist:
+        filepath = os.path.join(path, filename)
+        # 判断文件夹
+        if os.path.isdir(filepath):
+            # 文件夹继续递归
+            get_filename(filepath, allfile)
+        else:
+            # 文件，判断文件类型
+            for filetype in dict_filetype:
+                temp_file_type = filepath.split(".")
+                #print(temp_file_type)
+                #print(temp_file_type[-1:][0])
+                if filetype == temp_file_type[-1:][0]:
+                    allfile.append(filepath)
+                    break
+            # 展示所有非code文件
+            else:
+                print("the file is not code : %s" %filepath )
+
+    return allfile
+
+os.listdir() 方法用于返回指定的文件夹包含的文件或文件夹的名字的列表。这个列表以字母顺序。 它不包括 '.' 和'..' 即使它在文件夹中。
+os.path.join() 合并传入的路径
+os.path.isdir()判断传入的路径是否为文件夹
+
+## 19.请用Python手写实现冒泡排序
+冒泡排序的原理不难，假定要将被排序的数组R[1..n]从大到小垂直排列，每个数字R可以看作是重量为R.key的气泡。
+
+根据轻气泡在上、重气泡在上的原则，从下往上扫描数组R:凡扫描到违反本原则的轻气泡，则使其向上"飘浮"。如此反复进行，直到最后任何两个气泡都是轻者在上、重者在下为止。
+然后将所有气泡逆序，就实现了数组从小到大的排序。
+
+步骤：
+1 比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+2 对第0个到第n-1个数据做同样的工作。这时，最大的数就到了数组最后的位置上。
+3 针对所有的元素重复以上的步骤，除了最后一个。
+4 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+
+Python实现
+
+def bubble_sort(arry):
+    #获得数组的长度
+    n = len(arry)                   
+    for i in range(n):
+        for j in range(1,n-i):
+            #如果前者比后者大
+            if  arry[j-1] > arry[j] :  
+                #则交换两者     
+                arry[j-1],arry[j] = arry[j],arry[j-1]      
+    return arry
+## 20.请用Python手写实现选择排序
+选择排序(Selection sort)是一种简单直观的排序算法。
+
+它的工作原理如下。首先在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到排序序列第二个位置。以此类推，直到所有元素均排序完毕。
+
+Python实现
+
+def select_sort(ary):
+    n = len(ary)
+    for i in range(0,n):
+        #最小元素下标标记
+        min = i                             
+        for j in range(i+1,n):
+            if ary[j] < ary[min] :
+                #找到最小值的下标
+                min = j
+        #交换两者                     
+        ary[min],ary[i] = ary[i],ary[min]   
+    return ary
+## 21.请用Python手写实现插入排序
+插入排序（Insertion Sort）的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+
+算法执行步骤：
+1 从第一个元素开始，该元素可以认为已经被排序
+2 取出下一个元素，在已经排序的元素序列中从后向前扫描
+3 如果被扫描的元素（已排序）大于新元素，则将被扫描元素后移一位
+4 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置
+5 将新元素插入到该位置后
+6 重复步骤2~5
+
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517379760_484.gif'/>
+
+Python实现
+
+def insert_sort(ary):
+    n = len(ary)
+    for i in range(1,n):
+        if ary[i] < ary[i-1]:
+            temp = ary[i]
+
+            #待插入的下标
+            index = i           
+            #从i-1 循环到 0 (包括0)
+            for j in range(i-1,-1,-1):  
+                if ary[j] > temp :
+                    ary[j+1] = ary[j]
+                    #记录待插入下标
+                    index = j   
+                else :
+                    break
+            ary[index] = temp
+    return ary
+## 22.请用Python手写实现快速排序
+步骤：
+
+1 从数列中挑出一个元素，称为 “基准”（pivot），
+2 重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作。
+3 递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+
+换言之
+快速排序时基于分治模式处理的，
+对一个典型子数组A[p...r]排序的分治过程为三个步骤：
+1.分解：
+A[p..r]被划分为俩个（可能空）的子数组A[p ..q-1]和A[q+1 ..r]，使得
+A[p ..q-1] 
+## 23.请用Python手写实现堆排序
+堆排序在 top K 问题中使用比较频繁。堆排序是采用二叉堆的数据结构来实现的，虽然实质上还是一维数组。二叉堆是一个近似完全二叉树 。
+
+二叉堆具有以下性质：
+
+父节点的键值总是大于或等于（小于或等于）任何一个子节点的键值。
+每个节点的左右子树都是一个二叉堆（都是最大堆或最小堆）。
+
+步骤：
+1 构造最大堆（Build_Max_Heap）：若数组下标范围为0~n，考虑到单独一个元素是大根堆，则从下标n/2开始的元素均为大根堆。于是只要从n/2-1开始，向前依次构造大根堆，这样就能保证，构造到某个节点时，它的左右子树都已经是大根堆。
+
+2 堆排序（HeapSort）：由于堆是用数组模拟的。得到一个大根堆后，数组内部并不是有序的。因此需要将堆化数组有序化。思想是移除根节点，并做最大堆调整的递归运算。第一次将heap[0]与heap[n-1]交换，再对heap[0...n-2]做最大堆调整。第二次将heap[0]与heap[n-2]交换，再对heap[0...n-3]做最大堆调整。重复该操作直至heap[0]和heap[1]交换。由于每次都是将最大的数并入到后面的有序区间，故操作完后整个数组就是有序的了。
+
+3 最大堆调整（Max_Heapify）：该方法是提供给上述两个过程调用的。目的是将堆的末端子节点作调整，使得子节点永远小于父节点。
+
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517383109_209.gif'/>
+
+Python实现
+def heap_sort(ary) :
+    n = len(ary)
+    #最后一个非叶子节点
+    first = int(n/2-1)       
+    #构造大根堆
+    for start in range(first,-1,-1) :     
+        max_heapify(ary,start,n-1)
+
+    #堆排，将大根堆转换成有序数组
+    for end in range(n-1,0,-1):           
+        ary[end],ary[0] = ary[0],ary[end]
+        max_heapify(ary,0,end-1)
+    return ary
+
+#最大堆调整：将堆的末端子节点作调整，使得子节点永远小于父节点
+#start为当前需要调整最大堆的位置，end为调整边界
+def max_heapify(ary,start,end):
+    root = start
+    while True :
+        #调整节点的子节点
+        child = root*2 +1               
+        if child > end : break
+        if child+1 
+## 24.请用Python手写实现归并排序
+归并排序是采用分治法的一个非常典型的应用。归并排序的思想就是先递归分解数组，再合并数组。
+
+先考虑合并两个有序数组，基本思路是比较两个数组的最前面的数，谁小就先取谁，取了后相应的指针就往后移一位。然后再比较，直至一个数组为空，最后把另一个数组的剩余部分复制过来即可。
+
+再考虑递归分解，基本思路是将数组分解成left和right，如果这两个数组内部数据是有序的，那么就可以用上面合并数组的方法将这两个数组合并排序。如何让这两个数组内部是有序的？可以再二分，直至分解出的小组只含有一个元素时为止，此时认为该小组内部已有序。然后合并排序相邻二个小组即可。
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1517382470_410.gif'/>
+
+Python实现
+
+def merge_sort(ary):
+    if len(ary) 
+## 25.请创建一个函数检查一个词是否具有回文结构，使用 Python 进行编写。
+回文结构即一个字符串的倒序与其本身相同，使用python编写判定函数如下：
+
+方法一：
+def huiwen1(str):
+    if len(str) < 2:  # 字符串长度小于2：空串和单个字符都属于回文串
+        return True
+    else:
+        return str[0]==str[-1] and huiwen1(str[1:-1]) 
+        # 字符串长度大于等于2：首尾字符相同且中间字符串也是回文串，则原字符串属于回文串
+
+方法二：
+def huiwen2(str):
+    return str==str[::-1] 
+    # 根据回文串定义：字符串倒序和本身相同则为回文串。其中str[::-1]是切片操作，表示str的倒序
+
+运行测试：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64157028912866969520.png'/>
+

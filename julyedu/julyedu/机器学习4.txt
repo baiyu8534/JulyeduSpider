@@ -1,0 +1,2875 @@
+## 121.“买了这个的客户，也买了......”亚马逊的建议是哪种算法的结果？
+答：这种推荐引擎的基本想法来自于协同过滤。
+
+协同过滤算法考虑用于推荐项目的“用户行为”。它们利用的是其他用户的购买行为和针对商品的交易历史记录、评分、选择和购买信息。针对商品的其他用户的行为和偏好用来推荐项目（商品）给新用户。在这种情况下，项目（商品）的特征是未知的。
+
+注意：了解更多关于推荐系统的知识。
+## 122.你怎么理解第一类和第二类错误？
+答：第一类错误是当原假设为真时，我们却拒绝了它，也被称为“假阳性”。第二类错误是当原假设为是假时，我们接受了它，也被称为“假阴性”。
+
+在混淆矩阵里，我们可以说，当我们把一个值归为阳性（1）但其实它是阴性（0）时，发生第一类错误。而当我们把一个值归为阴性（0）但其实它是阳性（1）时，发生了第二类错误。
+## 123.当你在解决一个分类问题时，出于验证的目的，你已经将训练集随机抽样地分成训练集和验证集。你对你的模型能在未看见的数据上有好的表现非常有信心，因为你的验证精度高。但是，在得到很差的精度后，你大失所望。什么地方出了错？
+答：在做分类问题时，我们应该使用分层抽样而不是随机抽样。随机抽样不考虑目标类别的比例。相反，分层抽样有助于保持目标变量在所得分布样本中的分布。
+
+## 124.请简单阐述下决策树、回归、SVM、神经网络等算法各自的优缺点？
+
+正则化算法（Regularization Algorithms）
+集成算法（Ensemble Algorithms）
+
+决策树算法（Decision Tree Algorithm）
+回归（Regression）
+人工神经网络（Artificial Neural Network）
+深度学习（Deep Learning）
+支持向量机（Support Vector Machine）
+降维算法（Dimensionality Reduction Algorithms）
+
+聚类算法（Clustering Algorithms）
+基于实例的算法（Instance-based Algorithms）
+贝叶斯算法（Bayesian Algorithms）
+关联规则学习算法（Association Rule Learning Algorithms）
+图模型（Graphical Models）
+一、正则化算法（Regularization Algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559452_504.png'/>
+它是另一种方法（通常是回归方法）的拓展，这种方法会基于模型复杂性对其进行惩罚，它喜欢相对简单能够更好的泛化的模型。
+
+例子：
+岭回归（Ridge Regression）
+最小绝对收缩与选择算子（LASSO）
+GLASSO
+弹性网络（Elastic Net）
+最小角回归（Least-Angle Regression）
+
+优点：
+其惩罚会减少过拟合
+总会有解决方法
+
+缺点：
+惩罚会造成欠拟合
+很难校准
+
+二、集成算法（Ensemble algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559460_539.png'/>
+集成方法是由多个较弱的模型集成模型组，其中的模型可以单独进行训练，并且它们的预测能以某种方式结合起来去做出一个总体预测。
+
+该算法主要的问题是要找出哪些较弱的模型可以结合起来，以及结合的方法。这是一个非常强大的技术集，因此广受欢迎。
+
+Boosting
+Bootstrapped Aggregation（Bagging）
+AdaBoost
+层叠泛化（Stacked Generalization）（blending）
+梯度推进机（Gradient Boosting Machines，GBM）
+梯度提升回归树（Gradient Boosted Regression Trees，GBRT）
+随机森林（Random Forest）
+
+优点：
+当先最先进的预测几乎都使用了算法集成。它比使用单个模型预测出来的结果要精确的多
+
+缺点：
+需要大量的维护工作
+
+
+三、决策树算法（Decision Tree Algorithm）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559469_694.png'/>
+决策树学习使用一个决策树作为一个预测模型，它将对一个 item（表征在分支上）观察所得映射成关于该 item 的目标值的结论（表征在叶子中）。
+
+树模型中的目标是可变的，可以采一组有限值，被称为分类树；在这些树结构中，叶子表示类标签，分支表示表征这些类标签的连接的特征。
+
+例子：
+分类和回归树（Classification and Regression Tree，CART）
+Iterative Dichotomiser 3（ID3）
+C4.5 和 C5.0（一种强大方法的两个不同版本）
+
+优点：
+容易解释
+非参数型
+
+缺点：
+趋向过拟合
+可能或陷于局部最小值中
+没有在线学习
+
+四、回归（Regression）算法
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559505_619.png'/>
+回归是用于估计两种变量之间关系的统计过程。当用于分析因变量和一个 多个自变量之间的关系时，该算法能提供很多建模和分析多个变量的技巧。具体一点说，回归分析可以帮助我们理解当任意一个自变量变化，另一个自变量不变时，因变量变化的典型值。最常见的是，回归分析能在给定自变量的条件下估计出因变量的条件期望。
+
+回归算法是统计学中的主要算法，它已被纳入统计机器学习。
+
+例子：
+普通最小二乘回归（Ordinary Least Squares Regression，OLSR）
+线性回归（Linear Regression）
+逻辑回归（Logistic Regression）
+逐步回归（Stepwise Regression）
+多元自适应回归样条（Multivariate Adaptive Regression Splines，MARS）
+本地散点平滑估计（Locally Estimated Scatterplot Smoothing，LOESS）
+
+优点：
+直接、快速
+知名度高
+
+缺点：
+要求严格的假设
+需要处理异常值
+
+
+五、人工神经网络
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559512_437.png'/>
+人工神经网络是受生物神经网络启发而构建的算法模型。
+它是一种模式匹配，常被用于回归和分类问题，但拥有庞大的子域，由数百种算法和各类问题的变体组成。
+
+例子：
+感知器
+反向传播
+Hopfield 网络
+径向基函数网络（Radial Basis Function Network，RBFN）
+
+优点：
+在语音、语义、视觉、各类游戏（如围棋）的任务中表现极好
+算法可以快速调整，适应新的问题
+
+缺点：
+需要大量数据进行训练
+训练要求很高的硬件配置
+模型处于「黑箱状态」，难以理解内部机制
+元参数（Metaparameter）与网络拓扑选择困难。
+
+
+六、深度学习（Deep Learning）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559518_691.png'/>
+深度学习是人工神经网络的最新分支，它受益于当代硬件的快速发展。
+
+众多研究者目前的方向主要集中于构建更大、更复杂的神经网络，目前有许多方法正在聚焦半监督学习问题，其中用于训练的大数据集只包含很少的标记。
+
+例子：
+深玻耳兹曼机（Deep Boltzmann Machine，DBM）
+Deep Belief Networks（DBN）
+卷积神经网络（CNN）
+Stacked Auto-Encoders
+优点/缺点：见神经网络
+
+
+七、支持向量机（Support Vector Machines）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559524_236.png'/>
+给定一组训练事例，其中每个事例都属于两个类别中的一个，支持向量机（SVM）训练算法可以在被输入新的事例后将其分类到两个类别中的一个，使自身成为非概率二进制线性分类器。
+
+SVM 模型将训练事例表示为空间中的点，它们被映射到一幅图中，由一条明确的、尽可能宽的间隔分开以区分两个类别。
+随后，新的示例会被映射到同一空间中，并基于它们落在间隔的哪一侧来预测它属于的类别。
+
+优点：
+在非线性可分问题上表现优秀
+
+缺点：
+非常难以训练
+很难解释
+
+
+七、降维算法（Dimensionality Reduction Algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559530_939.png'/>
+和集簇方法类似，降维追求并利用数据的内在结构，目的在于使用较少的信息总结或描述数据。
+
+这一算法可用于可视化高维数据或简化接下来可用于监督学习中的数据。许多这样的方法可针对分类和回归的使用进行调整。
+
+例子：
+主成分分析（Principal Component Analysis (PCA)）
+主成分回归（Principal Component Regression (PCR)）
+偏最小二乘回归（Partial Least Squares Regression (PLSR)）
+Sammon 映射（Sammon Mapping）
+多维尺度变换（Multidimensional Scaling (MDS)）
+投影寻踪（Projection Pursuit）
+线性判别分析（Linear Discriminant Analysis (LDA)）
+混合判别分析（Mixture Discriminant Analysis (MDA)）
+二次判别分析（Quadratic Discriminant Analysis (QDA)）
+灵活判别分析（Flexible Discriminant Analysis (FDA)）
+
+优点：
+可处理大规模数据集
+无需在数据上进行假设
+
+缺点：
+难以搞定非线性数据
+难以理解结果的意义
+
+
+八、聚类算法（Clustering Algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559539_377.png'/>
+聚类算法是指对一组目标进行分类，属于同一组（亦即一个类，cluster）的目标被划分在一组中，与其他组目标相比，同一组目标更加彼此相似（在某种意义上）。
+
+例子：
+K-均值（k-Means）
+k-Medians 算法
+Expectation Maximi 封层 ation (EM)
+
+
+九、最大期望算法（EM）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559544_651.png'/>
+分层集群（Hierarchical Clstering）
+
+优点：
+让数据变得有意义
+
+缺点：
+结果难以解读，针对不寻常的数据组，结果可能无用。
+
+
+十、基于实例的算法（Instance-based Algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559568_615.png'/>
+基于实例的算法（有时也称为基于记忆的学习）是这样学 习算法，不是明确归纳，而是将新的问题例子与训练过程中见过的例子进行对比，这些见过的例子就在存储器中。
+
+之所以叫基于实例的算法是因为它直接从训练实例中建构出假设。这意味这，假设的复杂度能随着数据的增长而变化：最糟的情况是，假设是一个训练项目列表，分类一个单独新实例计算复杂度为 O（n）
+
+例子：
+K 最近邻（k-Nearest Neighbor (kNN)）
+学习向量量化（Learning Vector Quantization (LVQ)）
+自组织映射（Self-Organizing Map (SOM)）
+局部加权学习（Locally Weighted Learning (LWL)）
+
+优点：
+算法简单、结果易于解读
+
+缺点：
+内存使用非常高
+计算成本高
+不可能用于高维特征空间
+
+
+十一、贝叶斯算法（Bayesian Algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559582_795.png'/>
+贝叶斯方法是指明确应用了贝叶斯定理来解决如分类和回归等问题的方法。
+
+例子：
+朴素贝叶斯（Naive Bayes）
+高斯朴素贝叶斯（Gaussian Naive Bayes）
+多项式朴素贝叶斯（Multinomial Naive Bayes）
+平均一致依赖估计器（Averaged One-Dependence Estimators (AODE)）
+贝叶斯信念网络（Bayesian Belief Network (BBN)）
+贝叶斯网络（Bayesian Network (BN)）
+
+优点：
+快速、易于训练、给出了它们所需的资源能带来良好的表现
+
+缺点：
+如果输入变量是相关的，则会出现问题
+
+
+十二、关联规则学习算法（Association Rule Learning Algorithms）
+<img  src='https://julyedu-img-public.oss-cn-beijing.aliyuncs.com/Public/Image/Question/1526559590_207.png'/>
+关联规则学习方法能够提取出对数据中的变量之间的关系的最佳解释。比如说一家超市的销售数据中存在规则 {洋葱，土豆}=> {汉堡}，那说明当一位客户同时购买了洋葱和土豆的时候，他很有可能还会购买汉堡肉。
+
+例子：
+Apriori 算法（Apriori algorithm）
+Eclat 算法（Eclat algorithm）
+FP-growth
+
+
+图模型（Graphical Models）
+
+图模型或概率图模型（PGM/probabilistic graphical model）是一种概率模型，一个图（graph）可以通过其表示随机变量之间的条件依赖结构（conditional dependence structure）。
+
+例子：
+贝叶斯网络（Bayesian network）
+马尔可夫随机域（Markov random field）
+链图（Chain Graphs）
+祖先图（Ancestral graph）
+
+优点：
+模型清晰，能被直观地理解
+
+缺点：
+确定其依赖的拓扑很困难，有时候也很模糊。
+
+原英文链接：https://static.coggle.it/diagram/WHeBqDIrJRk-kDDY/t/categories-of-algorithms-non-exhaustive
+## 125.在应用机器学习算法之前纠正和清理数据的步骤是什么？
+1.将数据导入
+
+2.看数据：重点看元数据，即对字段解释、数据来源等信息；导入数据后，提取部分数据进行查看
+
+3.缺失值清洗
+- 根据需要对缺失值进行处理，可以删除数据或填充数据
+- 重新取数：如果某些非常重要的字段缺失，需要和负责采集数据的人沟通，是否可以再获得
+
+4.数据格式清洗：统一数据的时间、日期、全半角等显示格式
+
+5.逻辑错误的数据
+- 重复的数据
+- 不合理的值
+
+6.不一致错误的处理：指对矛盾内容的修正，最常见的如身份证号和出生年月日不对应
+不同业务中数据清洗的任务略有不同，比如数据有不同来源的话，数据格式清洗和不一致错误的处理就尤为突出。数据预处理是数据类岗位工作内容中重要的部分。
+
+## 126.什么是K-means聚类算法？
+本题解析作者：JerryLead
+来源：https://www.cnblogs.com/jerrylead/
+
+    K-means也是聚类算法中最简单的一种了，但是里面包含的思想却是不一般。最早我使用并实现这个算法是在学习韩爷爷那本数据挖掘的书中，那本书比较注重应用。看了Andrew Ng的这个讲义后才有些明白K-means后面包含的EM思想。
+
+     聚类属于无监督学习，以往的回归、朴素贝叶斯、SVM等都是有类别标签y的，也就是说样例中已经给出了样例的分类。而聚类的样本中却没有给定y，只有特征x，比如假设宇宙中的星星可以表示成三维空间中的点集<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928652941895214.png'/>。聚类的目的是找到每个样本x潜在的类别y，并将同类别y的样本x放在一起。比如上面的星星，聚类后结果是一个个星团，星团里面的点相互距离比较近，星团间的星星距离就比较远了。
+
+     在聚类问题中，给我们的训练样本是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928653912124497.png'/>，每个<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928654620514018.png'/>，没有了y。
+
+     K-means算法是将样本聚类成k个簇（cluster），具体算法描述如下：
+
+1、 随机选取k个聚类质心点（cluster centroids）为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928655694493441.png'/>。
+
+2、 重复下面过程直到收敛 {
+
+               对于每一个样例i，计算其应该属于的类
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928656797242383.png'/>
+
+               对于每一个类j，重新计算该类的质心
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928657647817307.png'/>
+
+}
+
+     K是我们事先给定的聚类数，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928659070261600.png'/>代表样例i与k个类中距离最近的那个类，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928659740925484.png'/>的值是1到k中的一个。质心<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928671339034477.png'/>代表我们对属于同一个类的样本中心点的猜测，拿星团模型来解释就是要将所有的星星聚成k个星团
+    ①首先随机选取k个宇宙中的点（或者k个星星）作为k个星团的质心，然后第一步对于每一个星星计算其到k个质心中每一个的距离，然后选取距离最近的那个星团作为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415492868833521554.png'/>，这样经过第一步每一个星星都有了所属的星团；
+    ②第二步对于每一个星团，重新计算它的质心<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928691113823939.png'/>（对里面所有的星星坐标求平均）。
+    重复迭代第一步和第二步直到质心不变或者变化很小。
+
+     下图展示了对n个样本点进行K-means聚类的效果，这里k取2。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928692922466369.png'/>
+
+     K-means面对的第一个问题是如何保证收敛，前面的算法中强调结束条件就是收敛，可以证明的是K-means完全可以保证收敛性。下面我们定性的描述一下收敛性，我们定义畸变函数（distortion function）如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928696944274734.png'/>
+
+     J函数表示每个样本点到其质心的距离平方和。K-means是要将J调整到最小。假设当前J没有达到最小值，那么首先可以固定每个类的质心<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928711588086941.png'/>，调整每个样例的所属的类别<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928712696062952.png'/>来让J函数减少，同样，固定<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928717291526564.png'/>，调整每个类的质心<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928719030395218.png'/>也可以使J减小。这两个过程就是内循环中使J单调递减的过程。当J递减到最小时，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928722880772036.png'/>和c也同时收敛。（在理论上，可以有多组不同的clip_image018[7]和c值能够使得J取得最小值，但这种现象实际上很少见）。
+
+     由于畸变函数J是非凸函数，意味着我们不能保证取得的最小值是全局最小值，也就是说k-means对质心初始位置的选取比较感冒，但一般情况下k-means达到的局部最优已经满足需求。但如果你怕陷入局部最优，那么可以选取不同的初始值跑多遍k-means，然后取其中最小的J对应的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928727070377191.png'/>和c输出。
+
+     下面累述一下K-means与EM的关系，首先回到初始问题，我们目的是将样本分成k个类，其实说白了就是求每个样例x的隐含类别y，然后利用隐含类别将x归类。由于我们事先不知道类别y，那么我们首先可以对每个样例假定一个y吧，但是怎么知道假定的对不对呢？怎么评价假定的好不好呢？
+
+    我们使用样本的极大似然估计来度量，这里是就是x和y的联合分布P(x,y)了。如果找到的y能够使P(x,y)最大，那么我们找到的y就是样例x的最佳类别了，x顺手就聚类了。但是我们第一次指定的y不一定会让P(x,y)最大，而且P(x,y)还依赖于其他未知参数，当然在给定y的情况下，我们可以调整其他参数让P(x,y)最大。但是调整完参数后，我们发现有更好的y可以指定，那么我们重新指定y，然后再计算P(x,y)最大时的参数，反复迭代直至没有更好的y可以指定。
+
+     这个过程有几个难点，第一怎么假定y？是每个样例硬指派一个y还是不同的y有不同的概率，概率如何度量。第二如何估计P(x,y)，P(x,y)还可能依赖很多其他参数，如何调整里面的参数让P(x,y)最大。这些问题在以后的篇章里回答。
+
+     这里只是指出EM的思想，E步就是估计隐含类别y的期望值，M步调整其他参数使得在给定类别y的情况下，极大似然估计P(x,y)能够达到极大值。然后在其他参数确定的情况下，重新估计y，周而复始，直至收敛。
+
+     上面的阐述有点费解，对应于K-means来说就是我们一开始不知道每个样例<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928744551273304.png'/>对应隐含变量也就是最佳类别<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928745519875932.png'/>。最开始可以随便指定一个<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928746851736177.png'/>给它，然后为了让P(x,y)最大（这里是要让J最小），我们求出在给定c情况下，J最小时的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928747778488062.png'/>（前面提到的其他未知参数），然而此时发现，可以有更好的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928750946929440.png'/>（质心与样例<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928752356346260.png'/>距离最小的类别）指定给样例<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928753020511232.png'/>，那么<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928754467924389.png'/>得到重新调整，上述过程就开始重复了，直到没有更好的clip_image022[10]指定。
+
+    这样从K-means里我们可以看出它其实就是EM的体现，E步是确定隐含类别变量<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928764930542217.png'/>，M步更新其他参数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928765746580813.png'/>来使J最小化。这里的隐含类别变量指定方法比较特殊，属于硬指定，从k个类别中硬选出一个给样例，而不是对每个类别赋予不同的概率。总体思想还是一个迭代优化过程，有目标函数，也有参数变量，只是多了个隐含变量，确定其他参数估计隐含变量，再确定隐含变量估计其他参数，直至目标函数最优。
+
+K-Means 算法的最大缺点是不能自动选择分类数 k，常见的确定 k 的方法有：
+- 根据先验知识来确定
+- k=2N ，N 为样本数
+- 拐点法：把聚类结果的 F-test 值对聚类个数的曲线画出来，选择图中的拐点
+- 基于信息准则判断，如果模型有似然函数，则可以用 BIC、DIC 来进行决策
+
+具体的 k 的选择往往和业务联系紧密，如希望能将用户进行分类，就有先验的分类要求
+## 127.如何理解模型的过拟合与欠拟合，以及如何解决？
+欠拟合（underfiting / high bias）
+训练误差和验证误差都很大，这种情况称为欠拟合。出现欠拟合的原因是模型尚未学习到数据的真实结构。因此，模拟在训练集和验证集上的性能都很差。
+
+解决办法
+1 做特征工程，添加跟多的特征项。如果欠拟合是由于特征项不够，没有足够的信息支持模型做判断。
+2 增加模型复杂度。如果模型太简单，不能够应对复杂的任务。可以使用更复杂的模型，减小正则化系数。比如说可以使用SVM的核函数，增加了模型复杂度，把低维不可分的数据映射到高维空间，就可以线性可分，减小欠拟合。还可以使用一些集成学习方法。
+3 集成学习方法boosting（如GBDT）能有效解决high bias
+
+过拟合（overfiting / high variance）
+模型在训练集上表现很好，但是在验证集上却不能保持准确，也就是模型泛化能力很差。这种情况很可能是模型过拟合。
+
+造成原因主要有以下几种：
+1 训练数据集样本单一，样本不足。如果训练样本只有负样本，然后那生成的模型去预测正样本，这肯定预测不准。所以训练样本要尽可能的全面，覆盖所有的数据类型。
+2 训练数据中噪声干扰过大。噪声指训练数据中的干扰数据。过多的干扰会导致记录了很多噪声特征，忽略了真实输入和输出之间的关系。
+3 模型过于复杂。模型太复杂，已经能够死记硬背记录下了训练数据的信息，但是遇到没有见过的数据的时候不能够变通，泛化能力太差。我们希望模型对不同的模型都有稳定的输出。模型太复杂是过拟合的重要因素。
+
+针对过拟合的上述原因，对应的预防和解决办法如下：
+1 在训练和建立模型的时候，从相对简单的模型开始，不要一开始就把特征做的非常多，模型参数跳的非常复杂。
+2 增加样本，要覆盖全部的数据类型。数据经过清洗之后再进行模型训练，防止噪声数据干扰模型。
+3 正则化。在模型算法中添加惩罚函数来防止过拟合。常见的有L1，L2正则化。
+4 集成学习方法bagging(如随机森林）能有效防止过拟合
+5 减少特征个数(不是太推荐)
+注意：降维不推荐用来解决过拟合。具体原因可以看：https://www.zhihu.com/question/47121788
+## 128.请详细说说文字特征提取
+很多机器学习问题涉及自然语言处理（NLP），必然要处理文字信息。文字必须转换成可以量化的特征向量。下面我们就来介绍最常用的文字表示方法：词库模型（Bag-of-words model）。
+
+词库表示法
+词库模型是文字模型化的最常用方法。对于一个文档（document），忽略其词序和语法，句法，将其仅仅看做是一个词集合，或者说是词的一个组合，文档中每个词的出现都是独立的，不依赖于其他词是否出现，或者说当这篇文章的作者在任意一个位置选择一个词汇都不受前面句子的影响而独立选择的。词库模型可以看成是独热编码的一种扩展，它为每个单词设值一个特征值。词库模型依据是用类似单词的文章意思也差不多。词库模型可以通过有限的编码信息实现有效的文档分类和检索。
+
+一批文档的集合称为文集（corpus）。让我们用一个由两个文档组成的文集来演示词库模型：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094405686764843.png'/>
+
+文集包括8个词：UNC, played, Duke, in, basketball, lost, the, game。文件的单词构成词汇表（vocabulary）。词库模型用文集的词汇表中每个单词的特征向量表示每个文档。
+
+文集有8个单词，那么每个文档就是由一个包含8位元素的向量构成。构成特征向量的元素数量称为维度（dimension）。用一个词典（dictionary）来表示词汇表与特征向量索引的对应关系。
+
+在大多数词库模型中，特征向量的每一个元素是用二进制数表示单词是否在文档中。例如，第一个文档的第一个词是UNC，词汇表的第一个单词是UNC，因此特征向量的第一个元素就是1。词汇表的最后一个单词是game。第一个文档没有这个词，那么特征向量的最后一个元素就是0。
+
+CountVectorizer类会把文档全部转换成小写，然后将文档词块化（tokenize）。文档词块化是把句子分割成词块（token）或有意义的字母序列的过程。词块大多是单词，但是他们也可能是一些短语，如标点符号和词缀。CountVectorizer类通过正则表达式用空格分割句子，然后抽取长度大于等于2的字母序列。
+
+scikit-learn实现代码如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094415674567555.jpeg'/>
+
+再增加一个文档到文集里：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094526963686347.jpeg'/>
+
+通过CountVectorizer类可以得出上面的结果。词汇表里面有10个单词，但a不在词汇表里面，是因为a的长度不符合CountVectorizer类的要求。
+
+对比文档的特征向量，会发现前两个文档相比第三个文档更相似。如果用欧氏距离（Euclidean distance）计算它们的特征向量会比其与第三个文档距离更接近。两向量的欧氏距离就是两个向量欧氏范数（Euclidean norm）或L2范数差的绝对值：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094512358078277.png'/>
+
+向量的欧氏范数是其元素平方和的平方根：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094514595994605.png'/>
+
+scikit-learn里面的euclidean_distances函数可以计算若干向量的距离，表示两个语义最相似的文档其向量在空间中也是最接近的。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094516994854898.jpeg'/>
+
+如果我们用新闻报道内容做文集，词汇表就可以用成千上万个单词。每篇新闻的特征向量都会有成千上万个元素，很多元素都会是0。体育新闻不会包含财经新闻的术语，同样文化新闻也不会包含财经新闻的术语。有许多零元素的高维特征向量成为稀疏向量（sparse vectors）。
+
+用高维数据可以量化机器学习任务时会有一些问题，不只是出现在自然语言处理领域。
+
+第一个问题就是高维向量需要占用更大内存。NumPy提供了一些数据类型只显示稀疏向量的非零元素，可以有效处理这个问题。
+
+第二个问题就是著名的维度灾难（curse of dimensionality，Hughes effect），维度越多就要求更大的训练集数据保证模型能够充分学习。如果训练样本不够，那么算法就可以拟合过度导致归纳失败。下面，介绍一些降维的方法。在第7章，PCA降维里面，还会介绍用数值方法降维。
+
+停用词过滤
+
+特征向量降维的一个基本方法是单词全部转换成小写。这是因为单词的大小写一般不会影响意思。而首字母大写的单词一般只是在句子的开头，而词库模型并不在乎单词的位置和语法。
+
+另一种方法是去掉文集常用词。这里词称为停用词（Stop-word），像a，an，the，助动词do，be，will，介词on，around，beneath等。停用词通常是构建文档意思的功能词汇，其字面意义并不体现。
+
+CountVectorizer类可以通过设置stop_words参数过滤停用词，默认是英语常用的停用词。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094541890986526.jpeg'/>
+
+这样停用词就没有了，前两篇文档依然相比其与第三篇的内容更接近。
+
+词根还原与词形还原
+
+停用词去掉之后，可能还会剩下许多词，还有一种常用的方法就是词根还原（stemming ）与词形还原（lemmatization）。
+
+特征向量里面的单词很多都是一个词的不同形式，比如jumping和jumps都是jump的不同形式。词根还原与词形还原就是为了将单词从不同的时态、派生形式还原。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094546333591308.jpeg'/>
+
+这两个文档意思差不多，但是其特征向量完全不同，因为单词的形式不同。两个单词都是有一个动词eat和一个sandwich，这些特征应该在向量中反映出来。
+
+词形还原就是用来处理可以表现单词意思的词元（lemma）或形态学的词根（morphological root）的过程。词元是单词在词典中查询该词的基本形式。词根还原与词形还原类似，但它不是生成单词的形态学的词根。而是把附加的词缀都去掉，构成一个词块，可能不是一个正常的单词。词形还原通常需要词法资料的支持，比如WordNet和单词词类（part of speech）。词根还原算法通常需要用规则产生词干（stem）并操作词块，不需要词法资源，也不在乎单词的意思。
+
+让我们分析一下单词gathering的词形还原：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094552251170977.png'/>
+
+第一句的gathering是动词，其词元是gather。后一句的gathering是名词，其词元是gathering。我们用Python的NLTK（Natural Language Tool Kit）(http://www.nltk.org/install.html)库来处理。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415309455464506694.png'/>
+
+NLTK的WordNetLemmatizer可以用gathering的词类确定词元。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094556178942327.png'/>
+
+把词形还原应用到之前的例子里
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094557878176344.jpeg'/>
+
+通过词根还原与词形还原可以有效降维，去掉不必要的单词形式，特征向量可以更有效的表示文档的意思。
+
+
+带TF-IDF权重的扩展词库
+前面用词库模型构建了判断单词是个在文档中出现的特征向量。这些特征向量与单词的语法，顺序，频率无关。不过直觉告诉我们文档中单词的频率对文档的意思有重要作用。一个文档中某个词多次出现，相比只出现过一次的单词更能体现反映文档的意思。现在我们就将单词频率加入特征向量，然后介绍由词频引出的两个问题。
+
+我们用一个整数来代码单词的频率。代码如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415309456132861139.jpeg'/>
+
+结果中第一行是单词的频率，dog频率为1，sandwich频率为3。注意和前面不同的是，binary=True没有了，因为binary默认是False，这样返回的是词汇表的词频，不是二进制结果[1 1 1 1 1]。这种单词频率构成的特征向量为文档的意思提供了更多的信息，但是在对比不同的文档时，需要考虑文档的长度。
+
+很多单词可能在两个文档的频率一样，但是两个文档的长度差别很大，一个文档比另一个文档长很多倍。scikit-learn的TfdfTransformer类可以解决这个问题，通过对词频（term frequency）特征向量归一化来实现不同文档向量的可比性。
+
+默认情况下，TfdfTransformer类用L2范数对特征向量归一化：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094563640422514.png'/>
+
+f(t,d)是第 个文档（document）第 个单词（term）的频率， 是频率向量的L2范数。另外，还有对数词频调整方法（logarithmically scaled term frequencies），把词频调整到一个更小的范围，或者词频放大法（augmented term frequencies），适用于消除较长文档的差异。
+
+对数词频公式如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415309456632844526.png'/>
+
+TfdfTransformer类计算对数词频调整时，需要将参数sublinear_tf设置为True。词频放大公式如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094568935776564.png'/>
+
+归一化，对数调整词频和词频放大三支方法都消除文档不同大小对词频的影响。
+
+但是，另一个问题仍然存在，那就是特征向量里高频词的权重更大，即使这些词在文集内其他文档里面也经常出现。这些单词并没有突出代表单个文档的意思。
+
+比如，一个文集里大多数文档都是关于杜克大学篮球队的，那么高频词就是basketball，Coach K，flop。这些词可以被看成是该文集的停用词，因为它们太普遍对区分文档的意思没任何作用。
+
+逆向文件频率（inverse document frequency，IDF）就是用来度量文集中单词频率的。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094572763452198.png'/>
+
+其中， 是文集中文档数量， 表示包含单词 的文档数量。单词的TF-IDF值就是其频率与逆向文件频率的乘积。
+
+TfdfTransformer类默认返回TF-IDF值，其参数use_idf默认为True。由于TF-IDF加权特征向量经常用来表示文本，所以scikit-learn提供了TfidfVectorizer类将CountVectorizer和TfdfTransformer类封装在一起。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094574670880562.jpeg'/>
+
+通过TF-IDF加权之后，我们会发现在文集中较常见的词，如sandwich被调整了。
+
+通过哈希技巧实现特征向量
+
+前面我们是用包含文集所有词块的词典来完成文档词块与特征向量的映射的。这么做有两个缺点。首先是文集需要被调用两次。第一次是创建词典，第二次是创建文档的特征向量。
+
+另外，词典必须储存在内存里，如果文集特别大就会很耗内存。通过哈希表可以有效的解决这些问题。可以将词块用哈希函数来确定它在特征向量的索引位置，可以不创建词典，这称为哈希技巧（hashing trick）。
+
+scikitlearn提供了HashingVectorizer来实现这个技巧：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094578687604589.png'/>
+
+哈希技巧是无固定状态的（stateless），，它把任意的数据块映射到固定数目的位置，并且保证相同的输入一定产生相同的输出，不同的输入尽可能产生不同的输出。它可以用并行，线上，流式传输创建特征向量，因为它初始化是不需要文集输入。n_features是一个可选参数，默认值是 ，这里2的20次方。
+
+这里设置成6是为了演示。另外，注意有些单词频率是负数。由于Hash碰撞可能发生，所以HashingVectorizer用有符号哈希函数（signed hash function）。特征值和它的词块的哈希值带同样符号，如果cats出现过两次，被哈希成-3，文档特征向量的第四个元素要减去2。如果dogs出现过两次，被哈希成3，文档特征向量的第四个元素要加上2。
+
+用带符号哈希函数可以把词块发生哈希碰撞的概率相互抵消掉，信息损失比信息损失的同时出现信息冗余要好。哈希技巧的一个不足是模型的结果更难察看，由于哈希函数不能显示哪个词块映射到特征向量的哪个位置了。
+## 129.请详细说说图像特征提取
+计算机视觉是一门研究如何使机器“看”的科学，让计算机学会处理和理解图像。这门学问有时需要借助机器学习。
+
+本节介绍一些机器学习在计算机视觉领域应用的基础技术。通过像素值提取特征数字图像通常是一张光栅图或像素图，将颜色映射到网格坐标里。一张图片可以看成是一个每个元素都是颜色值的矩阵。表示图像基本特征就是将矩阵每行连起来变成一个行向量。
+
+光学文字识别（Optical character recognition，OCR）是机器学习的经典问题。下面我们用这个技术来识别手写数字。
+
+scikit-learn的digits数字集包括至少1700种0-9的手写数字图像。每个图像都有8x8像像素构成。每个像素的值是0-16，白色是0，黑色是16。如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094602165094462.jpeg'/>
+
+我们将8x8矩阵转换成64维向量来创建一个特征向量：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094604039172409.png'/>
+
+这样表示可以有效的处理一些基本任务，比如识别手写字母等。但是，记录每个像素的数值在大图像处理时不太好用。一个100x100像素的图像其灰度图产生的特征向量是10000维度，而1920x1080像素的图像是2073600。
+
+和TF-IDF特征向量不同，大部分图像都不是稀疏的。这种表示法的缺点不只是特征向量的维度灾难，还有就是某个位置的学习结果在经过对图像的放缩，旋转或变换之后可能就不对了，非常敏感，缺乏稳定性。
+
+另外，这种方法对图像的亮度也十分敏感。所以这种方法在处理照片和其他自然景色图像时不怎么有用。现代计算机视觉应用通常手工实现特征提取，或者用深度学习自动化解决无监督问题。
+
+对感兴趣的点进行特征提取
+前面创建的特征矢量包含了图像的每个像素，既包含了图像特征的有用信息，也包含了一堆噪声。查看图像后，我们会发现所有的图像都有一个白边，这些像素是没用的。
+
+人们不需要观察物体的每个属性就可以很快的识别出很多物体。我们可以根据轮廓识别出汽车，并不需要观察后视镜，我们也可以通过一个鼻子或嘴巴判断图像是一个人。
+
+这些直觉就可以用来建立一种表示图像大多数信息属性的方法。而这些有信息量的属性，称为兴趣点（points of interest），是由丰富的纹理包围，基本可以重建图像。边缘（edges）和角点（corners）是两种常用的兴趣点类型。边是像素快速变化的分界线（boundary），角是两条边的交集。
+
+我们用scikit-image库抽取下图的兴趣点：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094610325328822.jpeg'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094611976397949.jpeg'/>
+
+上图就是兴趣点的提取结果。图片的230400个像素中，466个兴趣点被提取。这种提取方式更紧凑，而且当图片的亮度发生统一变化时，这些兴趣点依然存在。
+
+
+SIFT和SURF
+尺度不变特征转换（Scale-Invariant Feature Transform，SIFT）是一种特征提取方法，相比前面使用的方法，SIFT对图像的尺寸，旋转，亮度变化更不敏感。每个SIFT特征都是一个描述图片上某个区域边缘和角点的向量。和兴趣点不同，SIFT还可以获取每个兴趣点和它周围点的综合信息。
+
+加速稳健特征（Speeded-Up Robust Features，SURF）是另一个抽取图像兴趣点的方法，其特征向量对图像的尺寸，旋转，亮度变化是不变的。SURF的算法可以比SIFT更快，更有效的识别出兴趣点。
+
+两种方法的具体理论解释在数字图像处理类的教材中都有介绍，这样用mahotas库来应用SURF方法处理下面的图片。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094615056521573.jpeg'/>
+
+和兴趣点抽取类似，抽取SURF只是机器学习中创建特征向量的第一步。训练集的每个实例都会抽取不同的SURF。第六章的K-Means聚类，会介绍聚类方法抽取SURF来学习特征，可以作为一种图像分类方法。
+
+mahotas代码如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094641830158056.jpeg'/>
+
+
+数据标准化
+许多评估方法在处理标准化数据集时可以获得更好的效果。标准化数据均值为0，单位方差(UnitVariance)。均值为0的解释变量是关于原点对称的，特征向量的单位方差表示其特征值全身统一单位，统一量级的数据。
+
+例如，假设特征向量由两个解释变量构成，第一个变量值范围[0,1]，第二个变量值范围[0,1000000]，这时就要把第二个变量的值调整为[0,1]，这样才能保证数据是单位方差。
+
+如果变量特征值的量级比其他特征值的方差还大，这个特征值就会主导学习算法的方向，导致其他变量的影响被忽略。有些机器学习算法会在数据不标准时引入很小的优化参数值。解释变量的值可以通过正态分布进行标准化，减去均值后除以标准差。
+
+scikit-learn的scale函数可以实现：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153094646140214701.png'/>
+## 130.了解xgboost么，请详细说说它的原理
+本题解析来源于July的CSDN博客《通俗理解kaggle比赛大杀器xgboost》，特原封不动的刊载于此。
+
+
+前言
+xgboost一直在竞赛江湖里被传为神器，比如时不时某个kaggle/天池比赛中，某人用xgboost于千军万马中斩获冠军。
+
+而我们的机器学习课程里也必讲xgboost，如寒所说：“RF和GBDT是工业界大爱的模型，Xgboost 是大杀器包裹，Kaggle各种Top排行榜曾一度呈现Xgboost一统江湖的局面，另外某次滴滴比赛第一名的改进也少不了Xgboost的功劳”。
+
+此外，公司七月在线从2016年上半年起，就开始组织学员参加各种比赛，以在实际竞赛项目中成长（毕竟，搞AI不可能没实战，而参加比赛历经数据处理、特征选择、模型调优、代码调参，是一个极好的真刀真枪的实战机会，对能力的提升和找/换工作的帮助都非常大）。
+
+AI大潮之下，今年特别多从传统IT转行转岗转型AI的朋友，很多朋友都咨询如何转行AI，我一般都会着重强调学习AI或找/换AI的四大金刚：课程 + 题库 + OJ + kaggle/天池。包括集训营的毕业考核更会融合kaggle或天池比赛。
+
+考虑到kaggle/天池比赛对搞数学科学的重要性，特写此文介绍xgboost，助力大家快速入门xgboost以及在比赛中获得优异成绩。
+
+最后，xgboost不是我July发明的，但我会确保本文对它的介绍是最通俗易懂的（且本文得到七月在线AI lab负责人陈博士审校）。另，感谢文末所列的全部参考文献，有何问题，欢迎随时留言评论，thanks。
+
+1 决策树
+举个例子，集训营某一期有100多名学员，假定给你一个任务，要你统计男生女生各多少人，当一个一个学员依次上台站到你面前时，你会怎么区分谁是男谁是女呢？
+
+很快，你考虑到男生的头发一般很短，女生的头发一般比较长，所以你通过头发的长短将这个班的所有学员分为两拨，长发的为“女”，短发为“男”。
+
+相当于你依靠一个指标“头发长短”将整个班的人进行了划分，于是形成了一个简单的决策树，而划分的依据是头发长短。 
+这时，有的人可能有不同意见了：为什么要用“头发长短”划分呀，我可不可以用“穿的鞋子是否是高跟鞋”，“有没有喉结”等等这些来划分呢，答案当然是可以的。
+
+但究竟根据哪个指标划分更好呢？很直接的判断是哪个分类效果更好则优先用哪个。所以，这时就需要一个评价标准来量化分类效果了。 
+
+怎么判断“头发长短”或者“是否有喉结”是最好的划分方式，效果怎么量化呢？直观上来说，如果根据某个标准分类人群后，纯度越高效果越好，比如说你分为两群，“女”那一群都是女的，“男”那一群全是男的，那这个效果是最好的。但有时实际的分类情况不是那么理想，所以只能说越接近这种情况，我们则认为效果越好。
+
+量化分类效果的方式有很多，比如信息增益（ID3）、信息增益率（C4.5）、基尼系数（CART）等等。
+
+信息增益的度量标准：熵
+
+ID3算法的核心思想就是以信息增益度量属性选择，选择分裂后信息增益最大的属性进行分裂。
+
+什么是信息增益呢？为了精确地定义信息增益，我们先定义信息论中广泛使用的一个度量标准，称为熵（entropy），它刻画了任意样例集的纯度（purity）。给定包含关于某个目标概念的正反样例的样例集S，那么S相对这个布尔型分类的熵为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438524231084957.gif'/>
+ 
+
+上述公式中，p+代表正样例，比如在本文开头第二个例子中p+则意味着去打羽毛球，而p-则代表反样例，不去打球(在有关熵的所有计算中我们定义0log0为0)。
+
+举例来说，假设S是一个关于布尔概念的有14个样例的集合，它包括9个正例和5个反例（我们采用记号[9+，5-]来概括这样的数据样例），那么S相对于这个布尔样例的熵为：
+
+Entropy（[9+，5-]）=-（9/14）log2（9/14）-（5/14）log2（5/14）=0.940。
+
+So，根据上述这个公式，我们可以得到：
+
+如果S的所有成员属于同一类，则Entropy(S)=0；
+如果S的正反样例数量相等，则Entropy(S)=1；
+如果S的正反样例数量不等，则熵介于0，1之间
+
+如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438527224094223.gif'/>
+
+看到没，通过Entropy的值，你就能评估当前分类树的分类效果好坏了。
+
+更多细节如剪枝、过拟合、优缺点、可以参考此文《决策树学习》。
+
+所以，现在决策树的灵魂已经有了，即依靠某种指标进行树的分裂达到分类/回归的目的，总是希望纯度越高越好。
+
+
+2.回归树与集成学习
+如果用一句话定义xgboost，很简单：Xgboost就是由很多分类和回归树集成。分类树好理解，但，回归树又是什么呢？
+
+数据挖掘或机器学习中使用的决策树有两种主要类型：
+
+分类树分析是指预测结果是数据所属的类（比如某个电影去看还是不看）
+回归树分析是指预测结果可以被认为是实数（例如房屋的价格，或患者在医院中的逗留时间）
+而术语分类和回归树（CART，Classification And Regression Tree）分析是用于指代上述两种树的总称，由Breiman等人首先提出。
+
+2.1 回归树
+事实上，分类与回归是两个很接近的问题，分类的目标是根据已知样本的某些特征，判断一个新的样本属于哪种已知的样本类，它的结果是离散值。而回归的结果是连续的值。当然，本质是一样的，都是特征（feature）到结果/标签（label）之间的映射。
+
+理清了什么是分类和回归之后，理解分类树和回归树就不难了。
+
+分类树的样本输出（即响应值）是类的形式，比如判断这个救命药是真的还是假的，周末去看电影《风语咒》还是不去。而回归树的样本输出是数值的形式，比如给某人发放房屋贷款的数额就是具体的数值，可以是0到300万元之间的任意值。
+
+所以，对于回归树，你没法再用分类树那套信息增益、信息增益率、基尼系数来判定树的节点分裂了，你需要采取新的方式评估效果，包括预测误差（常用的有均方误差、对数误差等）。而且节点不再是类别，是数值（预测值），那么怎么确定呢？有的是节点内样本均值，有的是最优化算出来的比如Xgboost。
+
+CART回归树是假设树为二叉树，通过不断将特征进行分裂。比如当前树结点是基于第j个特征值进行分裂的，设该特征值小于s的样本划分为左子树，大于s的样本划分为右子树。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415343854853617715.png'/>
+
+而CART回归树实质上就是在该特征维度对样本空间进行划分，而这种空间划分的优化是一种NP难问题，因此，在决策树模型中是使用启发式方法解决。典型CART回归树产生的目标函数为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438551488112806.png'/>
+
+因此，当我们为了求解最优的切分特征j和最优的切分点s，就转化为求解这么一个目标函数：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415343855213970444.png'/>
+
+所以我们只要遍历所有特征的的所有切分点，就能找到最优的切分特征和切分点。最终得到一棵回归树。
+
+
+2.2 boosting集成学习
+
+所谓集成学习，是指构建多个分类器（弱分类器）对数据集进行预测，然后用某种策略将多个分类器预测的结果集成起来，作为最终预测结果。通俗比喻就是“三个臭皮匠赛过诸葛亮”，或一个公司董事会上的各董事投票决策，它要求每个弱分类器具备一定的“准确性”，分类器之间具备“差异性”。
+
+集成学习根据各个弱分类器之间有无依赖关系，分为Boosting和Bagging两大流派：
+
+Boosting流派，各分类器之间有依赖关系，必须串行，比如Adaboost、GBDT(Gradient Boosting Decision Tree)、Xgboost
+Bagging流派，各分类器之间没有依赖关系，可各自并行，比如随机森林（Random Forest）
+而著名的Adaboost作为boosting流派中最具代表性的一种方法，本博客曾详细介绍它。
+
+AdaBoost，是英文"Adaptive Boosting"（自适应增强）的缩写，由Yoav Freund和Robert Schapire在1995年提出。它的自适应在于：前一个基本分类器分错的样本会得到加强，加权后的全体样本再次被用来训练下一个基本分类器。同时，在每一轮中加入一个新的弱分类器，直到达到某个预定的足够小的错误率或达到预先指定的最大迭代次数。
+
+    具体说来，整个Adaboost 迭代算法就3步：
+
+①初始化训练数据的权值分布。如果有N个样本，则每一个训练样本最开始时都被赋予相同的权值：1/N。
+②训练弱分类器。具体训练过程中，如果某个样本点已经被准确地分类，那么在构造下一个训练集中，它的权值就被降低；相反，如果某个样本点没有被准确地分类，那么它的权值就得到提高。然后，权值更新过的样本集被用于训练下一个分类器，整个训练过程如此迭代地进行下去。
+③将各个训练得到的弱分类器组合成强分类器。各个弱分类器的训练过程结束后，加大分类误差率小的弱分类器的权重，使其在最终的分类函数中起着较大的决定作用，而降低分类误差率大的弱分类器的权重，使其在最终的分类函数中起着较小的决定作用。换言之，误差率低的弱分类器在最终分类器中占的权重较大，否则较小。
+
+而另一种boosting方法GBDT（Gradient Boost Decision Tree)，则与AdaBoost不同，GBDT每一次的计算是都为了减少上一次的残差，进而在残差减少（负梯度）的方向上建立一个新的模型。
+
+boosting集成学习由多个相关联的决策树联合决策，什么叫相关联？举个例子
+
+1、有一个样本[数据->标签]是：[(2，4，5)-> 4]
+2、第一棵决策树用这个样本训练的预测为3.3
+3、那么第二棵决策树训练时的输入，这个样本就变成了：[(2，4，5)-> 0.7]
+4、也就是说，下一棵决策树输入样本会与前面决策树的训练和预测相关
+
+很快你会意识到，Xgboost为何也是一个boosting的集成学习了。
+
+而一个回归树形成的关键点在于：
+
+• 分裂点依据什么来划分（如前面说的均方误差最小，loss）；
+• 分类后的节点预测值是多少（如前面说，有一种是将叶子节点下各样本实际值得均值作为叶子节点预测误差，或者计算所得）
+
+至于另一类集成学习方法，比如Random Forest（随机森林）算法，各个决策树是独立的、每个决策树在样本堆里随机选一批样本，随机选一批特征进行独立训练，各个决策树之间没有啥关系。本文暂不展开介绍。
+
+
+3.GBDT
+说到Xgboost，不得不先从GBDT(Gradient Boosting Decision Tree)说起。因为xgboost本质上还是一个GBDT，但是力争把速度和效率发挥到极致，所以叫X (Extreme) GBoosted。包括前面说过，两者都是boosting方法。
+
+GBDT的原理很简单，就是所有弱分类器的结果相加等于预测值，然后下一个弱分类器去拟合误差函数对预测值的残差(这个残差就是预测值与真实值之间的误差)。当然了，它里面的弱分类器的表现形式就是各棵树。如图所示：Y = Y1 + Y2 + Y3。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438563756358639.png'/>
+
+举一个非常简单的例子，比如我今年30岁了，但计算机或者模型GBDT并不知道我今年多少岁，那GBDT咋办呢？
+
+它会在第一个弱分类器（或第一棵树中）随便用一个年龄比如20岁来拟合，然后发现误差有10岁；
+接下来在第二棵树中，用6岁去拟合剩下的损失，发现差距还有4岁；
+接着在第三棵树中用3岁拟合剩下的差距，发现差距只有1岁了；
+最后在第四课树中用1岁拟合剩下的残差，完美。
+最终，四棵树的结论加起来，就是真实年龄30岁（实际工程中，gbdt是计算负梯度，用负梯度近似残差）。
+
+最终，四棵树的结论加起来，就是真实年龄30岁。实际工程中，gbdt是计算负梯度，用负梯度近似残差。
+
+注意，为何gbdt可以用用负梯度近似残差呢？
+回归任务下，GBDT 在每一轮的迭代时对每个样本都会有一个预测值，此时的损失函数为均方差损失函数，
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155214962034944638.gif'/>
+
+那此时的负梯度是这样计算的
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155214962416670973.gif'/>
+
+所以，当损失函数选用均方损失函数是时，每一次拟合的值就是（真实值 - 当前模型预测的值），即残差。此时的变量是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155214963633267938.gif'/>，即“当前预测模型的值”，也就是对它求负梯度。
+
+另外，这里还得再啰嗦一下，上面预测年龄的第一个步骤中的“随便”二字看似随便，其实深入思考一下一点都不随便，你会发现大部分做预测的模型，基本都是这么个常规套路，先随便用一个值去预测，然后对比预测值与真实值的差距，最后不断调整 缩小差距。所以会出来一系列目标函数：确定目标，和损失函数：缩小误差。
+
+再进一步思考，你会发现这完全符合人类做预测的普遍常识、普遍做法，当对一个事物不太了解时，一开始也是根据经验尝试、初探，直到逼近某种意义上的接近或者完全吻合。
+
+还是年龄预测的例子。
+
+简单起见，假定训练集只有4个人：A,B,C,D，他们的年龄分别是14,16,24,26。其中A、B分别是高一和高三学生；C,D分别是应届毕业生和工作两年的员工。
+
+如果是用一棵传统的回归决策树来训练，会得到如下图所示结果：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438568191303958.png'/>
+
+现在我们使用GBDT来做这件事，由于数据太少，我们限定叶子节点做多有两个，即每棵树都只有一个分枝，并且限定只学两棵树。
+
+我们会得到如下图所示结果：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438570529256895.png'/>
+
+在第一棵树分枝和图1一样，由于A,B年龄较为相近，C,D年龄较为相近，他们被分为左右两拨，每拨用平均年龄作为预测值。
+
+ • 此时计算残差（残差的意思就是：A的实际值 - A的预测值 = A的残差），所以A的残差就是实际值14 - 预测值15 = 残差值-1。
+ • 注意，A的预测值是指前面所有树累加的和，这里前面只有一棵树所以直接是15，如果还有树则需要都累加起来作为A的预测值。
+
+残差在数理统计中是指实际观察值与估计值（拟合值）之间的差。“残差”蕴含了有关模型基本假设的重要信息。如果回归模型正确的话， 我们可以将残差看作误差的观测值。
+
+进而得到A,B,C,D的残差分别为-1,1，-1,1。
+
+然后拿它们的残差-1、1、-1、1代替A B C D的原值，到第二棵树去学习，第二棵树只有两个值1和-1，直接分成两个节点，即A和C分在左边，B和D分在右边，经过计算（比如A，实际值-1 - 预测值-1 = 残差0，比如C，实际值-1 - 预测值-1 = 0），此时所有人的残差都是0。
+
+残差值都为0，相当于第二棵树的预测值和它们的实际值相等，则只需把第二棵树的结论累加到第一棵树上就能得到真实年龄了，即每个人都得到了真实的预测值。
+
+换句话说，现在A,B,C,D的预测值都和真实年龄一致了。Perfect！
+A: 14岁高一学生，购物较少，经常问学长问题，预测年龄A = 15 – 1 = 14
+B: 16岁高三学生，购物较少，经常被学弟问问题，预测年龄B = 15 + 1 = 16
+
+C: 24岁应届毕业生，购物较多，经常问师兄问题，预测年龄C = 25 – 1 = 24
+D: 26岁工作两年员工，购物较多，经常被师弟问问题，预测年龄D = 25 + 1 = 26
+
+所以，GBDT需要将多棵树的得分累加得到最终的预测得分，且每一次迭代，都在现有树的基础上，增加一棵树去拟合前面树的预测结果与真实值之间的残差。
+
+4.Xgboost
+4.1 xgboost树的定义
+
+本节的示意图基本引用自xgboost原作者陈天奇的讲义PPT中。
+
+我们要预测一家人对电子游戏的喜好程度，考虑到年轻和年老相比，年轻更可能喜欢电子游戏，以及男性和女性相比，男性更喜欢电子游戏，故先根据年龄大小区分小孩和大人，然后再通过性别区分开是男是女，逐一给各人在电子游戏喜好程度上打分，如下图所示。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438577232516800.png'/>
+
+就这样，训练出了2棵树tree1和tree2，类似之前gbdt的原理，两棵树的结论累加起来便是最终的结论，所以小孩的预测分数就是两棵树中小孩所落到的结点的分数相加：2 + 0.9 = 2.9。爷爷的预测分数同理：-1 + （-0.9）= -1.9。具体如下图所示
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438578739198433.png'/>
+
+恩，你可能要拍案而起了，惊呼，这不是跟上文介绍的gbdt乃异曲同工么？
+
+事实上，如果不考虑工程实现、解决问题上的一些差异，xgboost与gbdt比较大的不同就是目标函数的定义。xgboost的目标函数如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438580139159593.png'/>
+
+其中
+
+ • 红色箭头所指向的L 即为损失函数（比如平方损失函数：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155212197548502545.gif'/>，或logistic损失函数：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438590677865410.png'/>）
+ • 红色方框所框起来的是正则项（包括L1正则、L2正则）
+ • 红色圆圈所圈起来的为常数项
+ • 对于f(x)，xgboost利用泰勒展开三项，做一个近似
+
+我们可以很清晰地看到，最终的目标函数只依赖于每个数据点的在误差函数上的一阶导数和二阶导数。
+
+额，峰回路转，突然丢这么大一个公式，不少人可能瞬间就懵了。没事，下面咱们来拆解下这个目标函数，并一一剖析每个公式、每个符号、每个下标的含义。
+
+4.2 xgboost目标函数
+
+xgboost的核心算法思想不难，基本就是
+
+1、不断地添加树，不断地进行特征分裂来生长一棵树，每次添加一个树，其实是学习一个新函数，去拟合上次预测的残差。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438596754558899.png'/>
+
+注：w_q(x)为叶子节点q的分数，F 对应了所有K棵回归树（regression tree）的集合，而f(x)为其中一棵回归树。
+
+2、当我们训练完成得到k棵树，我们要预测一个样本的分数，其实就是根据这个样本的特征，在每棵树中会落到对应的一个叶子节点，每个叶子节点就对应一个分数
+3、最后只需要将每棵树对应的分数加起来就是该样本的预测值。
+
+显然，我们的目标是要使得树群的预测值 <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438617916457566.png'/>尽量接近真实值<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155212194742689103.gif'/>，而且有尽量大的泛化能力。
+
+所以，从数学角度看这是一个泛函最优化问题，故把目标函数简化如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438610877450610.png'/>
+
+如你所见，这个目标函数分为两部分：误差函数和正则化项。且误差/损失函数揭示训练误差（即预测分数和真实分数的差距），正则化定义复杂度。
+
+对于上式而言，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438619753717303.png'/>是整个累加模型的输出，正则化项<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155212192437071965.png'/>是则表示树的复杂度的函数，值越小复杂度越低，泛化能力越强，其表达式为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438621515919614.png'/>
+
+T表示叶子节点的个数，w表示叶子节点的分数。直观上看，目标要求预测误差尽量小，且叶子节点T尽量少（γ控制叶子结点的个数），节点数值w尽量不极端（λ控制叶子节点的分数不会过大），防止过拟合。
+
+插一句，一般的目标函数都包含下面两项
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438623683258457.png'/>
+其中，误差函数鼓励我们的模型尽量去拟合训练数据，使得最后的模型会有比较少的 bias。而正则化项则鼓励更加简单的模型。因为当模型简单之后，有限数据拟合出来结果的随机性比较小，不容易过拟合，使得最后模型的预测更加稳定。
+
+4.2.1 模型学习与训练误差
+
+具体来说，目标函数第一部分中的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799848224718091.gif'/>表示第<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799849379792495.gif'/>个样本，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799853091107029.gif'/>(<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799854427214614.png'/>−<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799855878753338.gif'/>) 表示第<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799858213955959.gif'/>个样本的预测误差，我们的目标当然是误差越小越好。
+
+类似之前GBDT的套路，xgboost也是需要将多棵树的得分累加得到最终的预测得分（每一次迭代，都在现有树的基础上，增加一棵树去拟合前面树的预测结果与真实值之间的残差）。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438657261833493.png'/>
+
+那接下来，我们如何选择每一轮加入什么 f 呢？答案是非常直接的，选取一个 f 来使得我们的目标函数尽量最大地降低。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415343865867530120.png'/>
+
+再强调一下，考虑到第t轮的模型预测值<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799863862283689.png'/>=  前t-1轮的模型预测<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799865632497543.png'/> + <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799867050759241.png'/> ，因此误差函数记为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799868790821016.gif'/>(<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415479987056426021.gif'/>, <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799872364402223.png'/> + <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799873288736641.png'/> )，后面一项为正则化项。
+
+对于这个误差函数的式子而言，在第t步，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155196560293831295.gif'/>是真实值，即已知，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155196563657221803.png'/>可由上一步第t-1步中的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155196543978971618.gif'/>加上<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155196566127396568.gif'/>计算所得，某种意义上也算已知值，故模型学习的是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155196566833916453.gif'/>。
+
+上面那个Obj公式可能有些过于抽象，我们可以考虑当 <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799882523266225.gif'/>是平方误差的情况（相当于<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799884649760138.gif'/>），这个时候我们的目标可以被写成下面这样的二次函数（图中画圈的部分表示的就是预测值和真实值之间的残差）：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438660559285998.png'/>
+
+更加一般的，损失函数不是二次函数咋办？泰勒展开，不是二次的想办法近似为二次（如你所见，定义了一阶导g和二阶导h）。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438646418297981.png'/>
+
+恩恩，注意了！不少人可能就会在这里卡壳，网上也很少有文章解释清楚，在和七月在线AI lab陈博士讨论之后，发现这里面最关键的其实就是把泰勒二阶展开各项和xgboost 目标函数的对应关系搞清楚，相当于我们可以利用泰勒二阶展开去做目标函数的近似。
+
+首先，这是泰勒二阶展开<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799895811816708.png'/>
+
+对应到xgboost的目标函数里头
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799896629614438.png'/>
+
+忽略损失函数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799897350156628.gif'/> 中的第一个自变量<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799898379768501.gif'/>（别忘了上面说的“在第t步，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799899693566266.gif'/>是真实值，即已知”，不影响后续目标函数对<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799905263888750.png'/>的偏导计算），做下一一对应：
+● 泰勒二阶展开f 里的x对应目标函数里的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799900939208960.png'/>
+● f 里的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197699632731742.png'/>对应目标函数的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799902222028087.png'/>
+● 从而f 对x求导数时，对应为目标函数对<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799905263888750.png'/>求偏导
+得到：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799908957656758.png'/>
+
+其中
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415479991045606393.png'/><img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799911080599822.png'/>
+
+呜呼，透了！不过，这个转化过程中的关键泰勒二次展开到底是哪来的呢？
+
+在数学中，泰勒公式（英语：Taylor's Formula）是一个用函数在某点的信息描述其附近取值的公式。这个公式来自于微积分的泰勒定理（Taylor's theorem），泰勒定理描述了一个可微函数，如果函数足够光滑的话，在已知函数在某一点的各阶导数值的情况之下，泰勒公式可以用这些导数值做系数构建一个多项式来近似函数在这一点的邻域中的值，这个多项式称为泰勒多项式（Taylor polynomial）。
+
+相当于告诉我们可由利用泰勒多项式的某些次项做原函数的近似。
+
+泰勒定理：
+设 n 是一个正整数。如果定义在一个包含 a 的区间上的函数 f 在 a 点处 n+1 次可导，那么对于这个区间上的任意 x，都有：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799914261419848.png'/>
+
+其中的多项式称为函数在a 处的泰勒展开式，剩余的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799917939722663.png'/>是泰勒公式的余项，是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799918920671583.png'/>的高阶无穷小。
+
+接下来，考虑到我们的第t 颗回归树是根据前面的t-1颗回归树的残差得来的，相当于t-1颗树的值<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799926389974076.png'/>是已知的。换句话说，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799925536011194.png'/>对目标函数的优化不影响，可以直接去掉，且常数项也可以移除，从而得到如下一个比较统一的目标函数。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438666247046933.png'/>
+
+这时，目标函数只依赖于每个数据点在误差函数上的一阶导数g和二阶导数h（相信你已看出xgboost的不同了，目标函数保留了泰勒展开的二次项）。
+
+总的指导原则如就职Google的读者crab6789所说：实质是把样本分配到叶子结点会对应一个obj，优化过程就是obj优化。也就是分裂节点到叶子不同的组合，不同的组合对应不同obj，所有的优化围绕这个思想展开。
+
+到目前为止我们讨论了目标函数中的第一个部分：训练误差。接下来我们讨论目标函数的第二个部分：正则项，即如何定义树的复杂度。
+
+4.2.2 正则项：树的复杂度
+
+首先，梳理下几个规则
+
+ • 用叶子节点集合以及叶子节点得分表示 
+ • 每个样本都落在一个叶子节点上 
+ • q(x)表示样本x在某个叶子节点上，wq(x)是该节点的打分,即该样本的模型预测值
+
+所以当我们把树成结构部分q和叶子权重部分w后，结构函数q把输入映射到叶子的索引号上面去，而w给定了每个索引号对应的叶子分数是什么。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438671337255095.png'/>
+
+另外，如下图所示，xgboost对树的复杂度包含了两个部分：
+
+1、一个是树里面叶子节点的个数T
+2、一个是树上叶子节点的得分w的L2模平方（对w进行L2正则化，相当于针对每个叶结点的得分增加L2平滑，目的是为了避免过拟合）
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438674199471483.png'/>
+
+还记得4.2节开头对目标函数的说明吧（损失函数揭示训练误差 + 正则化定义复杂度）？
+
+从数学角度看这是一个泛函最优化问题，故把目标函数简化如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438680167699452.png'/>
+
+如你所见，这个目标函数分为两部分：误差函数和正则化项。且误差/损失函数揭示训练误差（即预测分数和真实分数的差距），正则化定义复杂度。
+
+对于上式而言，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438683028014237.png'/>是整个累加模型的输出，正则化项∑kΩ(fk)是则表示树的复杂度的函数，值越小复杂度越低，泛化能力越强，其表达式为
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438681531320789.png'/>
+
+T表示叶子节点的个数，w表示叶子节点的分数。直观上看，目标要求预测误差尽量小，且叶子节点T尽量少（γ控制叶子结点的个数），节点数值w尽量不极端（λ控制叶子节点的分数不会过大），防止过拟合。
+
+在这种新的定义下，我们可以把之前的目标函数进行如下变形（另，别忘了：）
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438690914565357.png'/>
+
+其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799957831505548.png'/>被定义为每个叶节点j上面样本下标的集合<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799968875211448.30'/>，g是一阶导数，h是二阶导数。这一步是由于xgboost目标函数第二部分加了两个正则项，一个是叶子节点个数(T),一个是叶子节点的分数(w)。
+
+从而，加了正则项的目标函数里就出现了两种累加
+
+一种是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799970439323313.gif'/> - > n（样本数）
+一种是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799971159094254.gif'/> -> T（叶子节点数）
+这一个目标包含了T个相互独立的单变量二次函数。
+
+理解这个推导的关键在哪呢？在和AI lab陈博士讨论之后，其实就在于理解这个定义：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799972092872526.png'/>被定义为每个叶节点 j 上面样本下标的集合<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799973458990384.30'/>，这个定义里的q(xi)要表达的是：每个样本值xi 都能通过函数q(xi)映射到树上的某个叶子节点，从而通过这个定义把两种累加统一到了一起。
+
+接着，我们可以定义
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438698958543275.png'/>
+
+最终公式可以化简为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438700892894433.png'/>
+
+通过对wj求导等于0，可以得到
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438703643480322.png'/>
+
+然后把wj最优解代入得到：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438706527388172.png'/>
+
+4.3 打分函数计算
+
+Obj代表了当我们指定一个树的结构的时候，我们在目标上面最多减少多少。我们可以把它叫做结构分数(structure score)
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438708659888171.png'/>
+
+4.3.1 分裂节点
+
+很有意思的一个事是，我们从头到尾了解了xgboost如何优化、如何计算，但树到底长啥样，我们却一直没看到。很显然，一棵树的生成是由一个节点一分为二，然后不断分裂最终形成为整棵树。那么树怎么分裂的就成为了接下来我们要探讨的关键。
+
+对于一个叶子节点如何进行分裂，xgboost作者在其原始论文中给出了两种分裂节点的方法
+
+（1）枚举所有不同树结构的贪心法
+
+现在的情况是只要知道树的结构，就能得到一个该结构下的最好分数，那如何确定树的结构呢？
+
+一个想当然的方法是：不断地枚举不同树的结构，然后利用打分函数来寻找出一个最优结构的树，接着加入到模型中，不断重复这样的操作。而再一想，你会意识到要枚举的状态太多了，基本属于无穷种，那咋办呢？
+
+我们试下贪心法，从树深度0开始，每一节点都遍历所有的特征，比如年龄、性别等等，然后对于某个特征，先按照该特征里的值进行排序，然后线性扫描该特征进而确定最好的分割点，最后对所有特征进行分割后，我们选择所谓的增益Gain最高的那个特征，而Gain如何计算呢？
+
+还记得4.2节最后，我们得到的计算式子吧？
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154799988835118208.33'/>
+
+换句话说，目标函数中的G/(H+λ)部分，表示着每一个叶子节点对当前模型损失的贡献程度，融合一下，得到Gain的计算表达式，如下所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438710772062978.png'/>
+
+第一个值得注意的事情是“对于某个特征，先按照该特征里的值进行排序”，这里举个例子。
+
+比如设置一个值a，然后枚举所有x < a、a  < x这样的条件（x代表某个特征比如年龄age，把age从小到大排序：假定从左至右依次增大，则比a小的放在左边，比a大的放在右边），对于某个特定的分割a，我们要计算a左边和右边的导数和。
+
+比如总共五个人，按年龄排好序后，一开始我们总共有如下4种划分方法：
+①把第一个人和后面四个人划分开
+②把前两个人和后面三个人划分开
+③把前三个人和后面两个人划分开
+④把前面四个人和后面一个人划分开
+
+接下来，把上面4种划分方法全都各自计算一下Gain，看哪种划分方法得到的Gain值最大则选取哪种划分方法，经过计算，发现把第2种划分方法“前面两个人和后面三个人划分开”得到的Gain值最大，意味着在一分为二这个第一层层面上这种划分方法是最合适的。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438712297501391.png'/>
+
+换句话说，对于所有的特征x，我们只要做一遍从左到右的扫描就可以枚举出所有分割的梯度和GL和GR。然后用计算Gain的公式计算每个分割方案的分数就可以了。
+
+然后后续则依然按照这种划分方法继续第二层、第三层、第四层、第N层的分裂。
+
+第二个值得注意的事情就是引入分割不一定会使得情况变好，所以我们有一个引入新叶子的惩罚项。优化这个目标对应了树的剪枝， 当引入的分割带来的增益小于一个阀值γ的时候，则忽略这个分割。
+
+换句话说，当引入某项分割，结果分割之后得到的分数 - 不分割得到的分数得到的值太小（比如小于我们的最低期望阀值γ），但却因此得到的复杂度过高，则相当于得不偿失，不如不分割。即做某个动作带来的好处比因此带来的坏处大不了太多，则为避免复杂 多一事不如少一事的态度，不如不做。
+
+相当于在我们发现“分”还不如“不分”的情况下后（得到的增益太小，小到小于阈值γ），会有2个叶子节点存在同一棵子树上的情况。
+
+下面是论文中的算法
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438713964174461.png'/>
+
+（2）近似算法
+
+主要针对数据太大，不能直接进行计算
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438715368235850.png'/>
+
+就职于Google的读者crab6789点评：把样本从根分配到叶子结点，就是个排列组合。不同的组合对应的cost不同。求最好的组合你就要try，一味穷举是不可能的，所以才出来贪婪法。不看从头到尾 就看当下节点怎么分配最好。这才有了那个greddy exact 方法，后来还想加速才有了histogram的做法。
+
+4.4 小结：Boosted Tree Algorithm 
+
+总结一下，如图所示
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438717157194254.png'/>
+
+咱们来再次回顾整个过程。
+
+如果某个样本label数值为4，那么第一个回归树预测3，第二个预测为1； 另外一组回归树，一个预测2，一个预测2，那么倾向后一种，为什么呢？前一种情况，第一棵树学的太多，太接近4，也就意味着有较大的过拟合的风险。
+
+OK，听起来很美好，可是怎么实现呢，上面这个目标函数跟实际的参数怎么联系起来，记得我们说过，回归树的参数：
+
+1、选取哪个feature分裂节点呢
+2、节点的预测值（总不能靠取平均值这么粗暴不讲道理的方式吧，好歹高级一点）
+
+最终的策略就是：贪心 + 最优化（对的，二次最优化） 。
+
+通俗解释贪心策略：就是决策时刻按照当前目标最优化决定，说白了就是眼前利益最大化决定，“目光短浅”策略。
+
+这里是怎么用贪心策略的呢，刚开始你有一群样本，放在第一个节点，这时候T=1，w多少呢，不知道，是求出来的，这时候所有样本的预测值都是w,带入样本的label数值，此时loss function变为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438736456156114.png'/>
+
+ • 如果这里的l(w−yi)误差表示用的是平方误差，那么上述函数就是一个关于w的二次函数求最小值，取最小值的点就是这个节点的预测值，最小的函数值为最小损失函数。
+ • 本质上来讲，这就是一个二次函数最优化问题！但要是损失函数不是二次函数咋办？泰勒展开，不是二次的想办法近似为二次。
+
+接着来，接下来要选个feature分裂成两个节点，变成一棵弱小的树苗，那么需要：
+
+1、确定分裂用的feature，how？最简单的是粗暴的枚举/穷举（嗯，够粗暴），然后选择loss function效果最好的那个；
+2、如何确立节点的w以及最小的loss function，大声告诉我怎么做？对，二次函数的求最值（计算二次的最值一般都有固定套路，即导数等于0的点） 。所以，选择一个feature分裂，计算loss function最小值，然后再选一个feature分裂，又得到一个loss function最小值，你枚举完，找一个效果最好的，把树给分裂，就得到了小树苗。
+
+在分裂的时候，你可以注意到，每次节点分裂，loss function被影响的只有这个节点的样本，因而每次分裂，计算分裂的增益（loss function的降低量）只需要关注打算分裂的那个节点的样本。
+
+总而言之，XGBoost使用了和CART回归树一样的想法，利用贪婪算法，遍历所有特征的所有特征划分点，不同的是使用的目标函数不一样。具体做法就是分裂后的目标函数值比单子叶子节点的目标函数的增益，同时为了限制树生长过深，还加了个阈值，只有当增益大于该阈值才进行分裂。
+
+以下便为设定的阈值
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153438739834971460.png'/>
+
+从而继续分裂，形成一棵树，再形成一棵树，每次在上一次的预测基础上取最优进一步分裂/建树，是不是贪心策略？
+
+凡是这种循环迭代的方式必定有停止条件，什么时候停止呢？简言之，设置树的最大深度、当样本权重和小于设定阈值时停止生长以防止过拟合。具体而言，则
+
+1、当引入的分裂带来的增益小于设定阀值的时候，我们可以忽略掉这个分裂，所以并不是每一次分裂loss function整体都会增加的，有点预剪枝的意思，阈值参数为（即正则项里叶子节点数T的系数）；
+
+2、当树达到最大深度时则停止建立决策树，设置一个超参数max_depth，避免树太深导致学习局部样本，从而过拟合；
+ 
+3、当样本权重和小于设定阈值时则停止建树。什么意思呢，即涉及到一个超参数-最小的样本权重和min_child_weight，和GBM的 min_child_leaf 参数类似，但不完全一样。大意就是一个叶子节点样本太少了，也终止同样是防止过拟合； 
+
+4、貌似看到过有树的最大数量的…
+
+
+6 参考文献与推荐阅读
+1、xgboost原始论文：https://arxiv.org/pdf/1603.02754v1.pdf
+2、xgboost作者讲义PPT：https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf
+3、XGBoost 与 Boosted Tree
+4、xgboost原理：https://blog.csdn.net/a819825294/article/details/51206410
+5、xgboost入门与实战（原理篇）：https://blog.csdn.net/sb19931201/article/details/52557382
+6、CART的Wikipedia
+7、集成学习（Ensemble Learning)
+8、浅谈集成学习：Boosting与随机森林
+9、从决策树学习谈到贝叶斯分类算法
+10、决策树（三）--完整总结（ID3，C4.5，CART,剪枝，替代）兼源码剖析
+11、一文读懂机器学习大杀器XGBoost原理
+12、为什么在实际的 kaggle 比赛中 gbdt 和 random forest 效果非常好？
+13、通俗、有逻辑的写一篇说下Xgboost的原理，供讨论参考
+14、七月在线机器学习第8期第4课 决策树、随机森林、GBDT、xgboost
+15、怎样通俗的理解泰勒级数？：https://www.zhihu.com/question/21149770
+16、xgboost 为何需要泰勒二阶展开：https://www.julyedu.com/question/big/kp_id/23/ques_id/990
+17、在线编辑LaTeX公式：http://www.codecogs.com/latex/eqneditor.php?lang=zh-cn
+
+
+后记
+
+终于大致搞懂了这个经常刷屏的xgboost，再次印证我之前说过的一句话：当你学习某个知识点感觉学不懂时，十有八九不是你不够聪明，十有八九是你所看的资料不够通俗、不够易懂（如果还是不行，问人）。
+
+希望阅读此文的你，也有同样的感受。
+
+以下的本文的改进过程，供理解上参考：
+
+1、8.4上午第一版，通过一个通俗易懂的年龄预测例子介绍gbdt，因为gbdt是理解xgboost的基础；
+2、8.4下午第二版，xgboost的推导里公式很多，初学者很容易陷进去，后通过抓住xgboost的核心：目标函数，梳理清晰xgboost的脉络框架；
+3、8.5上午第三版，优化了决策树的介绍部分，比如增加对信息增益的介绍；
+4、8.5下午第四版，优化大部分公式的显示，比如之前是纯文本显示，现改成LaTeX图片显示；
+5、8.6上午第五版，优化对booting集成学习的介绍，已让全文更循序渐进；
+6、8.6晚上第六版，规范xgboost目标函数的公式表示，并梳理全文多处细节、公式；
+7、9.1上午第七版，完善4.3.1节中xgboost树的分裂划分方式，以更清晰；
+8、19年1.9第八版，完善4.3.1节中关于分裂节点的描述，以让逻辑更清晰、行文更通俗；
+9、19年1.10第九版，第3部分增加一个预测年龄的例子，以更通俗化解释GBDT；
+
+July、二零一八年八月六日晚上~二零一九年一月九日晚上。
+
+## 131.请详细说说梯度提升树(GBDT)的原理
+本文是小编我能找到的对GBDT最通俗的介绍了。
+
+GBDT主要由三个概念组成：Regression Decistion Tree（即DT)，Gradient Boosting（即GB)，Shrinkage (算法的一个重要演进分枝，目前大部分源码都按该版本实现）。搞定这三个概念后就能明白GBDT是如何工作的，要继续理解它如何用于搜索排序则需要额外理解RankNet概念，之后便功德圆满。下文将逐个碎片介绍，最终把整张图拼出来。
+
+一、 DT：回归树 Regression Decision Tree
+提起决策树（DT, Decision Tree) 绝大部分人首先想到的就是C4.5分类决策树。但如果一开始就把GBDT中的树想成分类树，那就是一条歪路走到黑，一路各种坑，最终摔得都要咯血了还是一头雾水。但，这说的就是LZ自己啊有木有。咳嗯，所以说千万不要以为GBDT是很多棵分类树。
+
+决策树分为两大类，回归树和分类树。前者用于预测实数值，如明天的温度、用户的年龄、网页的相关程度；后者用于分类标签值，如晴天/阴天/雾/雨、用户性别、网页是否是垃圾页面。这里要强调的是，前者的结果加减是有意义的，如10岁+5岁-3岁=12岁，后者则无意义，如男+男+女=到底是男是女？ 
+
+GBDT的核心在于累加所有树的结果作为最终结果，就像前面对年龄的累加（-3是加负3），而分类树的结果显然是没办法累加的，所以GBDT中的树都是回归树，不是分类树，这点对理解GBDT相当重要（尽管GBDT调整后也可用于分类但不代表GBDT的树是分类树）。那么回归树是如何工作的呢？
+
+下面我们以对人的性别判别/年龄预测为例来说明，每个instance都是一个我们已知性别/年龄的人，而feature则包括这个人上网的时长、上网的时段、网购所花的金额等。
+
+作为对比，先说分类树，我们知道C4.5分类树在每次分枝时，是穷举每一个feature的每一个阈值，找到使得按照feature<=阈值，和feature>阈值分成的两个分枝的熵最大的feature和阈值（熵最大的概念可理解成尽可能每个分枝的男女比例都远离1:1），按照该标准分枝得到两个新节点，用同样方法继续分枝直到所有人都被分入性别唯一的叶子节点，或达到预设的终止条件，若最终叶子节点中的性别不唯一，则以多数人的性别作为该叶子节点的性别。
+
+回归树总体流程也是类似，不过在每个节点（不一定是叶子节点）都会得一个预测值，以年龄为例，该预测值等于属于这个节点的所有人年龄的平均值。分枝时穷举每一个feature的每个阈值找最好的分割点，但衡量最好的标准不再是最大熵，而是最小化均方差--即（每个人的年龄-预测年龄）^2 的总和 / N，或者说是每个人的预测误差平方和 除以 N。
+
+这很好理解，被预测出错的人数越多，错的越离谱，均方差就越大，通过最小化均方差能够找到最靠谱的分枝依据。
+
+分枝直到每个叶子节点上人的年龄都唯一（这太难了）或者达到预设的终止条件（如叶子个数上限），若最终叶子节点上人的年龄不唯一，则以该节点上所有人的平均年龄做为该叶子节点的预测年龄。
+
+二、 GB：梯度迭代 Gradient Boosting
+Boosting，迭代，即通过迭代多棵树来共同决策。这怎么实现呢？难道是每棵树独立训练一遍，比如A这个人，第一棵树认为是10岁，第二棵树认为是0岁，第三棵树认为是20岁，我们就取平均值10岁做最终结论？--当然不是！且不说这是投票方法并不是GBDT，只要训练集不变，独立训练三次的三棵树必定完全相同，这样做完全没有意义。
+
+之前说过，GBDT是把所有树的结论累加起来做最终结论的，所以可以想到每棵树的结论并不是年龄本身，而是年龄的一个累加量。
+
+GBDT的核心就在于，每一棵树学的是之前所有树结论和的残差，这个残差就是一个加预测值后能得真实值的累加量。
+
+比如A的真实年龄是18岁，但第一棵树的预测年龄是12岁，差了6岁（即残差为6岁）。
+
+那么在第二棵树里我们把A的年龄设为6岁去学习
+如果第二棵树真的能把A分到6岁的叶子节点（残差为12岁），那累加两棵树的结论就是A的真实年龄18岁；
+如果第二棵树的结论是5岁，则A仍然存在1岁的残差，第三棵树里A的年龄就变成1岁，继续学。
+
+这就是Gradient Boosting在GBDT中的意义，简单吧。
+
+三、 GBDT工作过程实例。
+还是年龄预测，简单起见训练集只有4个人，A,B,C,D，他们的年龄分别是14,16,24,26。其中A、B分别是高一和高三学生；C,D分别是应届毕业生和工作两年的员工。
+
+如果是用一棵传统的回归决策树来训练，会得到如下图1所示结果：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153148112917172596.png'/>
+
+现在我们使用GBDT来做这件事，由于数据太少，我们限定叶子节点做多有两个，即每棵树都只有一个分枝，并且限定只学两棵树。
+
+我们会得到如下图2所示结果：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153148115267426581.png'/>
+
+在第一棵树分枝和图1一样，由于A,B年龄较为相近，C,D年龄较为相近，他们被分为两拨，每拨用平均年龄作为预测值。此时计算残差（残差的意思就是： A的预测值 + A的残差 = A的实际值），所以A的残差就是16-15=1（注意，A的预测值是指前面所有树累加的和，这里前面只有一棵树所以直接是15，如果还有树则需要都累加起来作为A的预测值）。进而得到A,B,C,D的残差分别为-1,1，-1,1。
+
+然后我们拿残差替代A,B,C,D的原值，到第二棵树去学习，如果我们的预测值和它们的残差相等，则只需把第二棵树的结论累加到第一棵树上就能得到真实年龄了。这里的数据显然是我可以做的，第二棵树只有两个值1和-1，直接分成两个节点。此时所有人的残差都是0，即每个人都得到了真实的预测值。
+
+换句话说，现在A,B,C,D的预测值都和真实年龄一致了。Perfect!：
+A: 14岁高一学生，购物较少，经常问学长问题；预测年龄A = 15 – 1 = 14
+B: 16岁高三学生；购物较少，经常被学弟问问题；预测年龄B = 15 + 1 = 16
+
+C: 24岁应届毕业生；购物较多，经常问师兄问题；预测年龄C = 25 – 1 = 24
+D: 26岁工作两年员工；购物较多，经常被师弟问问题；预测年龄D = 25 + 1 = 26 
+
+那么哪里体现了Gradient呢？其实回到第一棵树结束时想一想，无论此时的cost function是什么，是均方差还是均差，只要它以误差作为衡量标准，残差向量(-1, 1, -1, 1)都是它的全局最优方向，这就是Gradient。
+
+讲到这里我们已经把GBDT最核心的概念、运算过程讲完了！没错就是这么简单。
+
+不过讲到这里很容易发现三个问题：
+1）既然图1和图2 最终效果相同，为何还需要GBDT呢？
+
+答案是过拟合。过拟合是指为了让训练集精度更高，学到了很多”仅在训练集上成立的规律“，导致换一个数据集当前规律就不适用了。其实只要允许一棵树的叶子节点足够多，训练集总是能训练到100%准确率的（大不了最后一个叶子上只有一个instance)。在训练精度和实际精度（或测试精度）之间，后者才是我们想要真正得到的。
+
+我们发现图1为了达到100%精度使用了3个feature（上网时长、时段、网购金额），其中分枝“上网时长>1.1h” 很显然已经过拟合了，这个数据集上A,B也许恰好A每天上网1.09h, B上网1.05小时，但用上网时间是不是>1.1小时来判断所有人的年龄很显然是有悖常识的；
+
+相对来说图2的boosting虽然用了两棵树 ，但其实只用了2个feature就搞定了，后一个feature是问答比例，显然图2的依据更靠谱（当然，这里是LZ故意做的数据，所以才能靠谱得如此狗血。实际中靠谱不靠谱总是相对的）。
+
+Boosting的最大好处在于，每一步的残差计算其实变相地增大了分错instance的权重，而已经分对的instance则都趋向于0。这样后面的树就能越来越专注那些前面被分错的instance。
+
+就像我们做互联网，总是先解决60%用户的需求凑合着，再解决35%用户的需求，最后才关注那5%人的需求，这样就能逐渐把产品做好，因为不同类型用户需求可能完全不同，需要分别独立分析。如果反过来做，或者刚上来就一定要做到尽善尽美，往往最终会竹篮打水一场空。
+
+2）Gradient呢？不是“G”BDT么？
+到目前为止，我们的确没有用到求导的Gradient。在当前版本GBDT描述中，的确没有用到Gradient，该版本用残差作为全局最优的绝对方向，并不需要Gradient求解。
+
+3）这不是boosting吧？Adaboost可不是这么定义的。
+这是boosting，但不是Adaboost。GBDT不是Adaboost Decistion Tree。就像提到决策树大家会想起C4.5，提到boost多数人也会想到Adaboost。
+
+Adaboost是另一种boost方法，它按分类对错，分配不同的weight，计算cost function时使用这些weight，从而让“错分的样本权重越来越大，使它们更被重视”。详情参见：https://blog.csdn.net/v_july_v/article/details/40718799
+
+Bootstrap也有类似思想，它在每一步迭代时不改变模型本身，也不计算残差，而是从N个instance训练集中按一定概率重新抽取N个instance出来（单个instance可以被重复sample），对着这N个新的instance再训练一轮。由于数据集变了迭代模型训练结果也不一样，而一个instance被前面分错的越厉害，它的概率就被设的越高，这样就能同样达到逐步关注被分错的instance，逐步完善的效果。
+
+Adaboost的方法被实践证明是一种很好的防止过拟合的方法，但至于为什么则至今没从理论上被证明。GBDT也可以在使用残差的同时引入Bootstrap re-sampling，GBDT多数实现版本中也增加的这个选项，但是否一定使用则有不同看法。
+
+re-sampling一个缺点是它的随机性，即同样的数据集合训练两遍结果是不一样的，也就是模型不可稳定复现，这对评估是很大挑战，比如很难说一个模型变好是因为你选用了更好的feature，还是由于这次sample的随机因素。
+
+本题解析来源：https://blog.csdn.net/w28971023/article/details/8240756
+## 132.请说说Adaboost 算法的原理与推导
+本题解析来源于July在CSDN上的Adaboost笔记《Adaboost 算法的原理与推导》：https://blog.csdn.net/v_july_v/article/details/40718799
+
+
+0 引言
+
+    一直想写Adaboost来着，但迟迟未能动笔。其算法思想虽然简单：听取多人意见，最后综合决策，但一般书上对其算法的流程描述实在是过于晦涩。昨日11月1日下午，在我组织的机器学习班 第8次课上讲决策树与Adaboost，其中，Adaboost讲得酣畅淋漓，讲完后，我知道，可以写本篇博客了。
+
+    无心啰嗦，本文结合机器学习班决策树与Adaboost 的PPT，跟邹讲Adaboost指数损失函数推导的PPT（第85~第98页）、以及李航的《统计学习方法》等参考资料写就，可以定义为一篇课程笔记、读书笔记或学习心得，有何问题或意见，欢迎于本文评论下随时不吝指出，thanks。
+
+
+1 Adaboost的原理
+
+1.1 Adaboost是什么  
+  
+    AdaBoost，是英文"Adaptive Boosting"（自适应增强）的缩写，由Yoav Freund和Robert Schapire在1995年提出。它的自适应在于：前一个基本分类器分错的样本会得到加强，加权后的全体样本再次被用来训练下一个基本分类器。同时，在每一轮中加入一个新的弱分类器，直到达到某个预定的足够小的错误率或达到预先指定的最大迭代次数。
+
+    具体说来，整个Adaboost 迭代算法就3步：
+
+（1）初始化训练数据的权值分布。如果有N个样本，则每一个训练样本最开始时都被赋予相同的权值：1/N。
+
+（2）训练弱分类器。具体训练过程中，如果某个样本点已经被准确地分类，那么在构造下一个训练集中，它的权值就被降低；相反，如果某个样本点没有被准确地分类，那么它的权值就得到提高。然后，权值更新过的样本集被用于训练下一个分类器，整个训练过程如此迭代地进行下去。
+
+（3）将各个训练得到的弱分类器组合成强分类器。各个弱分类器的训练过程结束后，加大分类误差率小的弱分类器的权重，使其在最终的分类函数中起着较大的决定作用，而降低分类误差率大的弱分类器的权重，使其在最终的分类函数中起着较小的决定作用。换言之，误差率低的弱分类器在最终分类器中占的权重较大，否则较小。
+
+1.2 Adaboost算法流程
+
+    给定一个训练数据集T={(x1,y1), (x2,y2)…(xN,yN)}，其中实例<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163957382891890.png'/>，而实例空间<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163959210363131.png'/>，yi属于标记集合{-1,+1}，Adaboost的目的就是从训练数据中学习一系列弱分类器或基本分类器，然后将这些弱分类器组合成一个强分类器。
+
+    Adaboost的算法流程如下：
+
+*步骤1. 首先，初始化训练数据的权值分布。每一个训练样本最开始时都被赋予相同的权值：1/N。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163960657957900.3'/>
+
+*步骤2. 进行多轮迭代，用m = 1,2, ..., M表示迭代的第多少轮
+
+a. 使用具有权值分布Dm的训练数据集学习，得到基本分类器（选取让误差率最低的阈值来设计基本分类器）：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163963328511741.4'/>
+
+b. 计算Gm(x)在训练数据集上的分类误差率
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163965685048410.5'/>
+由上述式子可知，Gm(x)在训练数据集上的误差率em就是被Gm(x)误分类样本的权值之和。
+
+c. 计算Gm(x)的系数，am表示Gm(x)在最终分类器中的重要程度（目的：得到基本分类器在最终分类器中所占的权重。注：这个公式写成am=1/2ln((1-em)/em) 更准确，因为底数是自然对数e，故用In，写成log容易让人误以为底数是2或别的底数，下同）：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163967012353592.6'/>
+
+由上述式子可知，em <= 1/2时，am >= 0，且am随着em的减小而增大，意味着分类误差率越小的基本分类器在最终分类器中的作用越大。
+
+d. 更新训练数据集的权值分布（目的：得到样本的新的权值分布），用于下一轮迭代
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163968937635439.7'/>
+
+使得被基本分类器Gm(x)误分类样本的权值增大，而被正确分类样本的权值减小。就这样，通过这样的方式，AdaBoost方法能“重点关注”或“聚焦于”那些较难分的样本上。
+
+其中，Zm是规范化因子，使得Dm+1成为一个概率分布：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163971874709437.8'/>
+
+*步骤3. 组合各个弱分类器
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163974983362148.9'/>
+
+从而得到最终分类器，如下：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163975518442066.10'/>
+
+1.3 Adaboost的一个例子
+
+下面，给定下列训练样本，请用AdaBoost算法学习一个强分类器。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153163990760226039.11'/>
+
+求解过程：初始化训练数据的权值分布，令每个权值W1i = 1/N = 0.1，其中，N = 10，i = 1,2, ..., 10，然后分别对于m = 1,2,3, ...等值进行迭代。
+
+    拿到这10个数据的训练样本后，根据 X 和 Y 的对应关系，要把这10个数据分为两类，一类是“1”，一类是“-1”，根据数据的特点发现：“0 1 2”这3个数据对应的类是“1”，“3 4 5”这3个数据对应的类是“-1”，“6 7 8”这3个数据对应的类是“1”，9是比较孤独的，对应类“-1”。抛开孤独的9不讲，“0 1 2”、“3 4 5”、“6 7 8”这是3类不同的数据，分别对应的类是1、-1、1，直观上推测可知，可以找到对应的数据分界点，比如2.5、5.5、8.5 将那几类数据分成两类。当然，这只是主观臆测，下面实际计算下这个具体过程。
+
+迭代过程1
+
+对于m=1，在权值分布为D1（10个数据，每个数据的权值皆初始化为0.1）的训练数据上，经过计算可得：
+
+（1）阈值v取2.5时误差率为0.3（x < 2.5时取1，x > 2.5时取-1，则6 7 8分错，误差率为0.3），
+（2）阈值v取5.5时误差率最低为0.4（x < 5.5时取1，x > 5.5时取-1，则3 4 5 6 7 8皆分错，误差率0.6大于0.5，不可取。故令x > 5.5时取1，x < 5.5时取-1，则0 1 2 9分错，误差率为0.4），
+（3）阈值v取8.5时误差率为0.3（x < 8.5时取1，x > 8.5时取-1，则3 4 5分错，误差率为0.3）。
+
+可以看到，无论阈值v取2.5，还是8.5，总得分错3个样本，故可任取其中任意一个如2.5，弄成第一个基本分类器为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316399726971868.12'/>
+
+上面说阈值v取2.5时则6 7 8分错，所以误差率为0.3，更加详细的解释是：因为样本集中
+
+（1）0 1 2对应的类（Y）是1，因它们本身都小于2.5，所以被G1(x)分在了相应的类“1”中，分对了。
+（2）3 4 5本身对应的类（Y）是-1，因它们本身都大于2.5，所以被G1(x)分在了相应的类“-1”中，分对了。
+（3）但6 7 8本身对应类（Y）是1，却因它们本身大于2.5而被G1(x)分在了类"-1"中，所以这3个样本被分错了。
+（4）9本身对应的类（Y）是-1，因它本身大于2.5，所以被G1(x)分在了相应的类“-1”中，分对了。
+
+从而得到G1(x)在训练数据集上的误差率（被G1(x)误分类样本“6 7 8”的权值之和）e1=P(G1(xi)≠yi) = 3*0.1 = 0.3。
+
+然后根据误差率e1计算G1的系数：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164004237371524.13'/>
+
+这个a1代表G1(x)在最终的分类函数中所占的权重，为0.4236。
+接着更新训练数据的权值分布，用于下一轮迭代：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164005970920016.14'/>
+
+值得一提的是，由权值更新的公式可知，每个样本的新权值是变大还是变小，取决于它是被分错还是被分正确。
+
+即如果某个样本被分错了，则yi * Gm(xi)为负，负负得正，结果使得整个式子变大（样本权值变大），否则变小。
+
+第一轮迭代后，最后得到各个数据新的权值分布D2 = (0.0715, 0.0715, 0.0715, 0.0715, 0.0715,  0.0715, 0.1666, 0.1666, 0.1666, 0.0715)。由此可以看出，因为样本中是数据“6 7 8”被G1(x)分错了，所以它们的权值由之前的0.1增大到0.1666，反之，其它数据皆被分正确，所以它们的权值皆由之前的0.1减小到0.0715。
+
+分类函数f1(x)= a1*G1(x) = 0.4236G1(x)。
+
+此时，得到的第一个基本分类器sign(f1(x))在训练数据集上有3个误分类点（即6 7 8）。
+
+    从上述第一轮的整个迭代过程可以看出：被误分类样本的权值之和影响误差率，误差率影响基本分类器在最终分类器中所占的权重。
+
+  迭代过程2
+
+对于m=2，在权值分布为D2 = (0.0715, 0.0715, 0.0715, 0.0715, 0.0715,  0.0715, 0.1666, 0.1666, 0.1666, 0.0715)的训练数据上，经过计算可得：
+
+（1）阈值v取2.5时误差率为0.1666*3（x < 2.5时取1，x > 2.5时取-1，则6 7 8分错，误差率为0.1666*3），
+（2）阈值v取5.5时误差率最低为0.0715*4（x > 5.5时取1，x < 5.5时取-1，则0 1 2 9分错，误差率为0.0715*3 + 0.0715），
+（3）阈值v取8.5时误差率为0.0715*3（x < 8.5时取1，x > 8.5时取-1，则3 4 5分错，误差率为0.0715*3）。
+
+所以，阈值v取8.5时误差率最低，故第二个基本分类器为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164013045094185.15'/>
+
+面对的还是下述样本：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164013949923092.16'/>
+
+很明显，G2(x)把样本“3 4 5”分错了，根据D2可知它们的权值为0.0715, 0.0715,  0.0715，所以G2(x)在训练数据集上的误差率e2=P(G2(xi)≠yi) = 0.0715 * 3 = 0.2143。
+
+计算G2的系数：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164016258806463.17'/>
+
+更新训练数据的权值分布：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164017722985958.18'/>
+
+D3 = (0.0455, 0.0455, 0.0455, 0.1667, 0.1667,  0.01667, 0.1060, 0.1060, 0.1060, 0.0455)。被分错的样本“3 4 5”的权值变大，其它被分对的样本的权值变小。
+f2(x)=0.4236G1(x) + 0.6496G2(x)
+此时，得到的第二个基本分类器sign(f2(x))在训练数据集上有3个误分类点（即3 4 5）。
+
+  迭代过程3
+
+对于m=3，在权值分布为D3 = (0.0455, 0.0455, 0.0455, 0.1667, 0.1667,  0.01667, 0.1060, 0.1060, 0.1060, 0.0455)的训练数据上，经过计算可得：
+
+（1）阈值v取2.5时误差率为0.1060*3（x < 2.5时取1，x > 2.5时取-1，则6 7 8分错，误差率为0.1060*3），
+（2）阈值v取5.5时误差率最低为0.0455*4（x > 5.5时取1，x < 5.5时取-1，则0 1 2 9分错，误差率为0.0455*3 + 0.0715），
+（3）阈值v取8.5时误差率为0.1667*3（x < 8.5时取1，x > 8.5时取-1，则3 4 5分错，误差率为0.1667*3）。
+
+所以阈值v取5.5时误差率最低，故第三个基本分类器为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164021636734888.19'/>
+
+依然还是原样本：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316402322431567.20'/>
+
+此时，被误分类的样本是：0 1 2 9，这4个样本所对应的权值皆为0.0455，
+
+所以G3(x)在训练数据集上的误差率e3 = P(G3(xi)≠yi) = 0.0455*4 = 0.1820。
+
+计算G3的系数：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164024855258391.21'/>
+
+更新训练数据的权值分布：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164026556051060.22'/>
+
+D4 = (0.125, 0.125, 0.125, 0.102, 0.102,  0.102, 0.065, 0.065, 0.065, 0.125)。被分错的样本“0 1 2 9”的权值变大，其它被分对的样本的权值变小。
+
+f3(x)=0.4236G1(x) + 0.6496G2(x)+0.7514G3(x)
+
+此时，得到的第三个基本分类器sign(f3(x))在训练数据集上有0个误分类点。至此，整个训练过程结束。
+
+    现在，咱们来总结下3轮迭代下来，各个样本权值和误差率的变化，如下所示（其中，样本权值D中加了下划线的表示在上一轮中被分错的样本的新权值）：
+
+（1）训练之前，各个样本的权值被初始化为D1 = (0.1, 0.1,0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1)；
+（2）第一轮迭代中，样本“6 7 8”被分错，对应的误差率为e1=P(G1(xi)≠yi) = 3*0.1 = 0.3，此第一个基本分类器在最终的分类器中所占的权重为a1 = 0.4236。第一轮迭代过后，样本新的权值为D2 = (0.0715, 0.0715, 0.0715, 0.0715, 0.0715,  0.0715, 0.1666, 0.1666, 0.1666, 0.0715)；
+（3）第二轮迭代中，样本“3 4 5”被分错，对应的误差率为e2=P(G2(xi)≠yi) = 0.0715 * 3 = 0.2143，此第二个基本分类器在最终的分类器中所占的权重为a2 = 0.6496。第二轮迭代过后，样本新的权值为D3 = (0.0455, 0.0455, 0.0455, 0.1667, 0.1667,  0.01667, 0.1060, 0.1060, 0.1060, 0.0455)；
+（4）第三轮迭代中，样本“0 1 2 9”被分错，对应的误差率为e3 = P(G3(xi)≠yi) = 0.0455*4 = 0.1820，此第三个基本分类器在最终的分类器中所占的权重为a3 = 0.7514。第三轮迭代过后，样本新的权值为D4 = (0.125, 0.125, 0.125, 0.102, 0.102,  0.102, 0.065, 0.065, 0.065, 0.125)。
+
+ 从上述过程中可以发现，如果某些个样本被分错，它们在下一轮迭代中的权值将被增大，同时，其它被分对的样本在下一轮迭代中的权值将被减小。就这样，分错样本权值增大，分对样本权值变小，而在下一轮迭代中，总是选取让误差率最低的阈值来设计基本分类器，所以误差率e（所有被Gm(x)误分类样本的权值之和）不断降低。
+
+    综上，将上面计算得到的a1、a2、a3各值代入G(x)中，G(x) = sign[f3(x)] = sign[ a1 * G1(x) + a2 * G2(x) + a3 * G3(x) ]，得到最终的分类器为：
+
+G(x) = sign[f3(x)] = sign[ 0.4236G1(x) + 0.6496G2(x)+0.7514G3(x) ]。
+
+
+2 Adaboost的误差界
+
+  通过上面的例子可知，Adaboost在学习的过程中不断减少训练误差e，直到各个弱分类器组合成最终分类器，那这个最终分类器的误差界到底是多少呢？
+
+事实上，Adaboost 最终分类器的训练误差的上界为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164035257394877.23'/>
+
+下面，咱们来通过推导来证明下上述式子。
+
+当G(xi)≠yi时，yi*f(xi)<0，因而exp(-yi*f(xi))≥1，因此前半部分得证。
+
+关于后半部分，别忘了：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164062882833882.24'/>
+
+整个的推导过程如下：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316406496814197.25'/>
+
+ 这个结果说明，可以在每一轮选取适当的Gm使得Zm最小，从而使训练误差下降最快。接着，咱们来继续求上述结果的上界。
+
+    对于二分类而言，有如下结果：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164068128297564.26'/>
+
+   其中，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164070460386033.27'/>。
+
+    继续证明下这个结论。
+
+    由之前Zm的定义式跟本节最开始得到的结论可知：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164071998532748.28'/>
+
+ 而这个不等式<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316407444687542.29'/>可先由e^x和1-x的开根号，在点x的泰勒展开式推出。
+
+    值得一提的是，如果取γ1, γ2… 的最小值，记做γ（显然，γ≥γi>0，i=1,2,...m），则对于所有m，有：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164076193068110.30'/>
+
+这个结论表明，AdaBoost的训练误差是以指数速率下降的。另外，AdaBoost算法不需要事先知道下界γ，AdaBoost具有自适应性，它能适应弱分类器各自的训练误差率 。
+
+最后，Adaboost 还有另外一种理解，即可以认为其模型是加法模型、损失函数为指数函数、学习算法为前向分步算法的二类分类学习方法，下个月即12月份会再推导下，然后更新此文。而在此之前，有兴趣的可以参看《统计学习方法》第8.3节或其它相关资料。
+
+
+3 Adaboost 指数损失函数推导
+
+    事实上，在上文1.2节Adaboost的算法流程的步骤3中，我们构造的各个基本分类器的线性组合
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164140822240438.1'/>
+
+  是一个加法模型，而Adaboost算法其实是前向分步算法的特例。那么问题来了，什么是加法模型，什么又是前向分步算法呢？
+
+3.1 加法模型和前向分步算法
+
+    如下图所示的便是一个加法模型
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164143162041038.2'/>
+
+其中，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164146039708968.3'/>称为基函数，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164146632345545.4'/>称为基函数的参数，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164147641021376.5'/>称为基函数的系数。
+
+    在给定训练数据及损失函数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164148756997657.6'/>的条件下，学习加法模型<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164150355038312.7'/>成为经验风险极小化问题，即损失函数极小化问题：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164151653148560.8'/>
+
+这个优化方法便就是所谓的前向分步算法。
+
+    下面，咱们来具体看下前向分步算法的算法流程：
+
+*输入：训练数据集<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase641531641558133896.9'/>
+*损失函数：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164156380999747.10'/>
+*基函数集：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164156914729798.11'/>
+*输出：加法模型<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164157772681946.12'/>
+*算法步骤：
+*1. 初始化<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164158820365315.13'/>
+*2. 对于m=1,2,..M
+
+*a)极小化损失函数
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164161247600027.14'/>
+得到参数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164172550559216.1'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164173246725240.2'/>。
+
+*b)更新
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164175426367527.3'/>
+
+*3. 最终得到加法模型
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164178462936238.4'/>
+
+就这样，前向分步算法将同时求解从m=1到M的所有参数（<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164179729752694.5'/>、<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164180310051451.6'/>）的优化问题简化为逐次求解各个<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164181443465414.7'/>、<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164182414114624.8'/>（1≤m≤M）的优化问题。
+
+3.2 前向分步算法与Adaboost的关系
+
+    在上文第2节最后，我们说Adaboost 还有另外一种理解，即可以认为其模型是加法模型、损失函数为指数函数、学习算法为前向分步算法的二类分类学习方法。其实，Adaboost算法就是前向分步算法的一个特例，Adaboost 中，各个基本分类器就相当于加法模型中的基函数，且其损失函数为指数函数。
+
+    换句话说，当前向分步算法中的基函数为Adaboost中的基本分类器时，加法模型等价于Adaboost的最终分类器
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164198748380387.1'/>
+
+    你甚至可以说，这个最终分类器其实就是一个加法模型。只是这个加法模型由基本分类器<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164200293217724.2'/>及其系数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164200936717755.3'/>组成，m = 1, 2, ..., M。前向分步算法逐一学习基函数的过程，与Adaboost算法逐一学习各个基本分类器的过程一致。
+
+    下面，咱们便来证明：当前向分步算法的损失函数是指数损失函数
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164202497116528.4'/>
+
+  时，其学习的具体操作等价于Adaboost算法的学习过程。
+
+     假设经过m-1轮迭代，前向分步算法已经得到<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164204569776731.5'/>：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164205996276076.6'/>
+
+    而后在第m轮迭代得到<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164207772156565.7'/>、<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164208325834302.8'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164208950855281.9'/>。其中，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164210466426998.10'/>为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164211780222785.11'/>
+
+  而<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase641531642138892437.12'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164214580794473.13'/>未知。所以，现在咱们的目标便是根据前向分步算法训练<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164216076314602.14'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164216783157211.15'/>，使得最终<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164218213507960.16'/>在训练数据集T上的指数损失最小，即
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164219547068427.17'/>
+
+ 针对这种需要求解多个参数的情况，可以先固定其它参数，求解其中一两个参数，然后逐一求解剩下的参数。例如我们可以固定<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164251232581523.1'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164251823282493.2'/>，只针对<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164252677113122.3'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316425357433285.4'/>做优化。
+
+    换言之，在面对<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164255352178629.5'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316425595295206.6'/> 这2m个参数都未知的情况下，可以：
+
+1.先假定<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164258678911982.7'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164259124677508.8'/>已知，求解出<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164259853685304.9'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164260474359413.10'/>；
+
+2.然后再逐一求解其它未知参数。
+
+    且考虑到上式中的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316426271233596.11'/>既不依赖<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164286250117280.0'/>也不依赖G，所以是个与最小化无关的固定值，记为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164264695027506.12'/>，即<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164265772957595.13'/>，则上式可以表示为（后面要多次用到这个式子，简记为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164267127371883.14'/>）：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164268012829494.15'/>
+
+    值得一提的是，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164269484044793.16'/>虽然与最小化无关，但<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164270788984729.17'/>依赖于<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164271783039869.18'/>，随着每一轮迭代而发生变化。
+
+    接下来，便是要证使得上式达到最小的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164273385574660.19'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164274162186262.20'/>就是Adaboost算法所求解得到的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164275359766056.21'/>和<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164276150499565.22'/>。
+
+    为求解上式，咱们先求<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164278126950038.23'/>再求<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164279232252062.24'/>。
+
+    首先求<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164280362339765.25'/>。对于任意，使上式<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164282431673107.26'/>最小的G(x)由下式得到：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316428361281968.27'/>
+
+别忘了，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164308584713166.1'/>。
+
+    跟1.2节所述的误差率的计算公式对比下：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164309382438690.2'/>
+
+    可知，上面得到的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164310470186995.3'/>便是Adaboost算法的基本分类器<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164311337904136.4'/>，因为它是在第m轮加权训练数据时，使分类误差率最小的基本分类器。换言之，这个<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164313572503125.5'/>便是Adaboost算法所要求的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164314522239748.6'/>，别忘了，在Adaboost算法的每一轮迭代中，都是选取让误差率最低的阈值来设计基本分类器。
+
+    然后求<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164315774169003.7'/>。还是回到之前的这个式子<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164316549881465.8'/>上：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164317498430309.9'/>
+
+    这个式子的后半部分可以进一步化简，得：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164318755411024.10'/>
+
+ 接着将上面求得的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316432144815878.11'/>
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164322292380502.12'/>
+
+    代入上式中，且对<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164323847441646.13'/>求导，令其求导结果为0，即得到使得<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164324753943659.14'/>一式最小的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164325857534040.15'/>，即为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164326813678911.16'/>
+
+    这里的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316432815636719.17'/>跟上文1.2节中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164329666984197.18'/>的计算公式完全一致。
+
+    此外，毫无疑问，上式中的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164330913216753.19'/>便是误差率：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164347979891989.20'/>
+
+即<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164370535815775.1'/>就是被Gm(x)误分类样本的权值之和。
+
+   就这样，结合模型<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164371453415525.2'/>，跟<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164372270524011.3'/>，可以推出
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164373148706395.4'/>
+
+   从而有：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164374135656179.5'/>
+
+    与上文1.2节介绍的权值更新公式
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415316437572703633.6'/>
+
+    相比，只相差一个规范化因子，即后者多了一个
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164376754897347.7'/>
+
+  所以，整个过程下来，我们可以看到，前向分步算法逐一学习基函数的过程，确实是与Adaboost算法逐一学习各个基本分类器的过程一致，两者完全等价。
+
+    综上，本节不但提供了Adaboost的另一种理解：加法模型，损失函数为指数函数，学习算法为前向分步算法，而且也解释了最开始1.2节中基本分类器<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164379012839961.8'/>及其系数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153164379698969215.9'/>的由来，以及对权值更新公式的解释，你甚至可以认为本节就是对上文整个1.2节的解释。
+
+
+4 参考文献与推荐阅读：
+1.wikipedia上关于Adaboost的介绍：http://zh.wikipedia.org/zh-cn/AdaBoost；
+2.邹博之决策树与Adaboost PPT：http://pan.baidu.com/s/1hqePkdY；
+3.邹博讲Adaboost指数损失函数推导的PPT：http://pan.baidu.com/s/1kTkkepD（第85页~第98页）；
+4.《统计学习方法 李航著》第8章；
+5.关于adaboost的一些浅见：http://blog.sina.com.cn/s/blog_6ae183910101chcg.html；
+6.A Short Introduction to Boosting：http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.93.5148&rep=rep1&type=pdf；
+7.南大周志华教授做的关于boosting 25年的报告PPT：http://vdisk.weibo.com/s/FcILTUAi9m111；
+8.《数据挖掘十大算法》第7章 Adaboost；
+9.http://summerbell.iteye.com/blog/532376；
+10.统计学习那些事：http://cos.name/2011/12/stories-about-statistical-learning/；
+
+11.统计学习基础学习笔记：http://www.loyhome.com/âªç»è®¡å­¦ä¹ ç²¾è¦the-elements-of-statistical-learningâ«è¯¾å ç¬è®°ï¼ååï¼/；
+12.PRML第十四章组合模型读书笔记：http://vdisk.weibo.com/s/DmxNcM5_IaUD；
+13.顺便推荐一个非常实用的在线编辑LaTeX 公式的网页：http://www.codecogs.com/latex/eqneditor.php?lang=zh-cn。
+
+## 133.机器学习中的L0、L1与L2范数到底是什么意思？
+本题解析来源：@zouxy09，链接：https://blog.csdn.net/zouxy09/article/details/24971995/
+
+监督机器学习问题无非就是“minimizeyour error while regularizing your parameters”，也就是在规则化参数的同时最小化误差。最小化误差是为了让我们的模型拟合我们的训练数据，而规则化参数是防止我们的模型过分拟合我们的训练数据。
+
+多么简约的哲学啊！因为参数太多，会导致我们的模型复杂度上升，容易过拟合，也就是我们的训练误差会很小。但训练误差小并不是我们的最终目标，我们的目标是希望模型的测试误差小，也就是能准确的预测新的样本。
+
+所以，我们需要保证模型“简单”的基础上最小化训练误差，这样得到的参数才具有好的泛化性能（也就是测试误差也小），而模型“简单”就是通过规则函数来实现的。另外，规则项的使用还可以约束我们的模型的特性。这样就可以将人对这个模型的先验知识融入到模型的学习当中，强行地让学习到的模型具有人想要的特性，例如稀疏、低秩、平滑等等。
+
+要知道，有时候人的先验是非常重要的。前人的经验会让你少走很多弯路，这就是为什么我们平时学习最好找个大牛带带的原因。一句点拨可以为我们拨开眼前乌云，还我们一片晴空万里，醍醐灌顶。对机器学习也是一样，如果被我们人稍微点拨一下，它肯定能更快的学习相应的任务。只是由于人和机器的交流目前还没有那么直接的方法，目前这个媒介只能由规则项来担当了。
+
+有几种角度来看待规则化的。规则化符合奥卡姆剃刀(Occam's razor)原理。这名字好霸气，razor！不过它的思想很平易近人：在所有可能选择的模型中，我们应该选择能够很好地解释已知数据并且十分简单的模型。从贝叶斯估计的角度来看，规则化项对应于模型的先验概率。民间还有个说法就是，规则化是结构风险最小化策略的实现，是在经验风险上加一个正则化项(regularizer)或惩罚项(penalty term)。
+
+一般来说，监督学习可以看做最小化下面的目标函数：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415324335485610593.png'/>
+
+其中，第一项L(yi,f(xi;w)) 衡量我们的模型（分类或者回归）对第i个样本的预测值f(xi;w)和真实的标签yi之前的误差。因为我们的模型是要拟合我们的训练样本的嘛，所以我们要求这一项最小，也就是要求我们的模型尽量的拟合我们的训练数据。
+
+但正如上面说言，我们不仅要保证训练误差最小，我们更希望我们的模型测试误差小，所以我们需要加上第二项，也就是对参数w的规则化函数Ω(w)去约束我们的模型尽量的简单。
+
+OK，到这里，如果你在机器学习浴血奋战多年，你会发现，哎哟哟，机器学习的大部分带参模型都和这个不但形似，而且神似。是的，其实大部分无非就是变换这两项而已。
+
+对于第一项Loss函数，如果是Square loss，那就是最小二乘了；如果是Hinge Loss，那就是著名的SVM了；如果是exp-Loss，那就是牛逼的 Boosting了；如果是log-Loss，那就是Logistic Regression了；还有等等。
+
+不同的loss函数，具有不同的拟合特性，这个也得就具体问题具体分析的。但这里，我们先不究loss函数的问题，我们把目光转向“规则项Ω(w)”。
+
+规则化函数Ω(w)也有很多种选择，一般是模型复杂度的单调递增函数，模型越复杂，规则化值就越大。比如，规则化项可以是模型参数向量的范数。然而，不同的选择对参数w的约束不同，取得的效果也不同，但我们在论文中常见的都聚集在：零范数、一范数、二范数、迹范数、Frobenius范数和核范数等等。
+
+这么多范数，到底它们表达啥意思？具有啥能力？什么时候才能用？什么时候需要用呢？
+
+一、L0范数与L1范数
+
+L0范数是指向量中非0的元素的个数。如果我们用L0范数来规则化一个参数矩阵W的话，就是希望W的大部分元素都是0。这太直观了，太露骨了吧，换句话说，让参数W是稀疏的。
+
+OK，看到了“稀疏”二字，大家都应该从当下风风火火的“压缩感知”和“稀疏编码”中醒悟过来，原来用的漫山遍野的“稀疏”就是通过这玩意来实现的。但你又开始怀疑了，是这样吗？看到的papers世界中，稀疏不是都通过L1范数来实现吗？脑海里是不是到处都是||W||1影子呀！几乎是抬头不见低头见。
+
+没错，这就是这节的题目把L0和L1放在一起的原因，因为他们有着某种不寻常的关系。那我们再来看看L1范数是什么？它为什么可以实现稀疏？为什么大家都用L1范数去实现稀疏，而不是L0范数呢？
+
+L1范数是指向量中各个元素绝对值之和，也有个美称叫“稀疏规则算子”（Lasso regularization）。现在我们来分析下这个价值一个亿的问题：为什么L1范数会使权值稀疏？有人可能会这样给你回答“它是L0范数的最优凸近似”。
+
+实际上，还存在一个更美的回答：任何的规则化算子，如果他在Wi=0的地方不可微，并且可以分解为一个“求和”的形式，那么这个规则化算子就可以实现稀疏。这说是这么说，W的L1范数是绝对值，|w|在w=0处是不可微，但这还是不够直观。这里因为我们需要和L2范数进行对比分析。所以关于L1范数的直观理解，请待会看看第二节。
+
+对了，上面还有一个问题：既然L0可以实现稀疏，为什么不用L0，而要用L1呢？个人理解一是因为L0范数很难优化求解（NP难问题），二是L1范数是L0范数的最优凸近似，而且它比L0范数要容易优化求解。所以大家才把目光和万千宠爱转于L1范数。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243375818757892.png'/>
+
+OK，来个一句话总结：L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。
+
+好，到这里，我们大概知道了L1可以实现稀疏，但我们会想呀，为什么要稀疏？让我们的参数稀疏有什么好处呢？这里扯两点：
+1）特征选择(Feature Selection)：
+大家对稀疏规则化趋之若鹜的一个关键原因在于它能实现特征的自动选择。一般来说，xi的大部分元素（也就是特征）都是和最终的输出yi没有关系或者不提供任何信息的，在最小化目标函数的时候考虑xi这些额外的特征，虽然可以获得更小的训练误差，但在预测新的样本时，这些没用的信息反而会被考虑，从而干扰了对正确yi的预测。
+
+稀疏规则化算子的引入就是为了完成特征自动选择的光荣使命，它会学习地去掉这些没有信息的特征，也就是把这些特征对应的权重置为0。
+
+2）可解释性(Interpretability)：
+另一个青睐于稀疏的理由是，模型更容易解释。例如患某种病的概率是y，然后我们收集到的数据x是1000维的，也就是我们需要寻找这1000种因素到底是怎么影响患上这种病的概率的。
+
+假设我们这个是个回归模型：y=w1*x1+w2*x2+…+w1000*x1000+b（当然了，为了让y限定在[0,1]的范围，一般还得加个Logistic函数）。通过学习，如果最后学习到的w*就只有很少的非零元素，例如只有5个非零的wi，那么我们就有理由相信，这些对应的特征在患病分析上面提供的信息是巨大的，决策性的。
+
+也就是说，患不患这种病只和这5个因素有关，那医生就好分析多了。但如果1000个wi都非0，医生面对这1000种因素，累觉不爱。
+
+二、L2范数
+
+除了L1范数，还有一种更受宠幸的规则化范数是L2范数: ||W||2。它也不逊于L1范数，它有两个美称，在回归里面，有人把有它的回归叫“岭回归”（Ridge Regression），有人也叫它“权值衰减weight decay”。这用的很多吧，因为它的强大功效是改善机器学习里面一个非常重要的问题：过拟合。
+
+至于过拟合是什么，上面也解释了，就是模型训练时候的误差很小，但在测试的时候误差很大，也就是我们的模型复杂到可以拟合到我们的所有训练样本了，但在实际预测新的样本的时候，糟糕的一塌糊涂。
+
+通俗的讲就是应试能力很强，实际应用能力很差。擅长背诵知识，却不懂得灵活利用知识。如下两图所示（来自Ng的course）：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243393297549014.png'/><img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243402141002415.png'/>
+
+第一个图是线性回归，第二个图是Logistic回归，也可以说是分类的情况。从左到右分别是欠拟合（underfitting，也称High-bias）、合适的拟合和过拟合（overfitting，也称High variance）三种情况。
+
+可以看到，如果模型复杂（可以拟合任意的复杂函数），它可以让我们的模型拟合所有的数据点，也就是基本上没有误差。对于回归来说，就是我们的函数曲线通过了所有的数据点，如一图右。
+
+对分类来说，就是我们的函数曲线要把所有的数据点都分类正确，如二图右。这两种情况很明显过拟合了。
+
+OK，那现在到我们非常关键的问题了，为什么L2范数可以防止过拟合？回答这个问题之前，我们得先看看L2范数是个什么东西。
+
+L2范数是指向量各元素的平方和然后求平方根。我们让L2范数的规则项||W||2最小，可以使得W的每个元素都很小，都接近于0，但与L1范数不同，它不会让它等于0，而是接近于0，这里是有很大的区别的哦。而越小的参数说明模型越简单，越简单的模型则越不容易产生过拟合现象。
+
+为什么越小的参数说明模型越简单？我的理解是：限制了参数很小，实际上就限制了多项式某些分量的影响很小（看上面线性回归的模型的那个拟合的图），这样就相当于减少参数个数。
+
+这里也一句话总结下：通过L2范数，我们可以实现了对模型空间的限制，从而在一定程度上避免了过拟合。
+
+L2范数的好处是什么呢？这里也扯上两点：
+1）学习理论的角度：
+从学习理论的角度来说，L2范数可以防止过拟合，提升模型的泛化能力。
+
+2）优化计算的角度：
+从优化或者数值计算的角度来说，L2范数有助于处理 condition number不好的情况下矩阵求逆很困难的问题。
+
+额，condition number是啥？我们先故作高雅的来聊聊优化问题。
+
+优化有两大难题，一是：局部最小值，二是：ill-condition病态问题。前者俺就不说了，大家都懂吧，我们要找的是全局最小值，如果局部最小值太多，那我们的优化算法就很容易陷入局部最小而不能自拔，这很明显不是观众愿意看到的剧情。
+
+那下面我们来聊聊ill-condition。ill-condition对应的是well-condition。那他们分别代表什么？
+
+假设我们有个方程组AX=b，我们需要求解X。如果A或者b稍微的改变，会使得X的解发生很大的改变，那么这个方程组系统就是ill-condition的，反之就是well-condition的。
+
+我们具体举个例子吧：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243449975563508.png'/>
+
+咱们先看左边的那个。第一行假设是我们的AX=b，第二行我们稍微改变下b，得到的x和没改变前的差别很大，看到吧。第三行我们稍微改变下系数矩阵A，可以看到结果的变化也很大。
+
+换句话来说，这个系统的解对系数矩阵A或者b太敏感了。又因为一般我们的系数矩阵A和b是从实验数据里面估计得到的，所以它是存在误差的，如果我们的系统对这个误差是可以容忍的就还好，但系统对这个误差太敏感了，以至于我们的解的误差更大，那这个解就太不靠谱了。
+
+所以这个方程组系统就是ill-conditioned病态的，不正常的，不稳定的，有问题的，哈哈。这清楚了吧。右边那个就叫well-condition的系统了。
+
+还是再啰嗦一下吧，对于一个ill-condition的系统，我的输入稍微改变下，输出就发生很大的改变，这不好啊，这表明我们的系统不能实用啊。
+
+你想想看，例如对于一个回归问题y=f(x)，我们是用训练样本x去训练模型f，使得y尽量输出我们期待的值，例如0。那假如我们遇到一个样本x’，这个样本和训练样本x差别很小，面对他，系统本应该输出和上面的y差不多的值的，例如0.00001，最后却给我输出了一个0.9999，这很明显不对呀。
+
+就好像，你很熟悉的一个人脸上长了个青春痘，你就不认识他了，那你大脑就太差劲了，哈哈。所以如果一个系统是ill-conditioned病态的，我们就会对它的结果产生怀疑。那到底要相信它多少呢？我们得找个标准来衡量吧，因为有些系统的病没那么重，它的结果还是可以相信的，不能一刀切吧。
+
+终于回来了，上面的condition number就是拿来衡量ill-condition系统的可信度的。condition number衡量的是输入发生微小变化的时候，输出会发生多大的变化。也就是系统对微小变化的敏感度。condition number值小的就是well-conditioned的，大的就是ill-conditioned的。
+
+如果方阵A是非奇异的，那么A的conditionnumber定义为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243468033883015.png'/>
+
+也就是矩阵A的norm乘以它的逆的norm。所以具体的值是多少，就要看你选择的norm是什么了。如果方阵A是奇异的，那么A的condition number就是正无穷大了。实际上，每一个可逆方阵都存在一个condition number。但如果要计算它，我们需要先知道这个方阵的norm（范数）和Machine Epsilon（机器的精度）。
+
+为什么要范数？范数就相当于衡量一个矩阵的大小，我们知道矩阵是没有大小的，当上面不是要衡量一个矩阵A或者向量b变化的时候，我们的解x变化的大小吗？所以肯定得要有一个东西来度量矩阵和向量的大小吧？对了，他就是范数，表示矩阵大小或者向量长度。
+
+OK，经过比较简单的证明，对于AX=b，我们可以得到以下的结论：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243472561215533.png'/>
+
+也就是我们的解x的相对变化和A或者b的相对变化是有像上面那样的关系的，其中k(A)的值就相当于倍率，看到了吗？相当于x变化的界。
+
+对condition number来个一句话总结：condition number是一个矩阵（或者它所描述的线性系统）的稳定性或者敏感度的度量，如果一个矩阵的condition number在1附近，那么它就是well-conditioned的，如果远大于1，那么它就是ill-conditioned的，如果一个系统是ill-conditioned的，它的输出结果就不要太相信了。
+
+好了，对这么一个东西，已经说了好多了。对了，我们为什么聊到这个的了？
+
+回到第一句话：从优化或者数值计算的角度来说，L2范数有助于处理 condition number不好的情况下矩阵求逆很困难的问题。因为目标函数如果是二次的，对于线性回归来说，那实际上是有解析解的，求导并令导数等于零即可得到最优解为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243481730320539.png'/>
+
+然而，如果当我们的样本X的数目比每个样本的维度还要小的时候，矩阵XTX将会不是满秩的，也就是XTX会变得不可逆，所以w*就没办法直接计算出来了。或者更确切地说，将会有无穷多个解（因为我们方程组的个数小于未知数的个数）。也就是说，我们的数据不足以确定一个解，如果我们从所有可行解里随机选一个的话，很可能并不是真正好的解，总而言之，我们过拟合了。
+
+但如果加上L2规则项，就变成了下面这种情况，就可以直接求逆了：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243485517316837.png'/>
+
+这里面，专业点的描述是：要得到这个解，我们通常并不直接求矩阵的逆，而是通过解线性方程组的方式（例如高斯消元法）来计算。考虑没有规则项的时候，也就是λ=0的情况，如果矩阵XTX的 condition number 很大的话，解线性方程组就会在数值上相当不稳定，而这个规则项的引入则可以改善condition number。
+
+另外，如果使用迭代优化的算法，condition number 太大仍然会导致问题：它会拖慢迭代的收敛速度，而规则项从优化的角度来看，实际上是将目标函数变成λ-strongly convex（λ强凸）的了。哎哟哟，这里又出现个λ强凸，啥叫λ强凸呢？
+
+当f满足：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243490743792612.png'/>
+
+时，我们称f为λ-stronglyconvex函数，其中参数λ>0。当λ=0时退回到普通convex 函数的定义。
+
+在直观的说明强凸之前，我们先看看普通的凸是怎样的。假设我们让f在x的地方做一阶泰勒近似（一阶泰勒展开忘了吗？f(x)=f(a)+f'(a)(x-a)+o(||x-a||).）：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243493173067259.png'/>
+
+直观来讲，convex 性质是指函数曲线位于该点处的切线，也就是线性近似之上，而 strongly convex 则进一步要求位于该处的一个二次函数上方，也就是说要求函数不要太“平坦”而是可以保证有一定的“向上弯曲”的趋势。
+
+专业点说，就是convex 可以保证函数在任意一点都处于它的一阶泰勒函数之上，而strongly convex可以保证函数在任意一点都存在一个非常漂亮的二次下界quadratic lower bound。
+
+当然这是一个很强的假设，但是同时也是非常重要的假设。可能还不好理解，那我们画个图来形象的理解下。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243495315516494.png'/>
+
+大家一看到上面这个图就全明白了吧。不用我啰嗦了吧。
+
+还是啰嗦一下吧。我们取我们的最优解w*的地方。如果我们的函数f(w)，见左图，也就是红色那个函数，都会位于蓝色虚线的那根二次函数之上，这样就算wt和w*离的比较近的时候，f(wt)和f(w*)的值差别还是挺大的，也就是会保证在我们的最优解w*附近的时候，还存在较大的梯度值，这样我们才可以在比较少的迭代次数内达到w*。
+
+但对于右图，红色的函数f(w)只约束在一个线性的蓝色虚线之上，假设是如右图的很不幸的情况（非常平坦），那在wt还离我们的最优点w*很远的时候，我们的近似梯度(f(wt)-f(w*))/(wt-w*)就已经非常小了，在wt处的近似梯度∂f/∂w就更小了，这样通过梯度下降wt+1=wt-α*(∂f/∂w)，我们得到的结果就是w的变化非常缓慢，像蜗牛一样，非常缓慢的向我们的最优点w*爬动，那在有限的迭代时间内，它离我们的最优点还是很远。
+
+所以仅仅靠convex 性质并不能保证在梯度下降和有限的迭代次数的情况下得到的点w会是一个比较好的全局最小点w*的近似点（插个话，有地方说，实际上让迭代在接近最优的地方停止，也是一种规则化或者提高泛化性能的方法）。
+
+正如上面分析的那样，如果f(w)在全局最小点w*周围是非常平坦的情况的话，我们有可能会找到一个很远的点。但如果我们有“强凸”的话，就能对情况做一些控制，我们就可以得到一个更好的近似解。至于有多好嘛，这里面有一个bound，这个 bound 的好坏也要取决于strongly convex性质中的常数α的大小。
+
+看到这里，不知道大家学聪明了没有。如果要获得strongly convex怎么做？最简单的就是往里面加入一项(α/2)*||w||2。
+
+呃，讲个strongly convex花了那么多的篇幅。实际上，在梯度下降中，目标函数收敛速率的上界实际上是和矩阵XTX的 condition number有关，XTX的 condition number 越小，上界就越小，也就是收敛速度会越快。
+
+这一个优化说了那么多的东西。还是来个一句话总结吧：L2范数不但可以防止过拟合，还可以让我们的优化求解变得稳定和快速。
+
+好了，这里兑现上面的承诺，来直观的聊聊L1和L2的差别，为什么一个让绝对值最小，一个让平方最小，会有那么大的差别呢？我看到的有两种几何上直观的解析：
+
+1）下降速度：
+
+我们知道，L1和L2都是规则化的方式，我们将权值参数以L1或者L2的方式放到代价函数里面去。然后模型就会尝试去最小化这些权值参数。而这个最小化就像一个下坡的过程，L1和L2的差别就在于这个“坡”不同。
+
+如下图：L1就是按绝对值函数的“坡”下降的，而L2是按二次函数的“坡”下降。所以实际上在0附近，L1的下降速度比L2的下降速度要快。所以会非常快得降到0。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243798499628868.png'/>
+
+L1在江湖上人称Lasso，L2人称Ridge。不过这两个名字还挺让人迷糊的，看上面的图片，Lasso的图看起来就像ridge，而ridge的图看起来就像lasso。
+
+2）模型空间的限制：
+
+实际上，对于L1和L2规则化的代价函数来说，我们可以写成以下形式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243809996214332.png'/>
+
+也就是说，我们将模型空间限制在w的一个L1-ball 中。为了便于可视化，我们考虑两维的情况，在(w1, w2)平面上可以画出目标函数的等高线，而约束条件则成为平面上半径为C的一个 norm ball 。
+
+等高线与 norm ball 首次相交的地方就是最优解：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153243846160966235.png'/>
+
+可以看到，L1-ball 与L2-ball 的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的测地线除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性，例如图中的相交点就有w1=0，而更高维的时候（想象一下三维的L1-ball 是什么样的？）除了角点以外，还有很多边的轮廓也是既有很大的概率成为第一次相交的地方，又会产生稀疏性。
+
+相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小了。这就从直观上来解释了为什么L1-regularization 能产生稀疏性，而L2-regularization 不行的原因了。
+
+因此，一句话总结就是：L1会趋向于产生少量的特征，而其他的特征都是0，而L2会选择更多的特征，这些特征都会接近于0。Lasso在特征选择时候非常有用，而Ridge就只是一种规则化而已。
+## 134.请详细说说决策树的构造原理
+
+第一部分、决策树学习
+1.1、什么是决策树
+    咱们直接切入正题。所谓决策树，顾名思义，是一种树，一种依托于策略抉择而建立起来的树。
+
+    机器学习中，决策树是一个预测模型；他代表的是对象属性与对象值之间的一种映射关系。树中每个节点表示某个对象，而每个分叉路径则代表的某个可能的属性值，而每个叶结点则对应从根节点到该叶节点所经历的路径所表示的对象的值。决策树仅有单一输出，若欲有复数输出，可以建立独立的决策树以处理不同输出。
+    从数据产生决策树的机器学习技术叫做决策树学习, 通俗点说就是决策树，说白了，这是一种依托于分类、训练上的预测树，根据已知预测、归类未来。
+
+    来理论的太过抽象，下面举两个浅显易懂的例子：
+
+第一个例子
+
+    套用俗语，决策树分类的思想类似于找对象。现想象一个女孩的母亲要给这个女孩介绍男朋友，于是有了下面的对话：
+
+      女儿：多大年纪了？
+      母亲：26。
+      女儿：长的帅不帅？
+      母亲：挺帅的。
+      女儿：收入高不？
+      母亲：不算很高，中等情况。
+      女儿：是公务员不？
+      母亲：是，在税务局上班呢。
+      女儿：那好，我去见见。
+
+      这个女孩的决策过程就是典型的分类树决策。相当于通过年龄、长相、收入和是否公务员对将男人分为两个类别：见和不见。假设这个女孩对男人的要求是：30岁以下、长相中等以上并且是高收入者或中等以上收入的公务员，那么这个可以用下图表示女孩的决策逻辑：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499077293142193.gif'/>
+
+也就是说，决策树的简单策略就是，好比公司招聘面试过程中筛选一个人的简历，如果你的条件相当好比如说某985/211重点大学博士毕业，那么二话不说，直接叫过来面试，如果非重点大学毕业，但实际项目经验丰富，那么也要考虑叫过来面试一下，即所谓具体情况具体分析、决策。但每一个未知的选项都是可以归类到已有的分类类别中的。
+
+第二个例子
+
+    此例子来自Tom M.Mitchell著的机器学习一书：
+
+    小王的目的是通过下周天气预报寻找什么时候人们会打高尔夫，他了解到人们决定是否打球的原因最主要取决于天气情况。而天气状况有晴，云和雨；气温用华氏温度表示；相对湿度用百分比；还有有无风。如此，我们便可以构造一棵决策树，如下（根据天气这个分类决策这天是否合适打网球）：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499082525051394.gif'/>
+
+上述决策树对应于以下表达式：
+（Outlook=Sunny ^Humidity<=70）V （Outlook = Overcast）V （Outlook=Rain ^ Wind=Weak）
+
+1.2、ID3算法
+1.2.1、决策树学习之ID3算法
+    ID3算法是决策树算法的一种。想了解什么是ID3算法之前，我们得先明白一个概念：奥卡姆剃刀。
+
+  • 奥卡姆剃刀（Occam's Razor, Ockham's Razor），又称“奥坎的剃刀”，是由14世纪逻辑学家、圣方济各会修士奥卡姆的威廉（William of Occam，约1285年至1349年）提出，他在《箴言书注》2卷15题说“切勿浪费较多东西，去做‘用较少的东西，同样可以做好的事情’。简单点说，便是：be simple。
+
+     ID3算法（Iterative Dichotomiser 3 迭代二叉树3代）是一个由Ross Quinlan发明的用于决策树的算法。这个算法便是建立在上述所介绍的奥卡姆剃刀的基础上：越是小型的决策树越优于大的决策树（be simple简单理论）。尽管如此，该算法也不是总是生成最小的树形结构，而是一个启发式算法。
+
+    OK，从信息论知识中我们知道，期望信息越小，信息增益越大，从而纯度越高。ID3算法的核心思想就是以信息增益度量属性选择，选择分裂后信息增益(很快，由下文你就会知道信息增益又是怎么一回事)最大的属性进行分裂。该算法采用自顶向下的贪婪搜索遍历可能的决策树空间。
+
+     所以，ID3的思想便是：
+
+1、自顶向下的贪婪搜索遍历可能的决策树空间构造决策树(此方法是ID3算法和C4.5算法的基础)；
+
+2、从“哪一个属性将在树的根节点被测试”开始；
+
+3、使用统计测试来确定每一个实例属性单独分类训练样例的能力，分类能力最好的属性作为树的根结点测试(如何定义或者评判一个属性是分类能力最好的呢？这便是下文将要介绍的信息增益，or 信息增益率)。
+
+4、然后为根结点属性的每个可能值产生一个分支，并把训练样例排列到适当的分支（也就是说，样例的该属性值对应的分支）之下。
+
+5、重复这个过程，用每个分支结点关联的训练样例来选取在该点被测试的最佳属性。
+这形成了对合格决策树的贪婪搜索，也就是算法从不回溯重新考虑以前的选择。
+
+    下图所示即是用于学习布尔函数的ID3算法概要：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499096749955055.jpg'/>
+
+1.2.2、哪个属性是最佳的分类属性
+1、信息增益的度量标准：熵
+    上文中，我们提到：“ID3算法的核心思想就是以信息增益度量属性选择，选择分裂后信息增益(很快，由下文你就会知道信息增益又是怎么一回事)最大的属性进行分裂。”接下来，咱们就来看看这个信息增益是个什么概念(当然，在了解信息增益之前，你必须先理解：信息增益的度量标准：熵)。
+    上述的ID3算法的核心问题是选取在树的每个结点要测试的属性。我们希望选择的是最有利于分类实例的属性，信息增益(Information Gain)是用来衡量给定的属性区分训练样例的能力，而ID3算法在增长树的每一步使用信息增益从候选属性中选择属性。
+    为了精确地定义信息增益，我们先定义信息论中广泛使用的一个度量标准，称为熵（entropy），它刻画了任意样例集的纯度（purity）。给定包含关于某个目标概念的正反样例的样例集S，那么S相对这个布尔型分类的熵为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499103358092706.gif'/>
+
+上述公式中，p+代表正样例，比如在本文开头第二个例子中p+则意味着去打羽毛球，而p-则代表反样例，不去打球(在有关熵的所有计算中我们定义0log0为0)。
+
+    如果写代码实现熵的计算，则如下所示：
+
+//根据具体属性和值来计算熵  
+double ComputeEntropy(vector <vector <string> > remain_state, string attribute, string value,bool ifparent){  
+    vector<int> count (2,0);  
+    unsigned int i,j;  
+    bool done_flag = false;//哨兵值  
+    for(j = 1; j < MAXLEN; j++){  
+        if(done_flag) break;  
+        if(!attribute_row[j].compare(attribute)){  
+            for(i = 1; i < remain_state.size(); i++){  
+                if((!ifparent&&!remain_state[i][j].compare(value)) || ifparent){//ifparent记录是否算父节点  
+                    if(!remain_state[i][MAXLEN - 1].compare(yes)){  
+                        count[0]++;  
+                    }  
+                    else count[1]++;  
+                }  
+            }  
+            done_flag = true;  
+        }  
+    }  
+    if(count[0] == 0 || count[1] == 0 ) return 0;//全部是正实例或者负实例  
+    //具体计算熵 根据[+count[0],-count[1]],log2为底通过换底公式换成自然数底数  
+    double sum = count[0] + count[1];  
+    double entropy = -count[0]/sum*log(count[0]/sum)/log(2.0) - count[1]/sum*log(count[1]/sum)/log(2.0);  
+    return entropy;  
+} 
+
+举例来说，假设S是一个关于布尔概念的有14个样例的集合，它包括9个正例和5个反例（我们采用记号[9+，5-]来概括这样的数据样例），那么S相对于这个布尔样例的熵为：
+
+   Entropy（[9+，5-]）=-（9/14）log2（9/14）-（5/14）log2（5/14）=0.940。
+
+So，根据上述这个公式，我们可以得到：S的所有成员属于同一类，Entropy(S)=0； S的正反样例数量相等，Entropy(S)=1；S的正反样例数量不等，熵介于0，1之间，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499159479129313.gif'/>
+
+信息论中对熵的一种解释，熵确定了要编码集合S中任意成员的分类所需要的最少二进制位数。更一般地，如果目标属性具有c个不同的值，那么S相对于c个状态的分类的熵定义为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499161233853975.gif'/>
+
+ Pi为子集合中不同性(而二元分类即正样例和负样例)的样例的比例。
+
+2、信息增益度量期望的熵降低
+
+信息增益Gain(S,A)定义
+
+    已经有了熵作为衡量训练样例集合纯度的标准，现在可以定义属性分类训练数据的效力的度量标准。这个标准被称为“信息增益（information gain）”。简单的说，一个属性的信息增益就是由于使用这个属性分割样例而导致的期望熵降低(或者说，样本按照某属性划分时造成熵减少的期望)。更精确地讲，一个属性A相对样例集合S的信息增益Gain(S,A)被定义为：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499164248597567.gif'/>
+
+ 其中 Values(A)是属性A所有可能值的集合，是S中属性A的值为v的子集。换句话来讲，Gain(S,A)是由于给定属性A的值而得到的关于目标函数值的信息。当对S的一个任意成员的目标值编码时，Gain(S,A)的值是在知道属性A的值后可以节省的二进制位数。
+
+    接下来，有必要提醒读者一下：关于下面这两个概念 or 公式，
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499166982403955.png'/>
+
+第一个Entropy(S)是熵定义，第二个则是信息增益Gain(S,A)的定义，而Gain(S,A)由第一个Entropy(S)计算出，记住了。
+    下面，举个例子，假定S是一套有关天气的训练样例，描述它的属性包括可能是具有Weak和Strong两个值的Wind。像前面一样，假定S包含14个样例，[9+，5-]。在这14个样例中，假定正例中的6个和反例中的2个有Wind =Weak，其他的有Wind=Strong。由于按照属性Wind分类14个样例得到的信息增益可以计算如下。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499168419745260.jpg'/>
+
+运用在本文开头举得第二个根据天气情况是否决定打羽毛球的例子上，得到的最佳分类属性如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499198928737554.gif'/>
+
+ 在上图中，计算了两个不同属性：湿度(humidity)和风力(wind)的信息增益，最终humidity这种分类的信息增益0.151>wind增益的0.048。说白了，就是在星期六上午是否适合打网球的问题诀策中，采取humidity较wind作为分类属性更佳，决策树由此而来。
+
+//计算信息增益，DFS构建决策树  
+//current_node为当前的节点  
+//remain_state为剩余待分类的样例  
+//remian_attribute为剩余还没有考虑的属性  
+//返回根结点指针  
+Node * BulidDecisionTreeDFS(Node * p, vector <vector <string> > remain_state, vector <string> remain_attribute){  
+    //if(remain_state.size() > 0){  
+        //printv(remain_state);  
+    //}  
+    if (p == NULL)  
+        p = new Node();  
+    //先看搜索到树叶的情况  
+    if (AllTheSameLabel(remain_state, yes)){  
+        p->attribute = yes;  
+        return p;  
+    }  
+    if (AllTheSameLabel(remain_state, no)){  
+        p->attribute = no;  
+        return p;  
+    }  
+    if(remain_attribute.size() == 0){//所有的属性均已经考虑完了,还没有分尽  
+        string label = MostCommonLabel(remain_state);  
+        p->attribute = label;  
+        return p;  
+    }  
+  
+    double max_gain = 0, temp_gain;  
+    vector <string>::iterator max_it;  
+    vector <string>::iterator it1;  
+    for(it1 = remain_attribute.begin(); it1 < remain_attribute.end(); it1++){  
+        temp_gain = ComputeGain(remain_state, (*it1));  
+        if(temp_gain > max_gain) {  
+            max_gain = temp_gain;  
+            max_it = it1;  
+        }  
+    }  
+    //下面根据max_it指向的属性来划分当前样例，更新样例集和属性集  
+    vector <string> new_attribute;  
+    vector <vector <string> > new_state;  
+    for(vector <string>::iterator it2 = remain_attribute.begin(); it2 < remain_attribute.end(); it2++){  
+        if((*it2).compare(*max_it)) new_attribute.push_back(*it2);  
+    }  
+    //确定了最佳划分属性，注意保存  
+    p->attribute = *max_it;  
+    vector <string> values = map_attribute_values[*max_it];  
+    int attribue_num = FindAttriNumByName(*max_it);  
+    new_state.push_back(attribute_row);  
+    for(vector <string>::iterator it3 = values.begin(); it3 < values.end(); it3++){  
+        for(unsigned int i = 1; i < remain_state.size(); i++){  
+            if(!remain_state[i][attribue_num].compare(*it3)){  
+                new_state.push_back(remain_state[i]);  
+            }  
+        }  
+        Node * new_node = new Node();  
+        new_node->arrived_value = *it3;  
+        if(new_state.size() == 0){//表示当前没有这个分支的样例，当前的new_node为叶子节点  
+            new_node->attribute = MostCommonLabel(remain_state);  
+        }  
+        else   
+            BulidDecisionTreeDFS(new_node, new_state, new_attribute);  
+        //递归函数返回时即回溯时需要1 将新结点加入父节点孩子容器 2清除new_state容器  
+        p->childs.push_back(new_node);  
+        new_state.erase(new_state.begin()+1,new_state.end());//注意先清空new_state中的前一个取值的样例，准备遍历下一个取值样例  
+    }  
+    return p;  
+}
+
+1.2.3、ID3算法决策树的形成
+    OK，下图为ID3算法第一步后形成的部分决策树。这样综合起来看，就容易理解多了。1、overcast样例必为正，所以为叶子结点，总为yes；2、ID3无回溯，局部最优，而非全局最优，还有另一种树后修剪决策树。下图是ID3算法第一步后形成的部分决策树：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499205754785131.gif'/>
+
+ 如上图，训练样例被排列到对应的分支结点。分支Overcast的所有样例都是正例，所以成为目标分类为Yes的叶结点。另两个结点将被进一步展开，方法是按照新的样例子集选取信息增益最高的属性。
+
+1.3、C4.5算法
+1.3.1、ID3算法的改进：C4.5算法
+    C4.5，是机器学习算法中的另一个分类决策树算法，它是决策树(决策树也就是做决策的节点间的组织方式像一棵树，其实是一个倒树)核心算法，也是上文1.2节所介绍的ID3的改进算法，所以基本上了解了一半决策树构造方法就能构造它。
+
+    决策树构造方法其实就是每次选择一个好的特征以及分裂点作为当前节点的分类条件。
+
+    既然说C4.5算法是ID3的改进算法，那么C4.5相比于ID3改进的地方有哪些呢？：
+
+  1、用信息增益率来选择属性。ID3选择属性用的是子树的信息增益，这里可以用很多方法来定义信息，ID3使用
+  的是熵(entropy，熵是一种不纯度度量准则),也就是熵的变化值，而C4.5用的是信息增益率。对，区别就在于一
+  个是信息增益，一个是信息增益率。
+  2、在树构造过程中进行剪枝，在构造决策树的时候，那些挂着几个元素的节点，不考虑最好，不然容易导致
+   overfitting。
+  3、对非离散数据也能处理。
+  4、能够对不完整数据进行处理
+
+    针对上述第一点，解释下：一般来说率就是用来取平衡用的，就像方差起的作用差不多，比如有两个跑步的人，一个起点是10m/s的人、其10s后为20m/s；另一个人起速是1m/s、其1s后为2m/s。如果紧紧算差值那么两个差距就很大了，如果使用速度增加率(加速度，即都是为1m/s^2)来衡量，2个人就是一样的加速度。因此，C4.5克服了ID3用信息增益选择属性时偏向选择取值多的属性的不足。
+
+C4.5算法之信息增益率
+
+    OK，既然上文中提到C4.5用的是信息增益率，那增益率的具体是如何定义的呢？：
+
+    是的，在这里，C4.5算法不再是通过信息增益来选择决策属性。一个可以选择的度量标准是增益比率gain ratio（Quinlan 1986）。增益比率度量是用前面的增益度量Gain(S，A)和分裂信息度量SplitInformation(S，A)来共同定义的，如下所示：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499219046627187.jpg'/>
+
+  其中，分裂信息度量被定义为(分裂信息用来衡量属性分裂数据的广度和均匀)：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499220924195754.jpg'/>
+
+  其中S1到Sc是c个值的属性A分割S而形成的c个样例子集。注意分裂信息实际上就是S关于属性A的各值的熵。这与我们前面对熵的使用不同，在那里我们只考虑S关于学习到的树要预测的目标属性的值的熵。
+
+    请注意，分裂信息项阻碍选择值为均匀分布的属性。例如，考虑一个含有n个样例的集合被属性A彻底分割（译注：分成n组，即一个样例一组）。这时分裂信息的值为log2n。相反，一个布尔属性B分割同样的n个实例，如果恰好平分两半，那么分裂信息是1。如果属性A和B产生同样的信息增益，那么根据增益比率度量，明显B会得分更高。
+
+    使用增益比率代替增益来选择属性产生的一个实际问题是，当某个Si接近S（|Si|»|S|）时分母可能为0或非常小。如果某个属性对于S的所有样例有几乎同样的值，这时要么导致增益比率未定义，要么是增益比率非常大。为了避免选择这种属性，我们可以采用这样一些启发式规则，比如先计算每个属性的增益，然后仅对那些增益高过平均值的属性应用增益比率测试（Quinlan 1986）。
+
+    除了信息增益，Lopez de Mantaras（1991）介绍了另一种直接针对上述问题而设计的度量，它是基于距离的（distance-based）。这个度量标准基于所定义的一个数据划分间的距离尺度。具体更多请参看：Tom M.Mitchhell所著的机器学习之3.7.3节。
+
+1.3.2、C4.5算法构造决策树的过程
+
+Function C4.5(R:包含连续属性的无类别属性集合,C:类别属性,S:训练集)
+/*返回一棵决策树*/
+Begin
+   If S为空,返回一个值为Failure的单个节点;
+   If S是由相同类别属性值的记录组成,
+      返回一个带有该值的单个节点;
+   If R为空,则返回一个单节点,其值为在S的记录中找出的频率最高的类别属性值;
+   [注意未出现错误则意味着是不适合分类的记录]；
+  For 所有的属性R(Ri) Do
+        If 属性Ri为连续属性，则
+     Begin
+           将Ri的最小值赋给A1：
+        将Rm的最大值赋给Am；/*m值手工设置*/
+           For j From 2 To m-1 Do Aj=A1+j*(A1Am)/m;
+           将Ri点的基于{< =Aj,>Aj}的最大信息增益属性(Ri,S)赋给A；
+     End；
+  将R中属性之间具有最大信息增益的属性(D,S)赋给D;
+   将属性D的值赋给{dj/j=1,2...m}；
+  将分别由对应于D的值为dj的记录组成的S的子集赋给{sj/j=1,2...m};
+   返回一棵树，其根标记为D;树枝标记为d1,d2...dm;
+   再分别构造以下树:
+   C4.5(R-{D},C,S1),C4.5(R-{D},C,S2)...C4.5(R-{D},C,Sm);
+End C4.5
+
+1.3.3、C4.5算法实现中的几个关键步骤
+
+    在上文中，我们已经知道了决策树学习C4.5算法中4个重要概念的表达，如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153499227781507329.png'/>
+
+接下来，咱们写下代码实现，
+    1、信息熵
+
+double C4_5::entropy(int *attrClassCount, int classNum, int allNum){
+	double iEntropy = 0.0;
+	for(int i = 0; i < classNum; i++){
+		double temp = ((double)attrClassCount[i]) / allNum;
+		if(temp != 0.0)
+			iEntropy -= temp * (log(temp) / log(2.0));
+	}
+	return iEntropy;
+}
+
+  2、信息增益率
+
+double C4_5::gainRatio(int classNum, vector<int *> attriCount, double pEntropy){
+	int* attriNum = new int[attriCount.size()];
+	int allNum = 0;
+ 
+	for(int i = 0; i < (int)attriCount.size(); i++){
+		attriNum[i] = 0;
+		for(int j = 0; j < classNum; j++){
+			attriNum[i] += attriCount[i][j];
+			allNum += attriCount[i][j];
+		}
+	}
+	double gain = 0.0;
+	double splitInfo = 0.0;
+	for(int i = 0; i < (int)attriCount.size(); i++){
+		gain -= ((double)attriNum[i]) / allNum * entropy(attriCount[i], classNum, attriNum[i]);
+		splitInfo -= ((double)attriNum[i]) / allNum * (log(((double)attriNum[i])/allNum) / log(2.0));
+	}
+	gain += pEntropy;
+	delete[] attriNum; 
+	return (gain / splitInfo);
+}
+
+   3、选取最大增益属性作为分类条件
+
+
+int C4_5::chooseAttribute(vector<int> attrIndex, vector<int *>* sampleCount){
+	int bestIndex = 0;
+	double maxGainRatio = 0.0;
+	int classNum = (int)(decisions[attrIndex[(int)attrIndex.size()-1]]).size();//number of class
+ 
+	//computer the class entropy
+	int* temp = new int[classNum];
+	int allNum = 0;
+	for(int i = 0; i < classNum; i++){
+		temp[i] = sampleCount[(int)attrIndex.size()-1][i][i];
+		allNum += temp[i];
+	}
+	double pEntropy = entropy(temp, classNum, allNum);
+	delete[] temp;
+ 
+	//computer gain ratio for every attribute
+	for(int i = 0; i < (int)attrIndex.size()-1; i++){
+		double gainR = gainRatio(classNum, sampleCount[i], pEntropy);
+		if(gainR > maxGainRatio){
+			bestIndex = i;
+			maxGainRatio = gainR;
+		}
+	}
+	return bestIndex;
+}
+
+
+    4、还有一系列建树，打印树的步骤，此处略过。
+
+
+1.4、读者点评
+
+   1、form Wind：决策树使用于特征取值离散的情况，连续的特征一般也要处理成离散的(而很多文章没有表达出决策树的关键特征or概念)。实际应用中，决策树overfitting比较的严重，一般要做boosting。分类器的性能上不去，很主要的原因在于特征的鉴别性不足，而不是分类器的好坏，好的特征才有好的分类效果，分类器只是弱相关。
+
+  2、那如何提高 特征的鉴别性呢？一是设计特征时尽量引入domain knowledge，二是对提取出来的特征做选择、变换和再学习，这一点是机器学习算法不管的部分(我说的这些不是针对决策树的，因此不能说是决策树的特点，只是一些机器学习算法在应用过程中的经验体会)。
+
+## 135.怎么确定LDA的topic个数？
+1、基于经验 主观判断、不断调试、操作性强、最为常用
+
+2、基于困惑度（主要是比较两个模型之间的好坏） Blei 2003年原论文
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153555749930903456.jpg'/>
+该方法需要测测试集！参考文献：Blei D M, Ng A Y, Jordan M I. Latent Dirichlet Allocation[J]. Journal of Machine Learning Research, 2003, 3: 993-1022.
+
+3、贝叶斯统计标准方法参考文献：Griffiths T L, Steyvers M. Finding Scientific Topics[J]. Proceedings of the National Academy of Sciences of the United States of America, 2004, 101(S1): 5228-5235.
+
+使用Log-边际似然函数的方法，这种方法也挺常用的
+
+4、非参数方法：Teh提出的基于狄利克雷过程的HDP法
+
+参考文献：Teh Y, Jordan M, Beal M, et al. Hierarchical Dirichlet Processes [J]. Journal of the American Statistical Association, 2007, 101(476): 1566-1581.
+
+在《机器学习系统设计》的第4章主题模型的4.3节：选择主题个数 中，提到：“有一个能够自动确定主题个数的方法叫做层次狄利克雷过程(HDP)“在该方法中，主题本身是由数据生成的，而不是预先将主体固定，然后通过对数据的反向工程把它们恢复出来。
+
+在论文《Hierarchical Dirichlet Process》第6章中，如下图所示，HDP模型和LDA模型的Perplexity-topic number曲线：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153555757272887526.jpg'/>
+
+通过分析该HDP中混合成分抽样直方图发现，最佳的混合成分数正好与LDA的最优主题数一致，从而解决LDA中最优topic个数的选择问题。
+
+5、基于主题之间的相似度：计算主题向量之间的余弦距离，KL距离等参考文献:曹娟, 张勇东, 李锦涛, 等. 
+
+一种基于密度的自适应最优LDA 模型选择方法[J]. 计算机学报, 2008, 31(10): 1780-1787. (Cao Juan, Zhang Yongdong, Li Jintao, et al. A Method of Adaptively Selecting Best LDA Model Based on Density [J]. Chinese Journal of Computers, 2008, 31 (10): 1780-1787.)  
+
+这篇文章提到一个定理：当主题结构的平均相似度最小时，对应的模型最优。（我用自己的语料库试过这个方法，当语料库比较小，主题向量非常稀疏的时候感觉是有问题的）
+
+关鹏, 王曰芬. 科技情报分析中LDA 主题模型最优主题数 确定方法研究[J]. 现代图书情报技术, 2016(9): 42-49. (Guan Peng, Wang Yuefen. Research on the Method of Determining the Optimum Topic Number of LDA Topic Model in Scientific and Technical Information Analysis [J]. New Technology of Library and Information Service, 2016(9): 42-49.)
+
+这篇文章的核心方法如下：
+主题方差用来度量主 题和其均值之间的偏离程度, 可以衡量潜在主题空间 的整体差异性和稳定性。主题方差的计算方法如下
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153555763422748978.jpg'/>
+
+其中, T 表示LDA 抽取的主题, K 表示主题数目,DJS 表示JS 散度。Var(T)衡量了主题之间的稳定性和差异性, 当Var(T)越大时, 主题之间的差异性越大, 主题之间的区分性就越好, 这样的主题结构就越稳定。困惑度反映了模型的预测能力, 但一味追求模型的预测能力则必然导致抽取的主题数过大的问题, 所以二者相结合可以有效解决主题辨识度不高的问题。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64153555767389791586.jpg'/>
+
+其中, Dtest 为实验文本集中的测试数据集,Perplexity(Dtest ) 为测试数据集的困惑度, Var(Ttest )是测试数据集的主题方差。
+
+Perplexity-Var 指标含义: 首先, 考虑到模型的泛化能力, 当Perplexity 越小时, LDA 的泛化能力越好。其次, 考虑到LDA 的主题抽取效果, 当主题结构的平均相似度最小时, 对应的LDA 主题模型最优[21], 而主题结构的平均相似度越小, 则主题之间的差异就越大,此时主题结构的方差越大。所以当主题方差越大时,LDA主题抽取的效果越佳, 同时Perplexity-Var 指标就越小。综合以上分析, 当Perplexity-Var指标最小时, 对应的LDA 主题模型最优。
+
+我们希望方差越大（主题之间有区分度）越好，同时也希望困惑度越小越好，因此perplexity-var指标越小越好！
+
+用测试集来进行测试，一般来说方差不断降低，困惑度先降低后上升，perplexity-var指标先下降后上升，取最小的点即为最优的主题数目。
+
+本文解析来源：@文不测字，链接：https://www.zhihu.com/question/32286630/answer/376745432
+## 136.sklearn随机森林的特征重要度是不是偏好数值型变量呢？
+
+我在做kaggle的Titanic问题时使用随机森林和xgboost发现两个数值型的变量重要度非常高，远远高过性别这种在数据分析时候认为很重要的特征
+看sklearn文档说特征重要度是按照特征对不纯度减少的贡献来排的，刚才在网上找到了一篇论文大概是说这种特征重要度的衡量方式会偏好那些类别多的变量（feature selection based on impurity reduction is biased towards preferring variables with more categories）。
+
+sklearn的文档说sklearn的决策树都是cart树，cart树在对待数值型特征的时候也可以理解成一个类别数等于样本数的类别型特征吧。那么是因为这个原因导致随机森林偏好数值型特征吗？
+① 类别型本身也是转化成数值型处理的，在cart里，转化成 是否是某个属性取值 的01结果
+② 应该没有你说的这种偏好。不过数值型的字段，可以多次用来切分。一个极端的例子，给树足够的深度，如果一个数值型的字段，每个样本取值都不一样，可以切到足够细（甚至一个叶子节点一个样本），但是显然这时候过拟合了。性别只可以切分一次，属性取值比较有限。
+
+by 七月在线寒老师
+## 137.连续特征，既可以离散化，也可以做幅度缩放，那这两种处理方式分别适用于什么场景呢？
+幅度缩放一般在计算型模型里会用到，比如LR DNN
+离散化一般是线性模型会用到，比如LR。
+
+如七月在线寒老师所说，离散化的目的有以下几个方面：
+① 非线性！非线性！非线性！逻辑回归属于广义线性模型，表达能力受限；单变量离散化为N个后，每个变量有单独的权重，相当于为模型引入了非线性，能够提升模型表达能力，加大拟合；
+离散特征的增加和减少都很容易，易于模型的快速迭代；
+
+② 速度快！速度快！速度快！稀疏向量内积乘法运算速度快，计算结果方便存储，容易扩展；
+③ 鲁棒性！鲁棒性！鲁棒性！离散化后的特征对异常数据有很强的鲁棒性：比如一个特征是年龄>30是1，否则0。如果特征没有离散化，一个异常数据“年龄300岁”会给模型造成很大的干扰；
+
+④ 方便交叉与特征组合：离散化后可以进行特征交叉，由M+N个变量变为M*N个变量，进一步引入非线性，提升表达能力；
+⑤ 稳定性：特征离散化后，模型会更稳定，比如如果对用户年龄离散化，20-30作为一个区间，不会因为一个用户年龄长了一岁就变成一个完全不同的人。当然处于区间相邻处的样本会刚好相反，所以怎么划分区间是门学问；
+⑥ 简化模型：特征离散化以后，起到了简化了逻辑回归模型的作用，降低了模型过拟合的风险。
+## 138.从几何直观的角度解释下为什么拉格朗日乘子法能取到最优值？
+拉格朗日乘子法是在求解条件极值的时候使用的一种方法，为了更好的理解这种方法，我们可以考虑如下两个问题：
+1. 求函数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435593375419107.png'/>的极小值
+2. 求函数<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355935064434573.png'/>在约束条件y=1的极小值
+
+对于问题1我们的做法是求解方程<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435594225691399.png'/>,<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435594337522838.png'/>. 得到x=0,y=0.
+
+但是对于问题2我们无法直接使用这种方法，实际上因为这个问题比较简单，我们可以直接看出当限制在y=1上的时候，这个函数在x=0时达到极小值。也就是说在(0,1)这个点处。显然在此点处，函数f(x,y)的梯度不是零而是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355946437306548.png'/>.
+
+所以在条件极值的问题上，一个函数的极值点不一定能取到梯度为零的位置（因为这个条件很讨厌）！！也就是说那个利用求梯度等于零的方法不能直接用了。这可以说是条件极值之所以困难的一个主要因素。
+
+那么既然极值点的梯度可能不为零，是不是说这个梯度就没有用了呢？23333
+
+然而，事情并没有那么糟！拉格朗日乘子法其实就是在此种情况下尽可能有效的使用梯度来解决条件极值的一种方法。下面我们来看看，拉格朗日乘子到底干了一件什么事情。
+
+我们仍然以前面的例子为参考，我们发现在问题2的极值点处，虽然梯度不等于零，但是梯度与约束条件的曲线y=1是垂直的。而且这并不是一个巧合，实际上如果梯度与约束条件不垂直的话，那么在约束条件的方向上我们就可以进一步使函数值变小，这与 这个点作为极值点 矛盾。
+
+这个“极值点处梯度与约束曲线垂直”的现象，就是拉格朗日乘子法的直观基础。
+
+与约束曲线垂直的另一种说法就是说，梯度落在了约束曲线的法空间内部，而对于约束条件<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435595067986564.png'/>来说，约束曲线的法空间就是由<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355952565836546.png'/>张成的那个空间。
+
+也就是说如果约束条件写成<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355954512481315.png'/>的话，那么在这个极值点处，虽然<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355955786482185.png'/>不一定是0向量，但是总存在<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355956424719210.png'/>使得
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355963923326710.png'/>
+
+或者说 这个函数 <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355966424909529.png'/>的梯度为0：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435596749742761.png'/>
+
+于是如果能找到合适的<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435596987489482.png'/>我们就可以像求解问题1一样来利用梯度等于零来求解这个变换过的条件极值问题了，以问题2为例，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415435597166281499.png'/>，我们要求解方程组
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355972775330902.png'/>
+y = 1
+
+得到
+λ=−2,x=0
+
+这个问题相对应的几何图像如下
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154355977251325694.png'/>
+
+那么不等式约束的乘数法又是什么意思呢？其实不等式约束意味着可行域为定义域里的一个区域。如果极值点取在了这个区域的内部，那么条件极值就与原问题类似，都可以用梯度为零的方法来求解。而当极值点落在了区域的边界上的时候，那么不等式约束就等效于一个等式约束了，所以几何意义仍然由上面的例子给出。
+
+从这个lagrange 乘子法的几何解释我们可以看出，不论是这种方法，还是对偶方法或者KKT条件他们实际上关心的都是目标函数在边界上的性质——利用拉格朗日乘子，来把一个在边界上不太好的函数变得好一些。
+## 139.A/B测试的数学原理与深入理解
+当面对众多选择时，如何选才能最大化收益（或者说最小化我们的开销）？比如，怎么选择最优的上班的路线才能使途中花费的时间最少？假设每天上下班路线是确定的，我们便可以在账本中记下往返路线的长度。
+
+A/B测试便是基于数据来进行优选的常用方法，在记录多次上班路线长度后，我们便会从数据中发现到一些模式（例如路线A比路线B花的时间更少），然后最终一致选择某条路线。
+
+当A/B测试遇到非简单情况时（如分组不够随机时，或用户量不够大到可以忽略组间差异，或不希望大规模A/B测试长期影响一部分用户的收益），该怎样通过掌握理论知识来更好的指导实践呢？本文尝试通过由浅入深的介绍，希望能够帮助大家对A/B测试有更加深入的理解。
+
+任何问题，只要它的每个选项能够被多次进行测试，并且每个选项在被测试时都能返回固定的结果，那么它就能使用A/B测试技术来进行优化。在上述例子中，每天的上下班路线是确定的，所以我们能够在账本中记下往返路线的长度。
+
+那么什么样的路线对于用户来说才是一个好的方案呢？是考虑路线A还是B？什么时候用户才有充分的数据去确定哪条线路是最好的？测试线路好与不好的最优策略又是什么？图1用形式化概括定义了问题。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415441765692698009.png'/>
+图1 形式化定义的问题
+
+在这个场景中，参与的用户正面临一个选择，根据他的决策会生成一个结果，而这个结果会对应一份给参与者的反馈。假设用户持续地暴露于这个决策，他应该怎么制定获得最大收益（或等效地说，最小成本）的策略？
+图1中假定了用户多次处于需要进行选择的场景中，每一次进行决策都会达成一项结果，而这个结果会关联相应的反馈。在上下班这个例子中，假定他每天都需要上下班，而且他每次上下班都必须进行线路的选择，产出的结果是这次上下班中所有因素的结合体，反馈就是从这些因素中构建出来的（陈运文 达观数据）。
+
+这是个浅显的例子，在互联网产品研发时，有大量类似的场景需要做出各种正确的选择，例如：
+
+1 着陆页优化（Landing-page optimization）
+
+在用户点击去往的页面（着陆页），如何获得最大的转化率（常用计算方法为有购买行为或深度网页交互行为的用户数占网站访问总用户数的比率）。决策要考虑到着陆页的形式和内容（要从可能已有的3或4个备选方案中做出选择），希望能够从候选集合中选出最好的着陆页，以能够吸引来访的用户，并让深度交互或者购买行为的概率最大化。
+
+2 广告创意优化（Ad creative optimization）
+
+在线广告提出了许多适合机器学习技术应用的挑战，其中之一就是如何选择广告的形式和内容。当我们决定将要进行广告展示，以及确定了广告的价格后，在这个广告位上选择放置什么广告呢？我们需要对大量的决策进行测试，选出正确的广告创意组合。
+
+经常遇到的问题是，我们应该怎么评估各不相同的决策，以及应该采用哪些策略来测试我们的产出？ A/B测试（A/B testing）就是其中之一的方法。A/B测试近年来很受欢迎，但大部分产品经理也许会简单地认为它只不过是一种包含两个组的实验，其实背后有更为复杂的数学统计理论知识。
+
+具体细节
+当进行A/B测试时，通常会采用两个（或多个）组：A组和B组。第一个组是对照组，第二个组会改变其中一些因素。就以着陆页优化为例，A组会展示现有的着陆页，B组会展示一个内容或者内容作了某些修改的新着陆页。A/B测试的目的就是尝试了解新的布局是否在统计上显著地改变了转化率。
+
+特别值得注意的是，将用户分配到对应的组需要经过深思熟虑。对于A/B测试，我们可以高效地进行随机分组。当用户数量较大时，各组间用户行为可以假设是相同的（即组间没有偏差）。但是，这里有三个非常重要的关键点，是大家有必要进一步理解其数学理论原理的原因：
+
+1
+问题1
+怎样验证两个组的用户的行为是无偏差、完全相同的
+
+2
+问题2
+当两个组的用户行为不完全相同时（例如分组不够随机或者组内用户数量较小时），该如何设计AB测试以实现期望的验证结果
+
+3
+问题3
+当用户基础行为受其他因素影响发生整体变化了呢？例如季节、时间波动、热度等因素影响下，怎样更好的剔除干扰来评估结果
+
+假设我们已经构建了两组数目较大的用户组，这些用户组的区别仅在于他们到达的着陆页。我们现在希望能测试两组间的转化率在统计上是否存在明显差异。由于样本量大，我们可以采用双样本单尾z-检验（two-sample, one-tailed z-test）。另外，对于较小的样本集合，我们可以依赖于t-检验。
+
+z检验（z-test）是在数据是正态分布和随机抽样的假设下运行的，目的是验证测试集（B组）是否与该对照集（A组）有显著不同，但是如何执行这个测试呢？
+
+假设有来自A组和B组中的每一组的5,000个样本。我们需要一个数学公式来说明我们的零假设（null hypothesis）——两组群体的转化率没有显著的正差异，和备择假设（或称对立假设，alternative hypothesis）——不同人群间的转化率确实存在着正差异。
+
+我们可将采样转化率视为一个正态分布的随机变量，也就是说，采样的转化率是在正态分布下对转化率的一个观测。要了解这一点，请考虑从同一组中提取多个样本进行实验将导致略有不同的转化率。每当对某组进行抽样时，可获得群体转化率的估计，对于A组和B组都是如此。为此我们提出一个新的正态随机变量，它是A和B组的随机变量的组合，是差值的分布。让我们用X来表示这个新的随机变量，定义为:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417669636452432.png'/>
+其中，Xe表示实验组的转化率的随机变量，Xn表示对照组的转化率的随机变量。现在我们可以写出零假设和备择假设。零假设可以表示为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417670853940662.png'/>
+这表示实验组和对照组是相同的。两个随机变量Xe和Xn分布在相同的群体平均值周围，所以我们的新随机变量X应该分布在0左右。我们的备择假设可以表示如下:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417672378569103.png'/>
+实验组的随机变量的期望值大于对照组的期望值；该群体的平均值较高。
+
+我们可以在零假设的前提下，对X的分布执行单尾z检验，以确定是否有证据支持备择假设。为了达到这个目的，我们对X进行采样，计算标准分，并测试已知的显著性水平。
+
+X的采样等效于运行两个实验，确定它们各自的转化率，并将对照组和实验组的转化率相减。按照标准分的定义，可以写作：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417701011063440.png'/>
+
+其中，P_experiment是实验组的转化率，P_control 是对照组的转化率，SE是转化率差值的标准差。
+
+为确定标准误差，注意到转化过程是符合二项分布的，因此访问该网站可以被看作单次伯努利试验（single Bernoulli trial），而积极结果（完成转化）的可能性是未知的。
+
+假设样本数量足够大，我们可以使用广泛采用的Wald方法（参考Lawrence D. Brown, T. Tony Cai, and Anirban DasGupta, “Confidence Intervals for a Binomial Proportion and Asymptotic Expansions,” The Annals of Statistics 30, no. 1 (2002): 160–201.）将该分布近似为正态分布。为了捕获特定转化率的不确定性，我们可以将标准误差（SE）写入实验组和对照组，其中p是转化的可能性，n是样本数量，具体如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417702624802103.png'/>
+
+从二项分布（np（1-p））的方差得到分子，而分母表示当采用更多的样本时，转化率的误差会随之下降。请注意正面结果的概率等同于转化率，并且因为两个变量的标准误差可以通过相加来合并，得到如下结果：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417834193750097.png'/>
+通过替换，可获得如下的z检验公式，这是一个符合二项分布的Wald（或正态）区间的公式：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417834825627994.png'/>
+z的值越大，反对零假设的证据就越多。为了获得单尾测试的90％置信区间，我们的z值将需要大于1.28。这实际上这是指在零假设（A组和B组的人口平均值是相同的）的条件下，等于或大于这个转化率差值的偶然发生的概率小于10％。
+
+换句话说，在对照组和实验组的转化率来自具有相同平均值的分布的假设前提下，如果运行相同的实验100次，只会有10次具有这样的极端值。我们可以通过95％的置信区间，更严格的边界和更多的证据来反对零假设，这时需要将z值增加到1.65。
+
+
+研究影响z大小的因素会带来很多有用的帮助。很显然，如果在一个给定的时间点从一个实验集和一个对照集中提取两个转化率，转化率的差值越大将导致z分数越大。因此就有了更多的证据表明两个集合分别来自不同的人群，而且这些人群带有不同的均值。然而样品的数量也很重要，如你所见，大量样本将导致总体较小的标准误差。这表明运行实验的时间越长，转化率的估算越准确。
+
+设想你在负责大型零售网站，设计团队刚刚修改了着陆页。每周有约20,000用户，并可以量化用户的转化率：即购买产品的百分比。设计团队向你保证新网站将带来更多的客户。但你不太确定，希望运行A / B测试来看看效果是否真的会提高。
+
+用户在第一次访问网站时被随机分配到A组或B组，并在实验期间始终保留在该组中，实验结束时评估两组用户的平均转化率。统计结果是，新着陆页的平均转化率是0.002，而原先的着陆页的平均转化率是0.001。在着陆页永久更改为新设计之前，你需要知道这一增长是否足够明确。下面这段代码帮你回答这个问题。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417838083576508.png'/>
+
+这段代码获取实验中z的值，在上述参数条件下z值为1.827，超过了92％置信区间，但不在95％的区间内。可以说，从控制分布中抽取数据的概率小于0.08。因此在该区间内数据提升是显著的。我们应该否定零假设，接受备择假设，即组之间有差异，第二组具有较高的转化率。如果我们控制了用户组的所有其他方面，就意味着网站的新设计产生了积极的效果。
+
+你应该能够从代码中看到转化率分布的标准误差对返回的z值有直接影响。 对给定的常数值p_experiment和p_control，两个组的SE越高，z的数值越小，结果就越不显著。还注意到由于SE的定义，z的数值与样本的数量具有直接关系，对于给定的转换概率也同样如此。图2展示了这种关系。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417839337596569.png'/>
+
+图2 展示了A / B组的固定转化率，以及A / B组中的用户数量和z值之间的关系。 假设转化率不会随着我们收集更多数据而改变，我们需要每个组中大约3,000个用户达到70％的置信区间。 要达到80%的置信区间时需要每组约5000个用户，达到90%时需要 7500个用户，达到95%时需要12000个用户。
+
+图2中可见对于两个组的给定转化率，测试组中的用户越多，备择假设的证据就越充分。直观上来看这很容易理解：当收集的数据越多，我们对结果越自信！我们也可以绘制一张类似的图，保持用户数量不变，改变组之间的差异。但必须注意，对正在关注的应用，不应该期望效果的大幅度变化。
+
+对于非常小的效果变化，往往都需要创建相当大的对照组和测试组来实现AB测试，这个的代价往往是很大的。设想下在零售商场中，每天观察到的用户数量，往往需要很久的时间才能得出明显的结论。在实际业务应用中，会遇到的问题是：当你运行测试时整体运行的效果是受到很大影响的，因为必须有一半的用户处于效果不佳的实验组，或者有一半的用户处于效果不佳的对照组，而且你必须等待测试完成才能停止这种局面。
+
+这是被称为探索利用难题（explore-exploit conundrum）的一个经典问题。我们需要运行次优方法，以探索空间，并找到效果更好的解决方案，而一旦找到了更好的解决方案，我们还需要尽快利用它们来实现效果提升。能否可以更快地利用新的解决方案，而不必等待测试完全完成呢？答案是肯定的。下面简单介绍下多臂赌博机（multi-armed bandit，MAB）的概念。
+
+1
+多臂赌博机的定义
+
+多臂赌博机（multi-armed bandit，MAB）的名字来源于著名的赌博游戏角子赌博机（one-armed bandit）。对那些从没去过赌场的人，我们来做下解释：角子机（又称老虎机）是一个需要你拉杠杆（或摇臂）的赌博机器，根据机器展示的数值，你可能会得到一笔奖励，也可能（更大几率）得不到任何东西。和你想的一样，这些机器的设置都对庄家有利，所以能获的奖励的几率是非常非常小的。
+
+多臂赌博机（理论上的）扩展了这种形式，想象你面对的是一堆角子赌博机，每个赌博机都被分配按照一个独立的概率进行奖励。作为一个玩家，你不知道在这些机器后的获奖概率，你唯一可以找到获奖概率的方法是进行游戏。你的任务是通过玩这些机器，最大限度地提高所获的奖励。那么你应该使用什么策略呢？
+
+2
+多臂赌博机策略
+
+为了更严格地定义问题，我们通过数学形式化来表达，假设现在有k个赌博机，可观察到的每台的获奖概率等于p_k。假设一次只能拉动一个摇臂，并且赌博机只会按照它关联的概率机型奖励。这是一个设置了限定局数的有限次的游戏。在游戏期间任意时间点时，水平线H被定义为允许的剩余游戏的数量。
+
+对所有机器用户会尝试最大化的获奖回报。在游戏中的任一时间点，我们都可以通过使用称为遗憾值（regret）来度量用户的表现。遗憾值的意思是，假设用户能在每一步选择最优的赌博机，得到的奖励和目前获得的实际奖励的差值。遗憾值的数学定义为:
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417841875930283.png'/>
+
+其中T表示我们到目前为止进行过的步数，r_t表示在第t步获得的奖励，u_opt表示每一局从最优赌博机返回来的期望奖励。遗憾值的数值越低，策略越优。但因为这个度量值会受到偶然性的影响（奖励可能会被从最优赌博机选择中获得的期望奖励更高），我们可以选择使用遗憾值的期望值代替,定义为:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417843068648021.png'/>
+
+其中μ_t是在第t步从赌博机中获得的平均奖励（不可观测的）。因为第二项是来自所选策略的期望奖励，所以它将小于或等于来自最优策略（每一步都选择最优的赌博机）的期望奖励。
+
+3
+Epsilon优先方法
+Epsilon优先（Epsilon first）是MAB策略中最简单的一种方式，它被认为和事先执行A/B测试方法具有同等意义。给定ε，执行探索空间操作的次数为(1 – ε) × N，其中N是游戏中总共的局数，剩余的次数都是执行后续探索的局数。
+
+update_best_bandit算法会持续统计记录每一个赌博机的奖励收入和游戏局数。变best_bandit会在每一局结束进行更新，记录当前具有最高获奖概率的赌博机的编号，流程如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417844918265947.png'/>
+
+4
+Epsilon贪婪
+Epsilon贪婪（epsilon-greedy）策略中，ε表示我们进行探索空间的概率，和进行利用已知最优摇臂的事件互斥
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417846680100943.png'/>
+
+该方法的特点：不需要等到探索阶段完成，才能开始利用有关赌博机的奖励表现的知识。但要小心，该算法不会考虑效果数据的统计意义。因此可能发生这样的情况：个别赌博机的奖励峰值导致后续的所有局游戏都错误地选择了这个赌博机（陈运文 达观数据）。
+
+5
+Epsilon递减
+Epsilon递减（epsilon-decreasing）策略在实验开始阶段，会有一个很高的ε值，所以探索空间的可能性很高。ε值会随着水平线H上升而不断递减，致使利用似然知识的可能性更高。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417848068066154.png'/>
+
+需要注意这里有几种方法去来选择一个最优的速率来更新ε值，具体取决于赌博机的数量，以及他们各自进行奖励的权重。
+
+6
+贝叶斯赌博机
+与A / B测试类似，贝叶斯赌博机（Bayesian bandits）假设每个赌博机的获奖概率被建模为获奖概率的分布。当我们开始实验时，每个赌博机都有一个通用的先验概率（任意赌博机的奖励比率初始都是同等的）。
+
+在某一个赌博机上进行的局数越多，我们对它的奖励信息就了解越多，所以基于可能的奖励概率更新其获奖概率分布。当需要选择玩哪一个赌博机的时候，从获奖概率分布中采样，并选择对应样本中具有最高奖励比率的赌博机。图3提供了在给定时间内对三个赌博机所含信息的图形化表示。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417849363536695.png'/>
+
+图3
+
+使用贝叶斯赌博机策略对三个赌博机的获奖概率信息进行建模。第1、2和3个赌博机的平均获奖率分别为0.1、0.3和0.4。 第1个赌博机具有较低的平均值而且方差也比较大，第2个赌博机具有较高的平均值和较小的方差，第3个赌博机具有更高的平均值和更小的方差。
+
+可以看到关于赌博机的获奖概率分布的信息被编码为三个分布。每个分布具有递增的平均值和递减的方差。因此，我们不太确定奖励期望值为0.1的真实奖励率，最可靠的是奖励期望值为0.4的赌博机。因为赌博机的选择是通过对分布进行抽样来进行的，所以分布期望值是0.1的赌博机的摇臂也可能被拉动。这个事件会发生在第2个赌博机和第3个赌博机的采样样本奖励值异常小，而且第1个赌博机的采样样本异常大时，相应代码如下（陈运文 达观数据）：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415441785152579310.png'/>
+
+A/B测试和贝叶斯赌博机的各自的优点和局限是：两者有各自适用的场景，也验证的变量数量也各不相同，具体如下表。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417852861627157.png'/>
+
+此外，两个方法的收敛速度也很不一样。在A/B测试中是指获得统计意义，在贝叶斯赌博机中是指累积遗憾值不再增加。以本章最开始的网站优化为例，首先请注意，任何行为的改变可能是微小的（<0.01），而我们已经知道贝叶斯赌博机相比大的改变提升，需要更多的收敛时间。如果加了多种选择，在同一个实验中测试多种登陆页面，将更加会影响收敛速度。假如用户变化导致的底层分布变的比模型收敛更快呢？比如，季节趋势，销售或者其他因素可能会影响。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154417854125101876.png'/>
+
+显然，收集的数据越多，对效果的潜在变化的把握度就越高。当2个组划分本身就存在统计差异时，通过多臂赌博机而不是A/B测试的方法可以从概率上修正我们选择的分布。本文还重点介绍了z检验（z-test）的数学知识，因为其构成了A/B测试的统计理论基础。
+
+
+作者：陈运文
+来源：达观数据是国内领先的文本智能处理专家，为企业提供文本挖掘、知识图谱、个性化推荐、垂直搜索等人工智能服务。达观数据由陈运文博士及其伙伴创立，团队由来自腾讯、盛大、百度、阿里等知名企业的高管和技术专家组成。
+## 140.如何更科学的做机器学习100天入门计划
+无意中在微博上发现一篇《机器学习100天计划》的文章（详在文末），仔细看了后发现，整体很随意，忽而机器学习 深度学习，忽而数学 数据分析 可视化，其实比较好的计划就是按照七月在线的集训营大纲来：复习完数学2后，开始python 数据分析 可视化 大数据 机器学习 深度学习。
+
+所以便有了本文，做一个更加科学的机器学习100天入门计划，然后首发本七月在线APP里。
+
+第一阶段 复习数学基础
+参考数学2：https://www.julyedu.com/course/getDetail/103
+第1天 复习微分学基本概念
+极限，导数，偏导数，泰勒级数 
+七月在线题库里搜：梯度下降法与牛顿法
+推荐书籍《微积分概念发展史》
+
+第2天 函数求导法则，反函数求导，隐函数定理简介
+第3天 反向传播算法在神经网络里的应用
+
+第4天 积分学与概率论基本概念，贝叶斯公式，正态分布与熵
+第5天 朴素贝叶斯分类器
+blog，从贝叶斯方法谈到贝叶斯网络：http://blog.csdn.net/v_july_v/article/details/40984699
+
+第6天 极大似然估计 凸函数，琴生不等式
+第7天 逻辑回归，EM算法简介
+题库，通俗理解EM算法：https://www.julyedu.com/question/big/kp_id/23/ques_id/1007
+
+第8天 线性代数基础：线性函数与矩阵运算
+第9天 最小二乘法的几何以及统计学意义 
+
+第10天 线性代数进阶：矩阵标准型理论简介，矩阵的奇异值分解
+第11天 数据降维之主成分分析
+
+第12天 凸优化简介：凸优化问题，拉格朗日乘数法与KKT条件
+第13天 从优化的角度理解支持向量机
+
+第二阶段 复习经典数据结构和算法
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154916814617447016.jpeg'/>
+第14天 算法初步：复杂度 均摊分析 最大子数组和
+第15天 栈和队列、并查集
+第16天 什么都能往里塞的哈希表、布隆过滤器
+
+第17天  二叉树的前中后序遍历
+第18天 表达树构造与最近公共祖先
+第19天 堆的构造与应用
+
+第20天 图的定义（有向图，无向图）、拓扑排序
+第21天 最短路（Floyd，Dijkstra，Bellmanford）与最小生成树
+
+第22天 递归奥义、斐波那契数列、汉诺塔问题
+第23天 手写快速排序与树的遍历
+
+第24天 图搜索初步：遍历（深度优先 广度优先）、走迷宫、状态空间
+第25天 迭代加深搜索与启发式搜索
+
+第26天 实战动态规划和最小／最大子数组、最小差
+第27天 矩阵归零、跳跃游戏、加油站
+
+第28天 递归本质、最优子结构、重叠子问题
+第29天 万金油套路、手写写DP
+第30天 并发编程基础知识、Map Reduce简介及常见面试问题
+第31天 缓存以及数据库优化与分布式事务处理
+第32天 博弈论 概率 数论
+
+第三阶段 零基础快速上手编程
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154916820732539268.jpeg'/>
+第33天 基本python类型、判断与循环流程等
+第34天 实战google python基本练习题
+
+第35天 文件/数据读写、面向对象、第三方库等
+第36天 多种数据读写与面向对象练习
+
+第四阶段 数据分析全攻略
+第37天 使用Numpy与Pandas进行数据统计与分析
+第38天 pandas综合练习
+
+第39天 用pandas完成机器学习数据预处理与特征工程
+第40天 pandas完成Kaggle机器学习预处理
+第41天 美国大选、共享单车数据分析
+
+第五阶段 可视化提升数据逼格技能get
+第42天 好用的python可视化利器matplotlib
+第43天 matplotlib完成Titanic和自行车租赁数据可视化
+
+第44天 自带各种数据拟合分析的可视化利器seaborn
+第45天 seaborn完成Titanic和自行车租赁数据可视化
+第46天 美国大选、共享单车可视化技能巩固与实战
+
+第六阶段 玩转大数据
+第47天 hadoop与map-reduce
+第48天 手写map-reduce完成词频统计，制作词云
+第49天 Spark大数据日志分析与大数据分析处理案例
+
+第七阶段 机器学习原理
+第50天 线性回归、logistic回归、梯度下降
+第51天 实际工程海量数据下的logistic回归使用
+第52天 分布拟合与回归、用LR分类与概率预测
+第53天 用LR完成Kaggle比赛迈开第一步
+
+第54天 决策树与树集成模型
+知识点1：不同类型的分类树模型
+知识点2：决策树回归
+知识点3：树模型过拟合与优化
+实战：使用随机森林进行数据分类
+
+第55天 SVM
+知识点1 ：线性可分支持向量机、线性支持向量机
+知识点2 ：非线性支持向量机
+知识点3 ：SMO
+
+第56天 使用SVM进行数据分类
+公开课，老冯经典之作：纯白板手推SVM：http://www.julyedu.com/video/play/18/429
+风靡全网的《支持向量机通俗导论（理解SVM的三层境界）》：https://blog.csdn.net/v_JULY_v/article/details/7624837，题库版：https://www.julyedu.com/question/big/kp_id/23/ques_id/919
+
+第57天 最大熵
+第58天 EM算法
+如何通俗理解EM算法：https://www.julyedu.com/question/big/kp_id/23/ques_id/1007
+
+第59天 机器学习中的特征工程处理
+知识点1 ：数据清洗、异常点处理
+知识点2 ：特征抽取、选择与组合策略
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154911791324365155.png'/>
+到底什么是特征工程：https://www.julyedu.com/question/big/kp_id/23/ques_id/1058
+
+第60天 特征处理与特征选择模板
+
+第61天 多算法组合与模型最优化
+知识点1 ：机器学习问题场景分析、算法选择
+知识点2 ：模型构建、模型性能分析与优化策略
+第62天 构建模型组合策略工具与模板
+
+第63天 sklearn与机器学习实战
+知识点1 ：sklearn板块介绍
+知识点2 ：sklearn完成数据预处理与特征工程
+知识点3 ：建模流水线搭建
+第64天 经典Titanic案例
+第65天 商品销量预测案例等
+
+第66天 高级工具xgboost/lightGBM与建模实战
+知识点1 ：xgboost使用方法与高级功能
+知识点2 ：lightGBM使用方法与高级功能
+
+第67天 Titanic与商品销量预测进阶，Kaggle案例实战
+blog，通俗理解kaggle比赛大杀器xgboost：https://www.julyedu.com/question/big/kp_id/23/ques_id/2590
+
+第68天 实战电商推荐系统
+知识点1 ：推荐系统与评估
+知识点2 ：基于内容的推荐
+知识点3 ：基于近邻的推荐--协同过滤
+知识点4 ：隐语义模型
+
+第69天 从头手写搭建协同过滤与隐语义模型推荐
+第70天 基于scikit-surprise的推荐系统
+
+第71天 聚类
+知识点1 ：K-means/K-Medoid
+知识点2 ：层次聚类
+知识点3 ：GMM
+第72天 K-means/GMM代码实现和实际应用分析
+
+第73天 基于用户聚类的推荐系统
+第74天 推荐系统比赛案例（数据、代码）
+
+第75天 贝叶斯网络
+知识点1 ：朴素贝叶斯
+知识点2 ：有向分离
+知识点3 ：马尔科夫模型
+
+第76天 隐马尔科夫模型HMM
+知识点1 ：概率计算问题
+知识点2 ：参数学习问题
+知识点3 ：状态预测问题
+第77天 使用HMM进行中文分词
+
+第78天 主题模型
+知识点1 ：pLSA
+知识点2 ：共轭先验分布
+知识点3 ：LDA
+第79天 使用LDA进行文档分类
+
+第八阶段 实战深度学习
+第80天 DNN与混合网络
+知识点1 ：多分类softmax与交叉熵损失
+知识点2 ：人工神经网络与BP+SGD优化
+第81天 数据非线性切分+google wide&deep 模型实现分类
+
+第82天 CNN从入门到高级应用(上)
+知识点1 ：CNN结构详解
+知识点2 ：CNN发展史与主要优化点(从AlexNet到DenseNet)
+CNN笔记：通俗理解卷积神经网络：https://blog.csdn.net/v_JULY_v/article/details/51812459
+第83天 Keras搭建CNN完成图像分类示例
+
+第84天 CNN从入门到高级应用(下)
+知识点1 ：从图像分类到物体检测应用
+知识点2 ：rcnn/fast-rcnn/faster-rcnn/YOLO/SSD
+第85天 使用tensorflow的object detection API完成物体检测
+
+第86天 CNN延伸：NN框架：caffe, tensorflow与pytorch
+知识点1 ：Caffe的便捷图像应用
+知识点2 ：TensorFlow与搭积木一样方便的Keras
+知识点3 ：facebook的新秀pytorch
+第87天 用几大框架完成DNN与CNN网络搭建与分类
+
+第88天 生成对抗网络GAN
+知识点1 ：无监督学习与图像生成
+知识点2 ：生成对抗网络与原理
+实战项目 ：DCGAN图像生成
+
+第89天 从词向量到NLP分类问题
+知识点1 ：BOW、TF-IDF、word2vec
+知识点2 ：自然语言处理分类问题
+实战项目 ：用CNN完成文本分类
+
+第90天 RNN/LSTM/Grid LSTM
+知识点1 ：序列数据与循环神经网络
+知识点2 ：RNN/LSTM/Grid LSTM
+实战项目 ：RNN文本分类
+
+第91天 RNN条件生成与attention
+知识点1 ：RNN条件生成与attention
+知识点2 ：“看图说话”原理
+实战项目 ：google神经网络翻译系统
+第五阶段 迁移学习与增强学习
+
+第92天 增强学习与Deep Q Network
+知识点1 ：马尔科夫决策过程
+知识点2 ：价值函数与策略评价、学习
+知识点3 ：Deep Q network
+实战项目 ：用Tensorflow搭建Deep Q learning玩Flappy bird
+
+第92～95天 金融风控比赛实战
+知识点1 ：微额借贷风控案例：数据分析、特征处理、特征选择、模型设计
+知识点2 ：风控算法案例：数据清洗、特征选择、类别不平衡解决、模型设计
+知识点3 ：模型融合及项目代码
+
+第96～100天 全面复习机器学习原理，并快速实战机器学习项目，比如kaggle/天池比赛。
+
+
+附：国外一小哥的机器学习100天计划（整体偏随意，但可以结合着一块看看）：https://github.com/MLEveryday/100-Days-Of-ML-Code
+目录
+有监督学习
+数据预处理
+简单线性回归
+多元线性回归
+逻辑回归
+k近邻法(k-NN)
+支持向量机(SVM)
+决策树
+随机森林
+无监督学习
+K-均值聚类
+层次聚类
+
+数据预处理 | 第1天
+数据预处理实现
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154909178064150481.jpg'/>
+
+简单线性回归 | 第2天
+简单线性回归实现
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155727980445922742.png'/>
+多元线性回归 | 第3天
+多元线性回归实现
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155728001979811563.png'/>
+逻辑回归 | 第4天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155728028289736352.png'/>逻辑回归 | 第5天
+今天我深入研究了逻辑回归到底是什么，以及它背后的数学是什么。学习了如何计算代价函数，以及如何使用梯度下降法来将代价函数降低到最小。
+
+由于时间关系，我将隔天发布信息图。如果有人在机器学习领域有一定经验，并愿意帮我编写代码文档，也了解github的Markdown语法，请在领英联系我。
+
+逻辑回归 | 第6天
+逻辑回归实现
+
+K近邻法(k-NN) | 第7天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415572803257608365.png'/>
+逻辑回归背后的数学 | 第8天
+为了使我对逻辑回归的见解更加清晰，我在网上搜索了一些资源或文章，然后我就发现了Saishruthi Swaminathan的这篇文章
+它给出了逻辑回归的详细描述。请务必看一看。
+
+支持向量机(SVM) | 第9天
+直观了解SVM是什么以及如何使用它来解决分类问题。
+
+支持向量机和K近邻法 | 第10天
+了解更多关于SVM如何工作和实现knn算法的知识。
+
+K近邻法(k-NN) | 第11天
+K近邻法(k-NN)实现
+
+支持向量机(SVM) | 第12天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155728035842279652.png'/>
+支持向量机(SVM) | 第13天
+SVM实现
+
+支持向量机(SVM)的实现 | 第14天
+今天我在线性相关数据上实现了SVM。使用Scikit-Learn库。在scikit-learn中我们有SVC分类器，我们用它来完成这个任务。将在下一次实现时使用kernel-trick。Python代码见此处,Jupyter notebook见此处。
+
+朴素贝叶斯分类器(Naive Bayes Classifier)和黑盒机器学习(Black Box Machine Learning) | 第15天
+学习不同类型的朴素贝叶斯分类器同时开始Bloomberg的课程。课程列表中的第一个是黑盒机器学习。它给出了预测函数，特征提取，学习算法，性能评估，交叉验证，样本偏差，非平稳性，过度拟合和超参数调整的整体观点。
+
+通过内核技巧实现支持向量机 | 第16天
+使用Scikit-Learn库实现了SVM算法以及内核函数，该函数将我们的数据点映射到更高维度以找到最佳超平面。
+
+在Coursera开始深度学习的专业课程 | 第17天
+在1天内完成第1周和第2周内容以及学习课程中的逻辑回归神经网络。
+
+继续Coursera上的深度学习专业课程 | 第18天
+完成课程1。用Python自己实现一个神经网络。
+
+学习问题和Yaser Abu-Mostafa教授 | 第19天
+开始Yaser Abu-Mostafa教授的Caltech机器学习课程-CS156中的课程1。这基本上是对即将到来的课程的一种介绍。他也介绍了感知算法。
+
+深度学习专业课程2 | 第20天
+完成改进深度神经网络第1周内容：参数调整，正则化和优化。
+
+网页搜罗 | 第21天
+观看了一些关于如何使用Beautiful Soup进行网络爬虫的教程，以便收集用于构建模型的数据。
+
+学习还可行吗? | 第22天
+完成Yaser Abu-Mostafa教授的Caltech机器学习课程-CS156中的课程2。学习Hoeffding不等式。
+
+决策树 | 第23天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415572804069580340.png'/>统计学习理论的介绍 | 第24天
+
+Bloomberg ML课程的第3课介绍了一些核心概念，如输入空间，动作空间，结果空间，预测函数，损失函数和假设空间。
+
+决策树 | 第25天
+决策树实现
+
+跳到复习线性代数 | 第26天
+发现YouTube一个神奇的频道3Blue1Brown，它有一个播放列表《线性代数的本质》。看完了4个视频，包括了向量，线性组合，跨度，基向量，线性变换和矩阵乘法。
+
+跳到复习线性代数 | 第27天
+继续观看了4个视频，内容包括三维变换、行列式、逆矩阵、列空间、零空间和非方矩阵。
+
+跳到复习线性代数 | 第28天
+继续观看了3个视频，内容包括点积和叉积。
+
+跳到复习线性代数 | 第29天
+观看了剩余的视频12到14，内容包括特征向量和特征值，以及抽象向量空间。
+
+微积分的本质 | 第30天
+完成上一播放列表后，YouTube推荐了新内容《微积分的本质》，今天看完了其中的3个视频，包括导数、链式法则、乘积法则和指数导数。
+
+微积分的本质 | 第31天
+观看了2个视频，内容包括隐分化与极限。
+
+微积分的本质 | 第32天
+观看了剩余的4个视频，内容包括积分与高阶导数。
+
+随机森林 | 第33天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155728043696250869.png'/>
+随机森林 | 第34天
+随机森林实现
+
+什么是神经网络？ | 深度学习，第1章 | 第 35天
+Youtube频道3Blue1Brown中有精彩的视频介绍神经网络。这个视频提供了很好的解释，并使用手写数字数据集演示基本概念。
+
+梯度下降法，神经网络如何学习 | 深度学习，第2章 | 第36天
+Youtube频道3Blue1Brown关于神经网络的第2部分，这个视频用有趣的方式解释了梯度下降法。推荐必须观看169.
+
+反向传播法究竟做什么？ | 深度学习，第3章 | 第37天
+Youtube频道3Blue1Brown关于神经网络的第3部分，这个视频主要介绍了偏导数和反向传播法。
+
+反向传播法演算 | 深度学习，第4章 | 第38天
+Youtube频道3Blue1Brown关于神经网络的第3部分，这个视频主要介绍了偏导数和反向传播法。
+
+第1部分 | 深度学习基础Python，TensorFlow和Keras | 第39天
+
+第2部分 | 深度学习基础Python，TensorFlow和Keras | 第40天
+
+第3部分 | 深度学习基础Python，TensorFlow和Keras | 第41天
+
+第4部分 | 深度学习基础Python，TensorFlow和Keras | 第42天
+
+K-均值聚类 | 第43天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155728047817802456.png'/>转到无监督学习，并研究了聚类。可在作者网站查询。发现一个奇妙的动画有助于理解K-均值聚类。
+
+K-均值聚类 | 第44天
+实现（待添加代码）
+
+深入研究 | NUMPY | 第45天
+得到JK VanderPlas写的书《Python数据科学手册（Python Data Science HandBook）》，Jupyter notebooks在这里。 
+高清中文版pdf 
+第2章：NumPy介绍，包括数据类型、数组和数组计算。 
+代码如下： 
+2 NumPy入门 
+2.1 理解Python中的数据类型 
+2.2 NumPy数组基础 
+2.3 NumPy数组的计算：通用函数
+
+深入研究 | NUMPY | 第46天
+第2章： 聚合, 比较运算符和广播。 
+代码如下： 
+2.4 聚合：最小值、最大值和其他值 
+2.5 数组的计算：广播 
+2.6 比较、掩码和布尔运算
+
+深入研究 | NUMPY | 第47天
+第2章： 花哨的索引，数组排序，结构化数据。 
+代码如下： 
+2.7 花哨的索引 
+2.8 数组的排序 
+2.9 结构化数据：NumPy的结构化数组
+
+深入研究 | PANDAS | 第48天
+第3章：Pandas数据处理 
+包含Pandas对象，数据取值与选择，数值运算方法，处理缺失值，层级索引，合并数据集。 
+代码如下： 
+3 Pandas数据处理 
+3.1 Pandas对象简介 
+3.2 数据取值与选择 
+3.3 Pandas数值运算方法 
+3.4 处理缺失值 
+3.5 层级索引 
+3.6 合并数据集：ConCat和Append方法
+
+深入研究 | PANDAS | 第49天
+第3章：完成剩余内容-合并与连接，累计与分组，数据透视表。 
+代码如下： 
+3.7 合并数据集：合并与连接 
+3.8 累计与分组 
+3.9 数据透视表
+
+深入研究 | PANDAS | 第50天
+第3章：向量化字符串操作，处理时间序列。 
+代码如下： 
+3.10 向量化字符串操作 
+3.11 处理时间序列 
+3.12 高性能Pandas：eval()与query()
+
+深入研究 | MATPLOTLIB | 第51天
+第4章：Matplotlib数据可视化 
+学习简易线形图, 简易散点图，密度图与等高线图. 
+代码如下： 
+4 Matplotlib数据可视化 
+4.1 简易线形图 
+4.2 简易散点图 
+4.3 可视化异常处理 
+4.4 密度图与等高线图
+
+深入研究 | MATPLOTLIB | 第52天
+第4章：Matplotlib数据可视化 
+学习直方图，配置图例，配置颜色条，多子图。 
+代码如下： 
+4.5 直方图 
+4.6 配置图例 
+4.7 配置颜色条 
+4.8 多子图 
+4.9 文字与注释
+
+深入研究 | MATPLOTLIB | 第53天
+第4章：Matplotlib数据可视化 
+学习三维绘图。 
+4.12 画三维图
+
+层次聚类 | 第54天
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155728051420116095.png'/>

@@ -1,0 +1,2323 @@
+## 141.如何通俗理解主成成分分析PCA
+本题解析作者：JerryLead
+来源：https://www.cnblogs.com/jerrylead/
+
+一、问题
+我们在实际中，往往会发现真实的训练数据总是存在各种各样的问题：
+1、 比如拿到一个汽车的样本，里面既有以“千米/每小时”度量的最大速度特征，也有“英里/小时”的最大速度特征，显然这两个特征有一个多余。
+
+2、 拿到一个数学系的本科生期末考试成绩单，里面有三列，一列是对数学的兴趣程度，一列是复习时间，还有一列是考试成绩。我们知道要学好数学，需要有浓厚的兴趣，所以第二项与第一项强相关，第三项和第二项也是强相关。那是不是可以合并第一项和第二项呢？
+
+3、 拿到一个样本，特征非常多，而样例特别少，这样用回归去直接拟合非常困难，容易过度拟合。比如北京的房价：假设房子的特征是（大小、位置、朝向、是否学区房、建造年代、是否二手、层数、所在层数），搞了这么多特征，结果只有不到十个房子的样例。要拟合房子特征->房价的这么多特征，就会造成过度拟合。
+
+4、 这个与第二个有点类似，假设在IR中我们建立的文档-词项矩阵中，有两个词项为“learn”和“study”，在传统的向量空间模型中，认为两者独立。然而从语义的角度来讲，两者是相似的，而且两者出现频率也类似，是不是可以合成为一个特征呢？
+
+5、 在信号传输过程中，由于信道不是理想的，信道另一端收到的信号会有噪音扰动，那么怎么滤去这些噪音呢？
+
+     回顾我们之前介绍的《模型选择和规则化》，里面谈到的特征选择的问题。但在那篇中要剔除的特征主要是和类标签无关的特征。比如“学生的名字”就和他的“成绩”无关，使用的是互信息的方法。
+
+     而这里的特征很多是和类标签有关的，但里面存在噪声或者冗余。在这种情况下，需要一种特征降维的方法来减少特征数，减少噪音和冗余，减少过度拟合的可能性。
+
+     下面探讨一种称作主成分分析（PCA）的方法来解决部分上述问题。PCA的思想是将n维特征映射到k维上（k < n），这k维是全新的正交特征。这k维特征称为主元，是重新构造出来的k维特征，而不是简单地从n维特征中去除其余n-k维特征。
+
+
+二、PCA计算过程
+     首先介绍PCA的计算过程：
+
+     假设我们得到的2维数据如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918095330970905.png'/>
+
+     行代表了样例，列代表特征，这里有10个样例，每个样例两个特征。可以这样认为，有10篇文档，x是10篇文档中“learn”出现的TF-IDF，y是10篇文档中“study”出现的TF-IDF。也可以认为有10辆汽车，x是千米/小时的速度，y是英里/小时的速度，等等。
+
+     第一步分别求x和y的平均值，然后对于所有的样例，都减去对应的均值。这里x的均值是1.81，y的均值是1.91，那么一个样例减去均值后即为（0.69,0.49），得到
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918096271812558.png'/>
+
+     第二步，求特征协方差矩阵，如果数据是3维，那么协方差矩阵是
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918097069869010.png'/>
+
+     这里只有x和y，求解得
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918097556811253.png'/>
+
+     对角线上分别是x和y的方差，非对角线上是协方差。协方差大于0表示x和y若有一个增，另一个也增；小于0表示一个增，一个减；协方差为0时，两者独立。协方差绝对值越大，两者对彼此的影响越大，反之越小。
+
+     第三步，求协方差的特征值和特征向量，得到
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918098317431273.png'/>
+
+     上面是两个特征值，下面是对应的特征向量，特征值0.0490833989对应特征向量为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918099260908470.png'/>，这里的特征向量都归一化为单位向量。
+
+    第四步，将特征值按照从大到小的顺序排序，选择其中最大的k个，然后将其对应的k个特征向量分别作为列向量组成特征向量矩阵。
+
+     这里特征值只有两个，我们选择其中最大的那个，这里是1.28402771，对应的特征向量是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918100125863039.png'/>。
+
+     第五步，将样本点投影到选取的特征向量上。假设样例数为m，特征数为n，减去均值后的样本矩阵为DataAdjust(m*n)，协方差矩阵是n*n，选取的k个特征向量组成的矩阵为EigenVectors(n*k)。那么投影后的数据FinalData为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918100931452373.png'/>
+
+     这里是
+     FinalData(10*1) = DataAdjust(10*2矩阵)×特征向量<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918102391899350.png'/>
+
+     得到结果是
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918102885145929.png'/>
+
+这样，就将原始样例的n维特征变成了k维，这k维就是原始特征在k维上的投影。
+
+     上面的数据可以认为是learn和study特征融合为一个新的特征叫做LS特征，该特征基本上代表了这两个特征。
+
+     上述过程有个图描述：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918120179517045.png'/>
+
+     正号表示预处理后的样本点，斜着的两条线就分别是正交的特征向量（由于协方差矩阵是对称的，因此其特征向量正交），最后一步的矩阵乘法就是将原始样本点分别往特征向量对应的轴上做投影。
+
+     如果取的k=2，那么结果是
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918121070308735.png'/>
+
+     这就是经过PCA处理后的样本数据，水平轴（上面举例为LS特征）基本上可以代表全部样本点。整个过程看起来就像将坐标系做了旋转，当然二维可以图形化表示，高维就不行了。上面的如果k=1，那么只会留下这里的水平轴，轴上是所有点在该轴的投影。
+
+     这样PCA的过程基本结束。在第一步减均值之后，其实应该还有一步对特征做方差归一化。比如一个特征是汽车速度（0到100），一个是汽车的座位数（2到6），显然第二个的方差比第一个小。因此，如果样本特征中存在这种情况，那么在第一步之后，求每个特征的标准差<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918156463244921.png'/>，然后对每个样例在该特征下的数据除以<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918157294320984.png'/>。
+
+     归纳一下，使用我们之前熟悉的表示方法，在求协方差之前的步骤是：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918122097250836.png'/>
+
+     其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918127210737182.png'/>是样例，共m个，每个样例n个特征，也就是说<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918128689134686.png'/>是n维向量。<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918129489054602.png'/>是第i个样例的第j个特征。<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918159865005752.png'/>是样例均值。<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918133252718642.png'/>是第j个特征的标准差。
+
+     整个PCA过程貌似及其简单，就是求协方差的特征值和特征向量，然后做数据转换。但是有没有觉得很神奇，为什么求协方差的特征向量就是最理想的k维向量？其背后隐藏的意义是什么？整个PCA的意义是什么？
+
+
+三、PCA理论基础
+     要解释为什么协方差矩阵的特征向量就是k维理想特征，我看到的有三个理论：分别是最大方差理论、最小错误理论和坐标轴相关度理论。这里简单探讨前两种，最后一种在讨论PCA意义时简单概述。
+
+3.1 最大方差理论
+     在信号处理中认为信号具有较大的方差，噪声有较小的方差，信噪比就是信号与噪声的方差比，越大越好。如前面的图，样本在横轴上的投影方差较大，在纵轴上的投影方差较小，那么认为纵轴上的投影是由噪声引起的。
+
+因此我们认为，最好的k维特征是将n维样本点转换为k维后，每一维上的样本方差都很大。
+
+     比如下图有5个样本点：（已经做过预处理，均值为0，特征方差归一）
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918191274966606.png'/>
+
+     下面将样本投影到某一维上，这里用一条过原点的直线表示（前处理的过程实质是将原点移到样本点的中心点）。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918191829672400.jpg'/>
+
+     假设我们选择两条不同的直线做投影，那么左右两条中哪个好呢？根据我们之前的方差最大化理论，左边的好，因为投影后的样本点之间方差最大。
+
+     这里先解释一下投影的概念：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918192729171324.png'/>
+
+     红色点表示样例<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491819396934555.png'/>，蓝色点表示<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918196316145781.png'/>在u上的投影，u是直线的斜率也是直线的方向向量，而且是单位向量。蓝色点是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918198139025439.png'/>在u上的投影点，离原点的距离是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918199681319860.png'/>（即<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918200518267260.png'/>或者<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918201842959633.png'/>）由于这些样本点（样例）的每一维特征均值都为0，因此投影到u上的样本点（只有一个到原点的距离值）的均值仍然是0。
+
+     回到上面左右图中的左图，我们要求的是最佳的u，使得投影后的样本点方差最大。
+
+     由于投影后均值为0，因此方差为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918203715544576.png'/>
+
+     中间那部分很熟悉啊，不就是样本特征的协方差矩阵么（<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491820559179570.png'/>的均值为0，一般协方差矩阵都除以m-1，这里用m）。
+
+     用<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918206956585357.png'/>来表示<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918207833174323.png'/>，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918209356525855.png'/>表示<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918210019275010.png'/>，那么上式写作
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918210865787709.png'/>
+
+     由于u是单位向量，即<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918212627145441.png'/>，上式两边都左乘u得，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918213811202523.png'/>，即
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918215444258962.png'/>
+
+     We got it！<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918216859938742.png'/>就是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918217570773733.png'/>的特征值，u是特征向量。最佳的投影直线是特征值<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918218938291861.png'/>最大时对应的特征向量，其次是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918220473678294.png'/>第二大对应的特征向量，依次类推。
+
+     因此，我们只需要对协方差矩阵进行特征值分解，得到的前k大特征值对应的特征向量就是最佳的k维新特征，而且这k维新特征是正交的。得到前k个u以后，样例<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491823226038273.png'/>通过以下变换可以得到新的样本。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918234256528976.png'/>
+
+     其中的第j维就是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918235545674786.png'/>在<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918236361537092.png'/>上的投影。
+     通过选取最大的k个u，使得方差较小的特征（如噪声）被丢弃。
+
+    以上是其中一种对PCA的解释，下面来介绍第二种解释：错误最小化。
+
+3.2 最小平方误差理论
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918268162184697.png'/>
+
+     假设有这样的二维样本点（红色点），回顾我们前面探讨的是求一条直线，使得样本点投影到直线上的点的方差最大。本质是求直线，那么度量直线求的好不好，不仅仅只有方差最大化的方法。再回想我们最开始学习的线性回归等，目的也是求一个线性函数使得直线能够最佳拟合样本点，那么我们能不能认为最佳的直线就是回归后的直线呢？回归时我们的最小二乘法度量的是样本点到直线的坐标轴距离。
+
+比如这个问题中，特征是x，类标签是y。回归时最小二乘法度量的是距离d。如果使用回归方法来度量最佳直线，那么就是直接在原始样本上做回归了，跟特征选择就没什么关系了。
+
+     因此，我们打算选用另外一种评价直线好坏的方法，使用点到直线的距离d’来度量。
+
+     现在有n个样本点<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918274472852925.png'/>，每个样本点为m维（这节内容中使用的符号与上面的不太一致，需要重新理解符号的意义）。将样本点<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918275612484845.png'/>在直线上的投影记为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918276529841628.png'/>，那么我们就是要最小化
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918277257559241.png'/>
+
+     这个公式称作最小平方误差（Least Squared Error）。
+
+     而确定一条直线，一般只需要确定一个点，并且确定方向即可。
+
+     第一步确定点：
+
+     假设要在空间中找一点<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918286434900086.png'/>来代表这n个样本点，“代表”这个词不是量化的，因此要量化的话，我们就是要找一个m维的点<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918287545290637.png'/>，使得
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918288543183344.png'/>
+
+     最小。其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918289379090202.png'/>是平方错误评价函数（squared-error criterion function），假设m为n个样本点的均值：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918289941740148.png'/>
+
+     那么平方错误可以写作：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918290814198537.jpg'/>
+
+     后项与<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918291850535200.png'/>无关，看做常量，而<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918292543657263.png'/>，因此最小化<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918293470993764.png'/>时，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918294681656683.png'/>
+
+     <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918295412502448.png'/>是样本点均值。
+
+     第二步确定方向：
+
+     我们从<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918303291968902.png'/>拉出要求的直线（这条直线要过点m），假设直线的方向是单位向量e。那么直线上任意一点，比如<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918304057210097.png'/>就可以用点m和e来表示
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918305043882347.png'/>
+
+     其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491830581759896.png'/>是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918306483909570.png'/>到点m的距离。
+
+     我们重新定义最小平方误差：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918307068627318.png'/>
+
+     这里的k只是相当于i。<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491831459276837.png'/>就是最小平方误差函数，其中的未知参数是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918315561158490.png'/>和e。
+
+     实际上是求<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918317783134551.png'/>的最小值。首先将上式展开：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918318456629029.jpg'/>
+
+     我们首先固定e，将其看做是常量，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918319288708685.png'/>，然后对<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918320044188512.png'/>进行求导，得
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918320956801425.png'/>
+
+     这个结果意思是说，如果知道了e，那么将<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918341970070219.png'/>与e做内积，就可以知道了<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918342820830244.png'/>在e上的投影离m的长度距离，不过这个结果不用求都知道。
+
+     然后是固定<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918344716340549.png'/>，对e求偏导数，我们先将公式（8）代入<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918345560791961.png'/>，得 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491834629464596.png'/>
+
+     其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491834849152062.png'/>与协方差矩阵类似，只是缺少个分母n-1，我们称之为散列矩阵（scatter matrix）。
+
+     然后可以对e求偏导数，但是e需要首先满足<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918350132478114.png'/>，引入拉格朗日乘子<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415491835579995586.png'/>，来使<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918356959970450.png'/>最大（<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918358048801478.png'/>最小），令
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918359187995011.png'/>
+
+     求偏导
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918366757276819.png'/>
+
+     这里存在对向量求导数的技巧，方法这里不多做介绍。可以去看一些关于矩阵微积分的资料，这里求导时可以将<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918368149678553.png'/>看作是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918368925052299.png'/>，将<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918370088734599.png'/>看做是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918371030518709.png'/>。
+
+     导数等于0时，得
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918371754114210.png'/>
+
+     两边除以n-1就变成了，对协方差矩阵求特征值向量了。
+
+     从不同的思路出发，最后得到同一个结果，对协方差矩阵求特征向量，求得后特征向量上就成为了新的坐标，如下图：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918372460364940.png'/>
+
+     这时候点都聚集在新的坐标轴周围，因为我们使用的最小平方误差的意义就在此。
+
+
+四、PCA理论意义
+     PCA将n个特征降维到k个，可以用来进行数据压缩，如果100维的向量最后可以用10维来表示，那么压缩率为90%。同样图像处理领域的KL变换使用PCA做图像压缩。但PCA要保证降维后，还要保证数据的特性损失最小。
+
+再看回顾一下PCA的效果。经过PCA处理后，二维数据投影到一维上可以有以下几种情况：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918411034560999.png'/>
+
+     我们认为左图好，一方面是投影后方差最大，一方面是点到直线的距离平方和最小，而且直线过样本点的中心点。为什么右边的投影效果比较差？直觉是因为坐标轴之间相关，以至于去掉一个坐标轴，就会使得坐标点无法被单独一个坐标轴确定。
+
+     PCA得到的k个坐标轴实际上是k个特征向量，由于协方差矩阵对称，因此k个特征向量正交。看下面的计算过程。
+
+     假设我们还是用<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918413468277822.png'/>来表示样例，m个样例，n个特征。特征向量为e，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918414996456774.png'/>表示第i个特征向量的第1维。那么原始样本特征方程可以用下面式子来表示：
+
+     前面两个矩阵乘积就是协方差矩阵<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918415799684521.png'/>（除以m后），原始的样本矩阵A是第二个矩阵m*n。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918416769622053.png'/>
+
+     上式可以简写为<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918417530859577.png'/>
+
+     我们最后得到的投影结果是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918420311080470.png'/>，E是k个特征向量组成的矩阵，展开如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918420926987864.png'/>
+
+     得到的新的样例矩阵就是m个样例到k个特征向量的投影，也是这k个特征向量的线性组合。e之间是正交的。从矩阵乘法中可以看出，PCA所做的变换是将原始样本点（n维），投影到k个正交的坐标系中去，丢弃其他维度的信息。
+
+    举个例子，假设宇宙是n维的（霍金说是11维的），我们得到银河系中每个星星的坐标（相对于银河系中心的n维向量），然而我们想用二维坐标去逼近这些样本点，假设算出来的协方差矩阵的特征向量分别是图中的水平和竖直方向，那么我们建议以银河系中心为原点的x和y坐标轴，所有的星星都投影到x和y上，得到下面的图片。然而我们丢弃了每个星星离我们的远近距离等信息。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918422888242907.png'/>
+
+
+五、总结与讨论
+     这一部分来自http://www.cad.zju.edu.cn/home/chenlu/pca.htm
+
+     PCA技术的一大好处是对数据进行降维的处理。我们可以对新求出的“主元”向量的重要性进行排序，根据需要取前面最重要的部分，将后面的维数省去，可以达到降维从而简化模型或是对数据进行压缩的效果。同时最大程度的保持了原有数据的信息。
+
+     PCA技术的一个很大的优点是，它是完全无参数限制的。在PCA的计算过程中完全不需要人为的设定参数或是根据任何经验模型对计算进行干预，最后的结果只与数据相关，与用户是独立的。 
+但是，这一点同时也可以看作是缺点。如果用户对观测对象有一定的先验知识，掌握了数据的一些特征，却无法通过参数化等方法对处理过程进行干预，可能会得不到预期的效果，效率也不高。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918441465716500.gif'/>
+
+     图表 4：黑色点表示采样数据，排列成转盘的形状。 
+     容易想象，该数据的主元是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928563816242942.png'/>或是旋转角<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928564652087095.png'/>。
+
+     如图表 4中的例子，PCA找出的主元将是<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928567496331006.png'/>。但是这显然不是最优和最简化的主元。<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928568947080228.png'/>之间存在着非线性的关系。根据先验的知识可知旋转角<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928571219375703.png'/>是最优的主元（类比极坐标）。则在这种情况下，PCA就会失效。
+
+    但是，如果加入先验的知识，对数据进行某种划归，就可以将数据转化为以<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928572337982161.png'/>为线性的空间中。这类根据先验知识对数据预先进行非线性转换的方法就成为kernel-PCA，它扩展了PCA能够处理的问题的范围，又可以结合一些先验约束，是比较流行的方法。
+
+     有时数据的分布并不是满足高斯分布。如图表 5所示，在非高斯分布的情况下，PCA方法得出的主元可能并不是最优的。在寻找主元时不能将方差作为衡量重要性的标准。要根据数据的分布情况选择合适的描述完全分布的变量，然后根据概率分布式
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928573469611246.png'/>
+
+     来计算两个向量上数据分布的相关性。等价的，保持主元间的正交假设，寻找的主元同样要使<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154928574919331700.png'/>。这一类方法被称为独立主元分解(ICA)。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64154918453425222948.gif'/>
+
+     图表 5：数据的分布并不满足高斯分布，呈明显的十字星状。 
+     这种情况下，方差最大的方向并不是最优主元方向。
+
+     另外PCA还可以用于预测矩阵中缺失的元素。
+
+
+六、其他参考文献
+1 A tutorial on Principal Components Analysis LI Smith – 2002
+2 A Tutorial on Principal Component Analysis J Shlens
+3 http://www.cmlab.csie.ntu.edu.tw/~cyy/learning/tutorials/PCAMissingData.pdf
+4 http://www.cad.zju.edu.cn/home/chenlu/pca.htm
+## 142.机器学习/数据挖掘中如何处理缺失值
+本题解析来源：https://www.zhihu.com/question/26639110
+
+数据挖掘中遇到缺失值时， 一般有以下几种方式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155134491587568426.png'/>
+
+这里以一份实战数据为例（个人征信预测比赛的实际数据，保存在文件user_info_train.csv中，有兴趣自己动手实践一遍的可以私信我索取数据表）。
+
+打开这张表，如下图所示：包括用户的基本属性特征（性别、工作类型、教育程度、婚姻状况）和一些用户的记录（产品浏览历史、收入变化、账户数目、信用总额度、平均额度、上期还款金额），结果标签是overdue。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155134521073433053.png'/>
+
+可以看到，表格中有些用户的部分特征属性是存在缺失的，具体各个特征的情况如何我们可以借助pandas中的info()来看具体确实情况了。
+
+#coding:utf-8
+import pandas as pd
+
+# 读取user_info_train.csv表 
+user_info = pd.read_csv("C:/Users/Administrator/Desktop/user_info_train.csv")
+
+# info()查看每个特征的数据量情况 
+print data_train.info()
+
+输出结果如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155134509565738642.png'/>
+
+可以看到，该表里面的用户数一共有55594条，其中的gender，job，edu，marriage， family_type 五个特征没有值缺失；而browse_his，salary_change，card_num， total_amoount， av_amount，pre_repay六个属性存在缺失，而且salary_change特征只有2991条，说明其存在严重缺失。
+
+
+1、缺失值较多的特征处理
+
+一般如果某特征的缺失量过大（如上面的salary_change特征），我们会直接将该特征舍弃掉，否则可能反倒会带入较大的noise，对结果造成不良影响。
+
+但是，这里为了后面讲解数据标准化操作更完善，暂时不采取删除特征的操作，而是换一种方式，将该特征分为两类，一类是非缺失的，我们将其设为“工资收入有变化”，另一类是缺失的，将其设为“工资收入无变化”。
+
+# 定义工资改变特征缺失值处理函数，将有变化设为Yes，缺失设为No 
+def set_salary_change(df):
+     df.loc[(df.salary_change.notnull()), 'salary_change'] = "Yes"
+     df.loc[(df.salary_change.isnull()), 'salary_change'] = "No"
+     return df
+data_train = set_salary_change(data_train)
+
+2、缺失值较少的特征处理
+
+其余的特征缺失值都在10%以内，我们可以采取很多的方式来处理，下面一一介绍下：
+
+方式1：把NaN直接作为一个特征，假设用0表示，实现如下：
+
+data_train.fillna(0) 
+
+方式2：用均值填充；
+
+# 将所有行用各自的均值填充 
+data_train.fillna(data_train.mean())  
+
+# 也可以指定某些行进行填充 
+data_train.fillna(data_train.mean()['browse_his':'card_num']) 
+有时候还有可能遇到这样一种情况，那就是训练集train中有缺失值，而test中无缺失值。这时候最适合的处理方式应该是对缺失值取条件均值或条件中值，即即根据该用户的label值类别，取所有该label下用户该属性的均值或中值。
+
+
+方式3：用上下数据进行填充；
+
+# 用前一个数据代替NaN：method='pad'
+data_train.fillna(method='pad')  
+
+# 与pad相反，bfill表示用后一个数据代替NaN 
+data_train.fillna(method='bfill') 
+
+方式4：用插值法填充；
+
+# 插值法就是通过两点（x0，y0），（x1，y1）估计中间点的值 
+data_train.interpolate() 
+
+方式5：用算法拟合进行填充；
+
+# 定义browse_his缺失值预测填充函数
+def set_missing_browse_his(df):
+     # 把已有的数值型特征取出来输入到RandomForestRegressor中
+     process_df = df[[browse_his' , 'gender', 'job', 'edu', 'marriage', 'family_type']]
+
+     # 乘客分成已知该特征和未知该特征两部分
+     known = process_df[process_df.browse_his.notnull()].as_matrix()
+     unknown = process_df[process_df.browse_his.isnull()].as_matrix()
+
+     # X为特征属性值
+     X = known[:, 1:]
+
+     # y为结果标签值
+     y = known[:, 0]
+
+     # fit到RandomForestRegressor之中
+     rfr = RandomForestRegressor(random_state=0, n_estimators=2000, n_jobs=-1)
+     rfr.fit(X,y)
+
+     # 用得到的模型进行未知特征值预测
+     predicted = rfr.predict(unknown[:, 1::])
+
+     # 用得到的预测结果填补原缺失数据
+     df.loc[(df.browse_his.isnull()), 'browse_his'] = predicted
+
+     return df, rfr
+
+data_train, rfr = set_missing_browse_his(data_train) 
+
+当然，针对我们这里的数据，我们对那些缺失值不是很大的特征都采用方式5来填补其缺失值。即使用随机森林算法，利用数据表中某些没有缺失的特征属性来预测某特征属性的缺失值。将填补后的数据表保存在new_user_info_train.csv中：
+
+data_train.to_csv('C:/Users/Administrator/Desktop/new_user_info_train.csv')
+完成缺失值填充后的新数据表如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155134498495242898.png'/>
+## 143.如何通俗理解LightGBM
+本题解析大部分内容来自微软亚洲研究院DMTK团队的研究员们撰文解读，教你玩转LightGBM。
+
+不久前微软DMTK(分布式机器学习工具包)团队在GitHub上开源了性能超越其他boosting工具的LightGBM，在三天之内GitHub上被star了1000次，fork了200次。知乎上有近千人关注“如何看待微软开源的LightGBM？”问题，被评价为“速度惊人”，“非常有启发”，“支持分布式”，“代码清晰易懂”，“占用内存小”等。
+
+GBDT (Gradient Boosting Decision Tree)是机器学习中一个长盛不衰的模型，其主要思想是利用弱分类器（决策树）迭代训练以得到最优模型，该模型具有训练效果好、不易过拟合等优点。GBDT在工业界应用广泛，通常被用于点击率预测，搜索排序等任务。GBDT也是各种数据挖掘竞赛的致命武器，据统计Kaggle上的比赛有一半以上的冠军方案都是基于GBDT。
+
+LightGBM （Light Gradient Boosting Machine）(请点击https://github.com/Microsoft/LightGBM)是一个实现GBDT算法的框架，支持高效率的并行训练，并且具有以下优点：
+● 更快的训练速度
+●  更低的内存消耗
+● 更好的准确率
+● 分布式支持，可以快速处理海量数据
+
+LightGBM在Higgs数据集上LightGBM比XGBoost快将近10倍，内存占用率大约为XGBoost的1/6，并且准确率也有提升。
+Xgboost已经十分完美了，为什么还要追求速度更快、内存使用更小的模型？
+对GBDT算法进行改进和提升的技术细节是什么？
+
+一、提出LightGBM的动机
+常用的机器学习算法，例如神经网络等算法，都可以以mini-batch的方式训练，训练数据的大小不会受到内存限制。
+
+而GBDT在每一次迭代的时候，都需要遍历整个训练数据多次。如果把整个训练数据装进内存则会限制训练数据的大小；如果不装进内存，反复地读写训练数据又会消耗非常大的时间。尤其面对工业级海量的数据，普通的GBDT算法是不能满足其需求的。
+
+LightGBM提出的主要原因就是为了解决GBDT在海量数据遇到的问题，让GBDT可以更好更快地用于工业实践。
+
+
+改进的细节
+Xgboost是如何工作的？
+目前已有的GBDT工具基本都是基于预排序的方法（pre-sorted）的决策树算法(如xgboost)。这种构建决策树的算法基本思想是：
+首先，对所有特征都按照特征的数值进行预排序。
+其次，在遍历分割点的时候用O(#data)的代价找到一个特征上的最好分割点。
+最后，找到一个特征的分割点后，将数据分裂成左右子节点。
+
+这样的预排序算法的优点是能精确地找到分割点。
+
+缺点也很明显：
+首先，空间消耗大。这样的算法需要保存数据的特征值，还保存了特征排序的结果（例如排序后的索引，为了后续快速的计算分割点），这里需要消耗训练数据两倍的内存。
+
+其次，时间上也有较大的开销，在遍历每一个分割点的时候，都需要进行分裂增益的计算，消耗的代价大。
+
+最后，对cache优化不友好。在预排序后，特征对梯度的访问是一种随机访问，并且不同的特征访问的顺序不一样，无法对cache进行优化。同时，在每一层长树的时候，需要随机访问一个行索引到叶子索引的数组，并且不同特征访问的顺序也不一样，也会造成较大的cache miss。
+
+二、LightGBM在哪些地方进行了优化？
+a) 基于Histogram的决策树算法
+b) 带深度限制的Leaf-wise的叶子生长策略
+c) 直方图做差加速直接
+d) 支持类别特征(Categorical Feature)
+e) Cache命中率优化
+f) 基于直方图的稀疏特征优化多线程优化。
+
+下面主要介绍Histogram算法、带深度限制的Leaf-wise的叶子生长策略和直方图做差加速。
+
+2.1 Histogram算法
+直方图算法的基本思想是先把连续的浮点特征值离散化成k个整数（其实又是分桶的思想，而这些桶称为bin，比如[0,0.1)→0, [0.1,0.3)→1），同时构造一个宽度为k的直方图。
+
+在遍历数据的时候，根据离散化后的值作为索引在直方图中累积统计量，当遍历一次数据后，直方图累积了需要的统计量，然后根据直方图的离散值，遍历寻找最优的分割点。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197418746568601.jpg'/>
+
+其算法大致描述如下(当然loss计算有些问题)
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197472442091414.png'/>
+
+仔细看上面的伪代码，相信你有几个问题：
+如何将特征映射到bin呢？即如何分桶？
+如何构建直方图？直方图算法累加的g是什么？
+构建完直方图如何找最优特征，有用到二阶信息么？
+
+如何分桶呢？
+首先，在读取数据后，就决定每个特征如何分桶。关于如何分桶，对于数值型特征和类别特征采用不同的做法。
+
+2.2 构建直方图
+给定一个特征的取值，我们现在已经可以转化为对应的bin了。现在我们就可以构建直方图了。
+
+可以看到，累加了一阶和二阶梯度，同时还累加了梯度的和还有个数。（当然还有其它的版本，当is_constant_hessian为true的时候是不用二阶梯度的）。
+
+寻找最优切分点
+对每个特征都构建好直方图后，就可以进行最优切分点的构建了。
+
+遍历所有的特征，对于每个特征调用FindBestThreshold如下函数：
+void FindBestThreshold(double sum_gradient, double sum_hessian, data_size_t num_data, double min_constraint, double max_constraint, SplitInfo* output) {
+    output->default_left = true;
+    output->gain = kMinScore;
+    find_best_threshold_fun_(sum_gradient, sum_hessian + 2 * kEpsilon, num_data, min_constraint, max_constraint, output);
+    output->gain *= meta_->penalty;
+}
+
+使用直方图算法有很多优点。首先，最明显就是内存消耗的降低，直方图算法不仅不需要额外存储预排序的结果，而且可以只保存特征离散化后的值，而这个值一般用8位整型存储就足够了，内存消耗可以降低为原来的1/8。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197420937190321.jpg'/>
+
+然后在计算上的代价也大幅降低，预排序算法每遍历一个特征值就需要计算一次分裂的增益，而直方图算法只需要计算k次（k可以认为是常数），时间复杂度从O(#data*#feature)优化到O(k*#features)。
+
+当然，Histogram算法并不是完美的。由于特征被离散化后，找到的并不是很精确的分割点，所以会对结果产生影响。但在不同的数据集上的结果表明，离散化的分割点对最终的精度影响并不是很大，甚至有时候会更好一点。原因是决策树本来就是弱模型，分割点是不是精确并不是太重要；较粗的分割点也有正则化的效果，可以有效地防止过拟合；即使单棵树的训练误差比精确分割的算法稍大，但在梯度提升（Gradient
+Boosting）的框架下没有太大的影响。
+
+
+三、带深度限制的Leaf-wise的叶子生长策略
+3.1 层次生长的策略
+在XGBoost中，树是按层生长的，称为Level-wise tree growth，同一层的所有节点都做分裂，最后剪枝，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197509149646916.png'/>
+
+Level-wise过一次数据可以同时分裂同一层的叶子，容易进行多线程优化，也好控制模型复杂度，不容易过拟合。但实际上Level-wise是一种低效的算法，因为它不加区分的对待同一层的叶子，带来了很多没必要的开销，因为实际上很多叶子的分裂增益较低，没必要进行搜索和分裂。
+
+在Histogram算法之上，LightGBM进行进一步的优化。首先它抛弃了大多数GBDT工具使用的按层生长 (level-wise)
+的决策树生长策略，而使用了带有深度限制的按叶子生长 (leaf-wise)算法。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197520844369289.png'/>
+
+Leaf-wise则是一种更为高效的策略，每次从当前所有叶子中，找到分裂增益最大的一个叶子，然后分裂，如此循环。因此同Level-wise相比，在分裂次数相同的情况下，Leaf-wise可以降低更多的误差，得到更好的精度。Leaf-wise的缺点是可能会长出比较深的决策树，产生过拟合。因此LightGBM在Leaf-wise之上增加了一个最大深度的限制，在保证高效率的同时防止过拟合。
+
+3.2 直方图差加速
+LightGBM另一个优化是Histogram（直方图）做差加速。一个容易观察到的现象：一个叶子的直方图可以由它的父亲节点的直方图与它兄弟的直方图做差得到。通常构造直方图，需要遍历该叶子上的所有数据，但直方图做差仅需遍历直方图的k个桶。
+
+利用这个方法，LightGBM可以在构造一个叶子的直方图后，可以用非常微小的代价得到它兄弟叶子的直方图，在速度上可以提升一倍。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197532755646960.png'/>
+
+
+3.3 数值型特征
+在得到了叶子结点输出后，GetLeafSplitGainGivenOutput其实就是左右子树累加起来，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197572490270161.png'/>，和XGBoost一样。
+static double GetLeafSplitGainGivenOutput(double sum_gradients, double sum_hessians, double l1, double l2, double output) {
+    const double sg_l1 = ThresholdL1(sum_gradients, l1);
+    return -(2.0 * sg_l1 * output + (sum_hessians + l2) * output * output);
+  }
+
+注意到上面的增益计算出来是左子树+右子树，然后和min_gain_shift比较，而XGBoost是如下形式:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197579259701071.png'/>
+
+难道不一样？其实是一样的，min_gain_shift计算方式一开始的代码就给出了，即：
+double gain_shift = GetLeafSplitGain(sum_gradient, sum_hessian,
+                                         meta_->config->lambda_l1, meta_->config->lambda_l2, meta_->config->max_delta_step);
+double min_gain_shift = gain_shift + meta_->config->min_gain_to_split;
+
+就是分裂前的分数！
+因此，是和XGBoost一样的。
+
+
+3.4 直接支持类别特征
+实际上大多数机器学习工具都无法直接支持类别特征，一般需要把类别特征，转化到多维的0/1特征，降低了空间和时间的效率。而类别特征的使用是在实践中很常用的。基于这个考虑，LightGBM优化了对类别特征的支持，可以直接输入类别特征，不需要额外的0/1展开。并在决策树算法上增加了类别特征的决策规则。在Expo数据集上的实验，相比0/1展开的方法，训练速度可以加速8倍，并且精度一致。据我们所知，LightGBM是第一个直接支持类别特征的GBDT工具。
+
+LightGBM的单机版本还有很多其他细节上的优化，比如cache访问优化，多线程优化，稀疏特征优化等等，更多的细节可以查阅Github Wiki(https://github.com/Microsoft/LightGBM/wiki)上的文档说明。优化汇总对比表:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197431597512984.jpg'/>
+
+
+四、LightGBM的并行
+在探寻了LightGBM的优化之后，发现LightGBM还具有支持高效并行的优点。
+
+LightGBM针对这两种并行方法都做了优化，在特征并行算法中，通过在本地保存全部数据避免对数据切分结果的通信；在数据并行中使用分散规约(Reduce scatter)把直方图合并的任务分摊到不同的机器，降低通信和计算，并利用直方图做差，进一步减少了一半的通信量。
+
+基于投票的数据并行则进一步优化数据并行中的通信代价，使通信代价变成常数级别。在数据量很大的时候，使用投票并行可以得到非常好的加速效果。
+
+4.1 特征并行
+特征并行主要是并行化决策树中寻找最优划分点(“Find Best Split”)的过程，因为这部分最为耗时。
+
+传统算法的做法如下：
+1)垂直划分数据（对特征划分），不同的worker有不同的特征集
+2)每个workers找到局部最佳的切分点{feature, threshold}
+3）workers使用点对点通信，找到全局最佳切分点
+4)具有全局最佳切分点的worker进行节点分裂，然后广播切分后的结果（左右子树的instance indices）
+5)其它worker根据收到的instance indices也进行划分
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197607816660150.png'/>
+
+传统算法的缺点是：
+a)无法加速split的过程，该过程复杂度为O(#data)，当数据量大的时候效率不高
+b)需要广播划分的结果（左右子树的instance indices），1条数据1bit的话，大约需要花费O(#data/8)
+
+LightGBM中的特征并行
+每个worker保存所有的数据集，这样找到全局最佳切分点后各个worker都可以自行划分，就不用进行广播划分结果，减小了网络通信量。过程如下：
+i)每个workers找到局部最佳的切分点{feature, threshold}
+ii)workers使用点对点通信，找到全局最佳切分点
+iii)每个worker根据全局全局最佳切分点进行节点分裂
+
+但是这样仍然有缺点：
+a)split过程的复杂度仍是O(#data)，当数据量大的时候效率不高
+b)每个worker保存所有数据，存储代价高
+
+LightGBM原生支持并行学习，目前支持特征并行和数据并行的两种。
+
+特征并行的主要思想是在不同机器在不同的特征集合上分别寻找最优的分割点，然后在机器间同步最优的分割点。
+
+4.2 数据并行
+数据并行则是让不同的机器先在本地构造直方图，然后进行全局的合并，最后在合并的直方图上面寻找最优分割点。
+
+传统算法里，数据并行目标是并行化整个决策学习的过程：
+①水平切分数据，不同的worker拥有部分数据
+②每个worker根据本地数据构建局部直方图
+③合并所有的局部直方图得到全部直方图
+④根据全局直方图找到最优切分点并进行分裂
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197658017115043.png'/>
+
+在第3步中，有两种合并的方式：
+A 采用点对点方式(point-to-point communication algorithm)进行通讯，每个worker通讯量为O(#machine∗#feature∗#bin)
+
+B 采用collective communication algorithm(如“All Reduce”)进行通讯（相当于有一个中心节点，通讯后在返回结果），每个worker的通讯量为O(2∗#feature∗#bin)
+可以看出通信的代价是很高的，这也是数据并行的缺点。
+
+LightGBM中的数据并行
+使用“Reduce Scatter”将不同worker的不同特征的直方图合并，然后workers在局部合并的直方图中找到局部最优划分，最后同步全局最优划分。
+前面提到过，可以通过直方图作差法得到兄弟节点的直方图，因此只需要通信一个节点的直方图。
+
+通过上述两点做法，通信开销降为O(0.5∗#feature∗#bin)
+
+Voting Parallel
+LightGBM采用一种称为PV-Tree的算法进行投票并行(Voting Parallel)，其实这本质上也是一种数据并行。
+
+PV-Tree和普通的决策树差不多，只是在寻找最优切分点上有所不同。
+
+其算法伪代码描述如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197671833223171.png'/>
+
+①水平切分数据，不同的worker拥有部分数据。
+②Local voting: 每个worker构建直方图，找到top-k个最优的本地划分特征
+③Global voting: 中心节点聚合得到最优的top-2k个全局划分特征（top-2k是看对各个worker选择特征的个数进行计数，取最多的2k个）
+④Best Attribute Identification： 中心节点向worker收集这top-2k个特征的直方图，并进行合并，然后计算得到全局的最优划分
+⑤中心节点将全局最优划分广播给所有的worker，worker进行本地划分。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155197676685324391.png'/>
+
+可以看出，PV-tree将原本需要#feature×#bin 变为了2k×#bin，通信开销得到降低。此外，可以证明，当每个worker的数据足够多的时候，top-2k个中包含全局最佳切分点的概率非常高。
+
+LightGBM的工作还在持续进行，近期将会增加更多的新功能，如：R, Julia 等语言支持（目前已原生支持python，R语言正在开发中）、更多平台(如Hadoop和Spark)的支持、GPU加速。
+ 
+此外，LightGBM开发人员呼吁大家在Github上对LightGBM贡献自己的代码和建议，一起让LightGBM变得更好。DMTK也会继续开源更多优秀的机器学习工具，敬请期待。
+
+[1] Meng, Qi, Guolin Ke, Taifeng Wang, Wei Chen, Qiwei Ye, Zhi-Ming Ma, and Tieyan Liu. "A Communication-Efficient Parallel Algorithm for Decision Tree." In Advances In Neural Information Processing Systems, pp. 1271-1279. 2016.
+[2] 细语呢喃 > 『我爱机器学习』集成学习（四）LightGBM：https://www.hrwhisper.me/machine-learning-lightgbm/
+## 144.线性回归要求因变量服从正态分布？
+对于线性回归模型,当因变量服从正态分布,误差项满足高斯–马尔科夫条件（零均值、等方差、不相关）时,回归参数的最小二乘估计是一致最小方差无偏估计.
+
+解释一：
+我们假设线性回归的噪声服从均值为0的正态分布。 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155265749841981521.png'/>
+
+当噪声符合正态分布N(0,delta^2)时，因变量则符合正态分布N(ax(i)+b,delta^2)，其中预测函数y=ax(i)+b。这个结论可以由正态分布的概率密度函数得到。也就是说当噪声符合正态分布时，其因变量必然也符合正态分布。 
+
+在用线性回归模型拟合数据之前，首先要求数据应符合或近似符合正态分布，否则得到的拟合函数不正确。 
+
+若本身样本不符合正态分布或不近似服从正态分布，则要采用其他的拟合方法，比如对于服从二项式分布的样本数据，可以采用logistics线性回归。
+
+解释二：
+线性回归是广义线性模型，它的函数指数簇就是高斯分布。 
+p(y;η) = b(y)exp(η T T(y) − a(η))；
+
+假设方差为1，以下为高斯分布推导为广义函数指数簇： 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155265750953666788.png'/>
+
+η = µ
+T(y) = y
+a(η) = µ^2 /2= η^2 /2
+b(y) = (1/ √ 2π)exp(−y^2 /2).
+
+目标函数h(x) = E(y|x) = µ = η = θ T x
+
+所以线性回归的假设前提是噪声服从正态分布，即因变量服从正态分布。
+## 145.什么是K近邻算法和KD树？
+本题解析来源于July在CSDN上阅读量超过20万的《从K近邻算法、距离度量谈到KD树、SIFT+BBF算法》
+
+前言
+    前两日，在微博上说：“到今天为止，我至少亏欠了3篇文章待写：1、KD树；2、神经网络；3、编程艺术第28章。你看到，blog内的文章与你于别处所见的任何都不同。于是，等啊等，等一台电脑，只好等待..”。得益于田，借了我一台电脑（借他电脑的时候，我连表示感谢，他说“能找到工作全靠你的博客，这点儿小忙还说，不地道”，有的时候，稍许感受到受人信任也是一种压力，愿我不辜负大家对我的信任），于是今天开始Top 10 Algorithms in Data Mining系列第三篇文章，即本文「从K近邻算法谈到KD树、SIFT+BBF算法」的创作。
+
+    一个人坚持自己的兴趣是比较难的，因为太多的人太容易为外界所动了，而尤其当你无法从中得到多少实际性的回报时，所幸，我能一直坚持下来。毕达哥拉斯学派有句名言：“万物皆数”，最近读完「微积分概念发展史」后也感受到了这一点。同时，从算法到数据挖掘、机器学习，再到数学，其中每一个领域任何一个细节都值得探索终生，或许，这就是“终生为学”的意思。
+
+    本文各部分内容分布如下：
+
+第一部分讲K近邻算法，其中重点阐述了相关的距离度量表示法，
+第二部分着重讲K近邻算法的实现--KD树，和KD树的插入，删除，最近邻查找等操作，及KD树的一系列相关改进(包括BBF，M树等)；
+第三部分讲KD树的应用：SIFT+kd_BBF搜索算法。
+
+    同时，你将看到，K近邻算法同本系列的前两篇文章所讲的决策树分类贝叶斯分类，及支持向量机SVM一样，也是用于解决分类问题的算法，
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155283963472895660.jpg'/>
+
+    而本数据挖掘十大算法系列也会按照分类，聚类，关联分析，预测回归等问题依次展开阐述。
+
+    OK，行文仓促，本文若有任何漏洞，问题或者错误，欢迎朋友们随时不吝指正，各位的批评也是我继续写下去的动力之一。感谢。
+
+
+第一部分、K近邻算法
+1.1、什么是K近邻算法
+    何谓K近邻算法，即K-Nearest Neighbor algorithm，简称KNN算法，单从名字来猜想，可以简单粗暴的认为是：K个最近的邻居，当K=1时，算法便成了最近邻算法，即寻找最近的那个邻居。为何要找邻居？打个比方来说，假设你来到一个陌生的村庄，现在你要找到与你有着相似特征的人群融入他们，所谓入伙。
+
+    用官方的话来说，所谓K近邻算法，即是给定一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最邻近的K个实例（也就是上面所说的K个邻居），这K个实例的多数属于某个类，就把该输入实例分类到这个类中。根据这个说法，咱们来看下引自维基百科上的一幅图：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155283966654403646.png'/>
+
+如上图所示，有两类不同的样本数据，分别用蓝色的小正方形和红色的小三角形表示，而图正中间的那个绿色的圆所标示的数据则是待分类的数据。也就是说，现在，我们不知道中间那个绿色的数据是从属于哪一类（蓝色小正方形or红色小三角形），下面，我们就要解决这个问题：给这个绿色的圆分类。
+    我们常说，物以类聚，人以群分，判别一个人是一个什么样品质特征的人，常常可以从他/她身边的朋友入手，所谓观其友，而识其人。我们不是要判别上图中那个绿色的圆是属于哪一类数据么，好说，从它的邻居下手。但一次性看多少个邻居呢？从上图中，你还能看到：
+
+如果K=3，绿色圆点的最近的3个邻居是2个红色小三角形和1个蓝色小正方形，少数从属于多数，基于统计的方法，判定绿色的这个待分类点属于红色的三角形一类。
+如果K=5，绿色圆点的最近的5个邻居是2个红色三角形和3个蓝色的正方形，还是少数从属于多数，基于统计的方法，判定绿色的这个待分类点属于蓝色的正方形一类。
+    于此我们看到，当无法判定当前待分类点是从属于已知分类中的哪一类时，我们可以依据统计学的理论看它所处的位置特征，衡量它周围邻居的权重，而把它归为(或分配)到权重更大的那一类。这就是K近邻算法的核心思想。
+
+1.2、近邻的距离度量表示法
+    上文第一节，我们看到，K近邻算法的核心在于找到实例点的邻居，这个时候，问题就接踵而至了，如何找到邻居，邻居的判定标准是什么，用什么来度量。这一系列问题便是下面要讲的距离度量表示法。但有的读者可能就有疑问了，我是要找邻居，找相似性，怎么又跟距离扯上关系了？
+
+    这是因为特征空间中两个实例点的距离可以反应出两个实例点之间的相似性程度。K近邻模型的特征空间一般是n维实数向量空间，使用的距离可以使欧式距离，也是可以是其它距离，既然扯到了距离，下面就来具体阐述下都有哪些距离度量的表示法，权当扩展。
+
+1. 欧氏距离，最常见的两点之间或多点之间的距离表示法，又称之为欧几里得度量，它定义于欧几里得空间中，如点 x = (x1,...,xn) 和 y = (y1,...,yn) 之间的距离为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288092922669125.png'/>
+
+(1)二维平面上两点a(x1,y1)与b(x2,y2)间的欧氏距离：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288094923092156.png'/>
+
+
+(2)三维空间两点a(x1,y1,z1)与b(x2,y2,z2)间的欧氏距离：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415528809572677797.png'/>
+
+(3)两个n维向量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的欧氏距离：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288096764741525.png'/>
+
+　　也可以用表示成向量运算的形式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288097428201203.png'/>
+
+
+	其上，二维平面上两点欧式距离，代码可以如下编写：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288101480243354.png'/>
+
+
+2. 曼哈顿距离，我们可以定义曼哈顿距离的正式意义为L1-距离或城市区块距离，也就是在欧几里得空间的固定直角坐标系上两点所形成的线段对轴产生的投影的距离总和。例如在平面上，坐标（x1, y1）的点P1与坐标（x2, y2）的点P2的曼哈顿距离为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288105270370125.png'/>，要注意的是，曼哈顿距离依赖座标系统的转度，而非系统在座标轴上的平移或映射。 
+     通俗来讲，想象你在曼哈顿要从一个十字路口开车到另外一个十字路口，驾驶距离是两点间的直线距离吗？显然不是，除非你能穿越大楼。而实际驾驶距离就是这个“曼哈顿距离”，此即曼哈顿距离名称的来源， 同时，曼哈顿距离也称为城市街区距离(City Block distance)。
+
+(1)二维平面两点a(x1,y1)与b(x2,y2)间的曼哈顿距离 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288110594460572.png'/>
+
+(2)两个n维向量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的曼哈顿距离 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288111920308418.png'/>
+
+3. 切比雪夫距离，若二个向量或二个点p 、and q，其座标分别为Pi及qi，则两者之间的切比雪夫距离定义如下：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288113557223169.png'/>，
+
+ 这也等于以下Lp度量的极值：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288295414730530.png'/>，因此切比雪夫距离也称为L∞度量。
+
+    以数学的观点来看，切比雪夫距离是由一致范数（uniform norm）（或称为上确界范数）所衍生的度量，也是超凸度量（injective metric space）的一种。
+    在平面几何中，若二点p及q的直角坐标系坐标为(x1,y1)及(x2,y2)，则切比雪夫距离为：。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288124963104701.png'/>
+    玩过国际象棋的朋友或许知道，国王走一步能够移动到相邻的8个方格中的任意一个。那么国王从格子(x1,y1)走到格子(x2,y2)最少需要多少步？。你会发现最少步数总是max( | x2-x1 | , | y2-y1 | ) 步 。有一种类似的一种距离度量方法叫切比雪夫距离。
+(1)二维平面两点a(x1,y1)与b(x2,y2)间的切比雪夫距离 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288128990942517.png'/>
+
+(2)两个n维向量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的切比雪夫距离
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288131759181293.png'/> 　　
+
+这个公式的另一种等价形式是 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288132489278650.png'/>
+
+4. 闵可夫斯基距离(Minkowski Distance)，闵氏距离不是一种距离，而是一组距离的定义。
+(1) 闵氏距离的定义       
+两个n维变量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的闵可夫斯基距离定义为： 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288134324014217.png'/>
+
+其中p是一个变参数。
+当p=1时，就是曼哈顿距离
+当p=2时，就是欧氏距离
+当p→∞时，就是切比雪夫距离       
+根据变参数的不同，闵氏距离可以表示一类的距离。 
+
+5. 标准化欧氏距离 (Standardized Euclidean distance )
+标准化欧氏距离是针对简单欧氏距离的缺点而作的一种改进方案。标准欧氏距离的思路：既然数据各维分量的分布不一样，那先将各个分量都“标准化”到均值、方差相等。至于均值和方差标准化到多少，先复习点统计学知识。
+
+假设样本集X的数学期望或均值(mean)为m，标准差(standard deviation，方差开根)为s，那么X的“标准化变量”X*表示为：(X-m）/s，而且标准化变量的数学期望为0，方差为1。
+即，样本集的标准化过程(standardization)用公式描述就是：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288140374324567.png'/>
+
+标准化后的值 =  ( 标准化前的值  － 分量的均值 ) /分量的标准差　　
+经过简单的推导就可以得到两个n维向量a(x11,x12,…,x1n)与 b(x21,x22,…,x2n)间的标准化欧氏距离的公式：　
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288142651026460.png'/>
+
+6. 马氏距离(Mahalanobis Distance)
+（1）马氏距离定义       
+有M个样本向量X1~Xm，协方差矩阵记为S，均值记为向量μ，则其中样本向量X到u的马氏距离表示为： 
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288151718725531.png'/>
+（协方差矩阵中每个元素是各个矢量元素之间的协方差Cov(X,Y)，Cov(X,Y) = E{ [X-E(X)] [Y-E(Y)]}，其中E为数学期望）
+而其中向量Xi与Xj之间的马氏距离定义为：    
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288153632926588.png'/>
+若协方差矩阵是单位矩阵（各个样本向量之间独立同分布）,则公式就成了：       
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288154678214804.png'/>
+也就是欧氏距离了。　　
+若协方差矩阵是对角矩阵，公式变成了标准化欧氏距离。
+
+(2)马氏距离的优缺点：量纲无关，排除变量之间的相关性的干扰。 
+「微博上的seafood高清版点评道：原来马氏距离是根据协方差矩阵演变，一直被老师误导了，怪不得看Killian在05年NIPS发表的LMNN论文时候老是看到协方差矩阵和半正定，原来是这回事」
+
+7、巴氏距离（Bhattacharyya Distance）
+在统计中，Bhattacharyya距离测量两个离散或连续概率分布的相似性。它与衡量两个统计样品或种群之间的重叠量的Bhattacharyya系数密切相关。Bhattacharyya距离和Bhattacharyya系数以20世纪30年代曾在印度统计研究所工作的一个统计学家A. Bhattacharya命名。同时，Bhattacharyya系数可以被用来确定两个样本被认为相对接近的，它是用来测量中的类分类的可分离性。
+（1）巴氏距离的定义
+对于离散概率分布 p和q在同一域 X，它被定义为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288161950349184.png'/>
+其中：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288162519949281.png'/>
+是Bhattacharyya系数。
+对于连续概率分布，Bhattacharyya系数被定义为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288163442613429.png'/>
+
+在<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288181055962101.jpg'/>这两种情况下，巴氏距离DB并没有服从三角不等式.（值得一提的是，Hellinger距离不服从三角不等式）<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288183985074103.jpg'/>。 
+对于多变量的高斯分布<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288185175202173.png'/> ，
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288186230019781.png'/>，
+
+和是手段和协方差的分布<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288187238317124.png'/>。
+需要注意的是，在这种情况下，第一项中的Bhattacharyya距离与马氏距离有关联。 
+
+（2）Bhattacharyya系数
+Bhattacharyya系数是两个统计样本之间的重叠量的近似测量，可以被用于确定被考虑的两个样本的相对接近。
+计算Bhattacharyya系数涉及集成的基本形式的两个样本的重叠的时间间隔的值的两个样本被分裂成一个选定的分区数，并且在每个分区中的每个样品的成员的数量，在下面的公式中使用
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288189376840133.png'/>
+
+考虑样品a 和 b ，n是的分区数，并且<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288190419099455.png'/>，被一个 和 b i的日分区中的样本数量的成员。更多介绍请参看：http://en.wikipedia.org/wiki/Bhattacharyya_coefficient。
+
+8. 汉明距离(Hamming distance)
+两个等长字符串s1与s2之间的汉明距离定义为将其中一个变为另外一个所需要作的最小替换次数。例如字符串“1111”与“1001”之间的汉明距离为2。应用：信息编码（为了增强容错性，应使得编码间的最小汉明距离尽可能大）。
+
+或许，你还没明白我再说什么，不急，看下上篇blog中第78题的第3小题整理的一道面试题目，便一目了然了。如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288196227836227.jpg'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288196787222276.png'/>
+
+与此同时，面试官还可以继续问下去：那么，请问，如何设计一个比较两篇文章相似性的算法？（这个问题的讨论可以看看这里：http://t.cn/zl82CAH，及这里关于simhash算法的介绍：http://www.cnblogs.com/linecong/archive/2010/08/28/simhash.html），接下来，便引出了下文关于夹角余弦的讨论。
+（上篇blog中第78题的第3小题给出了多种方法，读者可以参看之。同时，程序员编程艺术系列第二十八章将详细阐述这个问题）
+
+9. 夹角余弦(Cosine) 
+几何中夹角余弦可用来衡量两个向量方向的差异，机器学习中借用这一概念来衡量样本向量之间的差异。
+(1)在二维空间中向量A(x1,y1)与向量B(x2,y2)的夹角余弦公式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288202839099788.png'/>
+
+(2) 两个n维样本点a(x11,x12,…,x1n)和b(x21,x22,…,x2n)的夹角余弦
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288203561061245.png'/>      
+
+类似的，对于两个n维样本点a(x11,x12,…,x1n)和b(x21,x22,…,x2n)，可以使用类似于夹角余弦的概念来衡量它们间的相似程度，即：       
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288204225128199.png'/>
+
+夹角余弦取值范围为[-1,1]。夹角余弦越大表示两个向量的夹角越小，夹角余弦越小表示两向量的夹角越大。当两个向量的方向重合时夹角余弦取最大值1，当两个向量的方向完全相反夹角余弦取最小值-1。 
+
+10. 杰卡德相似系数(Jaccard similarity coefficient)
+(1) 杰卡德相似系数       
+两个集合A和B的交集元素在A，B的并集中所占的比例，称为两个集合的杰卡德相似系数，用符号J(A,B)表示。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288211148951999.png'/>
+杰卡德相似系数是衡量两个集合的相似度一种指标。
+
+(2) 杰卡德距离       
+与杰卡德相似系数相反的概念是杰卡德距离(Jaccard distance)。
+杰卡德距离可用如下公式表示：　　
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288212324981846.png'/>
+杰卡德距离用两个集合中不同元素占所有元素的比例来衡量两个集合的区分度。
+
+(3) 杰卡德相似系数与杰卡德距离的应用      
+可将杰卡德相似系数用在衡量样本的相似度上。
+举例：样本A与样本B是两个n维向量，而且所有维度的取值都是0或1，例如：A(0111)和B(1011)。我们将样本看成是一个集合，1表示集合包含该元素，0表示集合不包含该元素。
+	M11 ：样本A与B都是1的维度的个数
+	M01：样本A是0，样本B是1的维度的个数
+	M10：样本A是1，样本B是0 的维度的个数
+	M00：样本A与B都是0的维度的个数
+依据上文给的杰卡德相似系数及杰卡德距离的相关定义，样本A与B的杰卡德相似系数J可以表示为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288213653903353.png'/>
+
+这里M11+M01+M10可理解为A与B的并集的元素个数，而M11是A与B的交集的元素个数。而样本A与B的杰卡德距离表示为J'：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288214270857926.png'/>
+
+11.皮尔逊系数(Pearson Correlation Coefficient)
+    在具体阐述皮尔逊相关系数之前，有必要解释下什么是相关系数 ( Correlation coefficient )与相关距离(Correlation distance)。
+    相关系数 ( Correlation coefficient )的定义是：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288217518762818.png'/>
+	
+	(其中，E为数学期望或均值，D为方差，D开根号为标准差，E{ [X-E(X)] [Y-E(Y)]}称为随机变量X与Y的协方差，记为Cov(X,Y)，即Cov(X,Y) = E{ [X-E(X)] [Y-E(Y)]}，而两个变量之间的协方差和标准差的商则称为随机变量X与Y的相关系数，记为Pxy)
+   相关系数衡量随机变量X与Y相关程度的一种方法，相关系数的取值范围是[-1,1]。相关系数的绝对值越大，则表明X与Y相关度越高。当X与Y线性相关时，相关系数取值为1（正线性相关）或-1（负线性相关）。
+    具体的，如果有两个变量：X、Y，最终计算出的相关系数的含义可以有如下理解：
+当相关系数为0时，X和Y两变量无关系。
+当X的值增大（减小），Y值增大（减小），两个变量为正相关，相关系数在0.00与1.00之间。
+当X的值增大（减小），Y值减小（增大），两个变量为负相关，相关系数在-1.00与0.00之间。
+
+ 相关距离的定义是：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288227847644216.png'/>
+
+OK，接下来，咱们来重点了解下皮尔逊相关系数。
+    在统计学中，皮尔逊积矩相关系数（英语：Pearson product-moment correlation coefficient，又称作 PPMCC或PCCs, 用r表示）用于度量两个变量X和Y之间的相关（线性相关），其值介于-1与1之间。
+通常情况下通过以下取值范围判断变量的相关强度：
+相关系数     0.8-1.0     极强相关
+                 0.6-0.8     强相关
+                 0.4-0.6     中等程度相关
+                 0.2-0.4     弱相关
+                 0.0-0.2     极弱相关或无相关
+
+在自然科学领域中，该系数广泛用于度量两个变量之间的相关程度。它是由卡尔·皮尔逊从弗朗西斯·高尔顿在19世纪80年代提出的一个相似却又稍有不同的想法演变而来的。这个相关系数也称作“皮尔森相关系数r”。
+
+(1)皮尔逊系数的定义：
+两个变量之间的皮尔逊相关系数定义为两个变量之间的协方差和标准差的商：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288229134980314.png'/>
+以上方程定义了总体相关系数, 一般表示成希腊字母ρ(rho)。基于样本对协方差和方差进行估计，可以得到样本标准差, 一般表示成r：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288229812192747.png'/>
+一种等价表达式的是表示成标准分的均值。基于(Xi, Yi)的样本点，样本皮尔逊系数是
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288230852154540.png'/>
+               其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288232059507212.png'/>，分别是标准分、样本平均值和样本标准差。
+
+或许上面的讲解令你头脑混乱不堪，没关系，我换一种方式讲解，如下：
+假设有两个变量X、Y，那么两变量间的皮尔逊相关系数可通过以下公式计算：
+公式一：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288245871493180.jpg'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288247798020326.jpg'/>
+注：勿忘了上面说过，“皮尔逊相关系数定义为两个变量之间的协方差和标准差的商”，其中标准差的计算公式为：
+公式二：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288248619247509.jpg'/>
+公式三：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288249175923027.jpg'/>
+公式四：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288249854529520.jpg'/>
+以上列出的四个公式等价，其中E是数学期望，cov表示协方差，N表示变量取值的个数。
+
+(2)皮尔逊相关系数的适用范围
+当两个变量的标准差都不为零时，相关系数才有定义，皮尔逊相关系数适用于：
+两个变量之间是线性关系，都是连续数据。
+两个变量的总体是正态分布，或接近正态的单峰分布。
+两个变量的观测值是成对的，每对观测值之间相互独立。
+
+(3)如何理解皮尔逊相关系数
+rubyist：皮尔逊相关系数理解有两个角度
+其一, 按照高中数学水平来理解, 它很简单, 可以看做将两组数据首先做Z分数处理之后, 然后两组数据的乘积和除以样本数，Z分数一般代表正态分布中, 数据偏离中心点的距离.等于变量减掉平均数再除以标准差.(就是高考的标准分类似的处理)
+
+样本标准差则等于变量减掉平均数的平方和，再除以样本数，最后再开方，也就是说，方差开方即为标准差，样本标准差计算公式为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415528826067411155.jpg'/>
+
+所以, 根据这个最朴素的理解,我们可以将公式依次精简为:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288264659827605.png'/>
+
+其二, 按照大学的线性数学水平来理解, 它比较复杂一点,可以看做是两组数据的向量夹角的余弦。下面是关于此皮尔逊系数的几何学的解释，先来看一幅图，如下所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288265328129027.png'/>
+
+
+回归直线： y=gx(x) [红色] 和 x=gy(y) [蓝色]
+
+如上图，对于没有中心化的数据, 相关系数与两条可能的回归线y=gx(x) 和 x=gy(y) 夹角的余弦值一致。
+对于没有中心化的数据 (也就是说, 数据移动一个样本平均值以使其均值为0), 相关系数也可以被视作由两个随机变量 向量 夹角 的 余弦值（见下方）。
+
+举个例子，例如，有5个国家的国民生产总值分别为 10, 20, 30, 50 和 80 亿美元。 假设这5个国家 (顺序相同) 的贫困百分比分别为 11%, 12%, 13%, 15%, and 18% 。 令 x 和 y 分别为包含上述5个数据的向量: x = (1, 2, 3, 5, 8) 和 y = (0.11, 0.12, 0.13, 0.15, 0.18)。
+
+利用通常的方法计算两个向量之间的夹角  (参见 数量积), 未中心化 的相关系数是:
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288266531628258.png'/>
+
+
+我们发现以上的数据特意选定为完全相关: y = 0.10 + 0.01 x。 于是，皮尔逊相关系数应该等于1。将数据中心化 (通过E(x) = 3.8移动 x 和通过 E(y) = 0.138 移动 y ) 得到 x = (−2.8, −1.8, −0.8, 1.2, 4.2) 和 y = (−0.028, −0.018, −0.008, 0.012, 0.042), 从中
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155288267619861010.png'/>
+(4)皮尔逊相关的约束条件
+
+从以上解释, 也可以理解皮尔逊相关的约束条件:
+1 两个变量间有线性关系
+2 变量是连续变量
+3 变量均符合正态分布,且二元分布也符合正态分布
+4 两变量独立
+在实践统计中,一般只输出两个系数,一个是相关系数,也就是计算出来的相关系数大小,在-1到1之间;另一个是独立样本检验系数,用来检验样本一致性。
+
+     简单说来，各种“距离”的应用场景简单概括为，空间：欧氏距离，路径：曼哈顿距离，国际象棋国王：切比雪夫距离，以上三种的统一形式:闵可夫斯基距离，加权：标准化欧氏距离，排除量纲和依存：马氏距离，向量差距：夹角余弦，编码差别：汉明距离，集合近似度：杰卡德类似系数与距离，相关：相关系数与相关距离。
+
+1.3、K值的选择
+    除了上述1.2节如何定义邻居的问题之外，还有一个选择多少个邻居，即K值定义为多大的问题。不要小看了这个K值选择问题，因为它对K近邻算法的结果会产生重大影响。如李航博士的一书「统计学习方法」上所说：
+
+i)如果选择较小的K值，就相当于用较小的领域中的训练实例进行预测，“学习”近似误差会减小，只有与输入实例较近或相似的训练实例才会对预测结果起作用，与此同时带来的问题是“学习”的估计误差会增大，换句话说，K值的减小就意味着整体模型变得复杂，容易发生过拟合；
+ii)如果选择较大的K值，就相当于用较大领域中的训练实例进行预测，其优点是可以减少学习的估计误差，但缺点是学习的近似误差会增大。这时候，与输入实例较远（不相似的）训练实例也会对预测器作用，使预测发生错误，且K值的增大就意味着整体的模型变得简单。
+iii)K=N，则完全不足取，因为此时无论输入实例是什么，都只是简单的预测它属于在训练实例中最多的累，模型过于简单，忽略了训练实例中大量有用信息。
+
+    在实际应用中，K值一般取一个比较小的数值，例如采用交叉验证法（简单来说，就是一部分样本做训练集，一部分做测试集）来选择最优的K值。
+
+
+第二部分、K近邻算法的实现：KD树
+2.0、背景
+    之前blog内曾经介绍过SIFT特征匹配算法，特征点匹配和数据库查、图像检索本质上是同一个问题，都可以归结为一个通过距离函数在高维矢量之间进行相似性检索的问题，如何快速而准确地找到查询点的近邻，不少人提出了很多高维空间索引结构和近似查询的算法。
+
+    一般说来，索引结构中相似性查询有两种基本的方式：
+
+一种是范围查询，范围查询时给定查询点和查询距离阈值，从数据集中查找所有与查询点距离小于阈值的数据
+另一种是K近邻查询，就是给定查询点及正整数K，从数据集中找到距离查询点最近的K个数据，当K=1时，它就是最近邻查询。
+    同样，针对特征点匹配也有两种方法：
+
+最容易的办法就是线性扫描，也就是我们常说的穷举搜索，依次计算样本集E中每个样本到输入实例点的距离，然后抽取出计算出来的最小距离的点即为最近邻点。此种办法简单直白，但当样本集或训练集很大时，它的缺点就立马暴露出来了，举个例子，在物体识别的问题中，可能有数千个甚至数万个SIFT特征点，而去一一计算这成千上万的特征点与输入实例点的距离，明显是不足取的。
+另外一种，就是构建数据索引，因为实际数据一般都会呈现簇状的聚类形态，因此我们想到建立数据索引，然后再进行快速匹配。索引树是一种树结构索引方法，其基本思想是对搜索空间进行层次划分。根据划分的空间是否有混叠可以分为Clipping和Overlapping两种。前者划分空间没有重叠，其代表就是k-d树；后者划分空间相互有交叠，其代表为R树。
+    而关于R树本blog内之前已有介绍(同时，关于基于R树的最近邻查找，还可以看下这篇文章：http://blog.sina.com.cn/s/blog_72e1c7550101dsc3.html)，本文着重介绍k-d树。
+
+    1975年，来自斯坦福大学的Jon Louis Bentley在ACM杂志上发表的一篇论文：Multidimensional Binary Search Trees Used for Associative Searching 中正式提出和阐述的了如下图形式的把空间划分为多个部分的k-d树。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155335017673569783.png'/>
+
+2.1、什么是KD树
+    Kd-树是K-dimension tree的缩写，是对数据点在k维空间（如二维(x，y)，三维(x，y，z)，k维(x1，y，z..)）中划分的一种数据结构，主要应用于多维空间关键数据的搜索（如：范围搜索和最近邻搜索）。本质上说，Kd-树就是一种平衡二叉树。
+
+    首先必须搞清楚的是，k-d树是一种空间划分树，说白了，就是把整个空间划分为特定的几个部分，然后在特定空间的部分内进行相关搜索操作。想像一个三维(多维有点为难你的想象力了)空间，kd树按照一定的划分规则把这个三维空间划分了多个空间，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155344275027763857.png'/>
+
+2.2、KD树的构建
+    kd树构建的伪代码如下图所示（伪代码来自《图像局部不变特性特征与描述》王永明 王贵锦 编著）：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155344266926262911.jpg'/>
+
+    再举一个简单直观的实例来介绍k-d树构建算法。假设有6个二维数据点{(2,3)，(5,4)，(9,6)，(4,7)，(8,1)，(7,2)}，数据点位于二维空间内，如下图所示。为了能有效的找到最近邻，k-d树采用分而治之的思想，即将整个空间划分为几个小部分，首先，粗黑线将空间一分为二，然后在两个子空间中，细黑直线又将整个空间划分为四部分，最后虚黑直线将这四部分进一步划分。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155368320742672975.png'/>
+
+6个二维数据点{(2,3)，(5,4)，(9,6)，(4,7)，(8,1)，(7,2)}构建kd树的具体步骤为：
+
+1、确定：split域=x。具体是：6个数据点在x，y维度上的数据方差分别为39，28.63，所以在x轴上方差更大，故split域值为x；
+
+  2、确定：Node-data = （7,2）。具体是：根据x维上的值将数据排序，6个数据的中值(所谓中值，即中间大小的值)为7，所以Node-data域位数据点（7,2）。这样，该节点的分割超平面就是通过（7,2）并垂直于：split=x轴的直线x=7；
+
+  3、确定：左子空间和右子空间。具体是：分割超平面x=7将整个空间分为两部分：x<=7的部分为左子空间，包含3个节点={(2,3),(5,4),(4,7)}；另一部分为右子空间，包含2个节点={(9,6)，(8,1)}；
+    
+  如上算法所述，kd树的构建是一个递归过程，我们对左子空间和右子空间内的数据重复根节点的过程就可以得到一级子节点（5,4）和（9,6），同时将空间和数据集进一步细分，如此往复直到空间中只包含一个数据点。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155368331380867672.png'/>
+
+  与此同时，经过对上面所示的空间划分之后，我们可以看出，点(7,2)可以为根结点，从根结点出发的两条红粗斜线指向的(5,4)和(9,6)则为根结点的左右子结点，而(2,3)，(4,7)则为(5,4)的左右孩子(通过两条细红斜线相连)，最后，(8,1)为(9,6)的左孩子(通过细红斜线相连)。如此，便形成了下面这样一棵k-d树：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155368335593855374.png'/>
+
+  k-d树的数据结构
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155368351953759767.png'/>
+
+  针对上表给出的kd树的数据结构，转化成具体代码如下所示(注，本文以下代码分析基于Rob Hess维护的sift库)：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155368411210038916.png'/>
+
+  也就是说，如之前所述，kd树中，kd代表k-dimension，每个节点即为一个k维的点。每个非叶节点可以想象为一个分割超平面，用垂直于坐标轴的超平面将空间分为两个部分，这样递归的从根节点不停的划分，直到没有实例为止。经典的构造k-d tree的规则如下：
+
+  随着树的深度增加，循环的选取坐标轴，作为分割超平面的法向量。对于3-d tree来说，根节点选取x轴，根节点的孩子选取y轴，根节点的孙子选取z轴，根节点的曾孙子选取x轴，这样循环下去。
+每次均为所有对应实例的中位数的实例作为切分点，切分点作为父节点，左右两侧为划分的作为左右两子树。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377864387564652.gif'/>
+
+  对于n个实例的k维数据来说，建立kd-tree的时间复杂度为O(k*n*logn)。
+
+  以下是构建k-d树的代码：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377875427713954.png'/>
+
+  上面的涉及初始化操作的两个函数kd_node_init，及expand_kd_node_subtree代码分别如下所示：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377877936513332.png'/>
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377879915820783.png'/>
+
+  构建完kd树之后，如今进行最近邻搜索呢？从下面的动态gif图中，你是否能看出些许端倪呢？
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377886229929442.gif'/>
+
+  k-d树算法可以分为两大部分，除了上部分有关k-d树本身这种数据结构建立的算法，另一部分是在建立的k-d树上各种诸如插入，删除，查找(最邻近查找)等操作涉及的算法。下面，咱们依次来看kd树的插入、删除、查找操作。
+
+
+2.3、KD树的插入
+
+  元素插入到一个K-D树的方法和二叉检索树类似。本质上，在偶数层比较x坐标值，而在奇数层比较y坐标值。当我们到达了树的底部，（也就是当一个空指针出现），我们也就找到了结点将要插入的位置。生成的K-D树的形状依赖于结点插入时的顺序。给定N个点，其中一个结点插入和检索的平均代价是O(log2N)。
+
+  下面4副图(来源：中国地质大学电子课件)说明了插入顺序为(a) Chicago, (b) Mobile, (c) Toronto, and (d) Buffalo，建立空间K-D树的示例：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377895462114526.png'/>
+
+  应该清楚，这里描述的插入过程中，每个结点将其所在的平面分割成两部分。因比，Chicago 将平面上所有结点分成两部分，一部分所有的结点x坐标值小于35，另一部分结点的x坐标值大于或等于35。同样Mobile将所有x坐标值大于35的结点以分成两部分，一部分结点的Y坐标值是小于10，另一部分结点的Y坐标值大于或等于10。后面的Toronto、Buffalo也按照一分为二的规则继续划分。
+
+2.4、KD树的删除
+
+  KD树的删除可以用递归程序来实现。我们假设希望从K-D树中删除结点（a,b）。如果（a,b）的两个子树都为空，则用空树来代替（a,b）。否则，在（a,b）的子树中寻找一个合适的结点来代替它，譬如(c,d)，则递归地从K-D树中删除（c,d）。一旦(c,d)已经被删除，则用（c,d）代替（a,b）。假设(a,b)是一个X识别器，那么，它得替代节点要么是（a,b）左子树中的X坐标最大值的结点，要么是（a,b）右子树中x坐标最小值的结点。
+  也就是说，跟普通二叉树(包括如下图所示的红黑树)结点的删除是同样的思想：用被删除节点A的左子树的最右节点或者A的右子树的最左节点作为替代A的节点(比如，下图红黑树中，若要删除根结点26，第一步便是用23或28取代根结点26)。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377902131672220.jpg'/>
+
+ 当(a,b)的右子树为空时，找到（a,b）左子树中具有x坐标最大的结点，譬如（c,d），将(a,b)的左子树放到(c,d)的右子树中，且在树中从它的上一层递归地应用删除过程（也就是（a,b）的左子树） 。
+    下面来举一个实际的例子(来源：中国地质大学电子课件，原课件错误已经在下文中订正)，如下图所示，原始图像及对应的kd树，现在要删除图中的A结点，请看一系列删除步骤：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377904784496247.jpg'/>
+
+  要删除上图中结点A，选择结点A的右子树中X坐标值最小的结点，这里是C，C成为根，如下图：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377912448672600.jpg'/>
+
+  从C的右子树中找出一个结点代替先前C的位置，
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377914973991477.jpg'/>
+
+  这里是D，并将D的左子树转为它的右子树，D代替先前C的位置，如下图：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377917753460670.jpg'/>
+
+  在D的新右子树中，找X坐标最小的结点，这里为H，H代替D的位置，
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377920028856740.jpg'/>
+
+  在D的右子树中找到一个Y坐标最小的值，这里是I，将I代替原先H的位置，从而A结点从图中顺利删除，如下图所示：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415537792238505282.jpg'/>
+
+  从一个K-D树中删除结点(a,b)的问题变成了在(a,b)的子树中寻找x坐标为最小的结点。不幸的是寻找最小x坐标值的结点比二叉检索树中解决类似的问题要复杂得多。特别是虽然最小x坐标值的结点一定在x识别器的左子树中，但它同样可在y识别器的两个子树中。因此关系到检索，且必须注意检索坐标，以使在每个奇数层仅检索2个子树中的一个。
+
+  从K-D树中删除一个结点是代价很高的，很清楚删除子树的根受到子树中结点个数的限制。用TPL（T）表示树T总的路径长度。可看出树中子树大小的总和为TPL（T）+N。 以随机方式插入N个点形成树的TPL是O(N*log2N),这就意味着从一个随机形成的K-D树中删除一个随机选取的结点平均代价的上界是O(log2N) 。
+
+2.5、KD树的最近邻搜索算法
+
+  现实生活中有许多问题需要在多维数据的快速分析和快速搜索，对于这个问题最常用的方法是所谓的kd树。在k-d树中进行数据的查找也是特征匹配的重要环节，其目的是检索在k-d树中与查询点距离最近的数据点。在一个N维的笛卡儿空间在两个点之间的距离是由下述公式确定：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377935490637181.gif'/>
+
+ 2.5.1、k-d树查询算法的伪代码
+
+  k-d树查询算法的伪代码如下所示：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377943526545714.png'/>
+
+  读者来信点评@yhxyhxyhx，在“将Kd_point压入search_path堆栈；”这行代码后，应该是调到步骤2再往下走二分搜索的逻辑一直到叶结点，我写了一个递归版本的二维kd tree的搜索函数你对比的看看：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415537794775411079.png'/>
+  
+  下面，以两个简单的实例(例子来自图像局部不变特性特征与描述一书)来描述最邻近查找的基本思路。
+
+ 2.5.2、举例：查询点（2.1,3.1）
+  
+  星号表示要查询的点（2.1,3.1）。通过二叉搜索，顺着搜索路径很快就能找到最邻近的近似点，也就是叶子节点（2,3）。而找到的叶子节点并不一定就是最邻近的，最邻近肯定距离查询点更近，应该位于以查询点为圆心且通过叶子节点的圆域内。为了找到真正的最近邻，还需要进行相关的‘回溯'操作。也就是说，算法首先沿搜索路径反向查找是否有距离查询点更近的数据点。
+
+  以查询（2.1,3.1）为例：
+
+    二叉树搜索：先从（7,2）点开始进行二叉查找，然后到达（5,4），最后到达（2,3），此时搜索路径中的节点为<(7,2)，(5,4)，(2,3)>，首先以（2,3）作为当前最近邻点，计算其到查询点（2.1,3.1）的距离为0.1414，
+    回溯查找：在得到（2,3）为查询点的最近点之后，回溯到其父节点（5,4），并判断在该父节点的其他子节点空间中是否有距离查询点更近的数据点。以（2.1,3.1）为圆心，以0.1414为半径画圆，如下图所示。发现该圆并不和超平面y = 4交割，因此不用进入（5,4）节点右子空间中(图中灰色区域)去搜索；
+    最后，再回溯到（7,2），以（2.1,3.1）为圆心，以0.1414为半径的圆更不会与x = 7超平面交割，因此不用进入（7,2）右子空间进行查找。至此，搜索路径中的节点已经全部回溯完，结束整个搜索，返回最近邻点（2,3），最近距离为0.1414。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377956885340563.png'/>
+
+2.5.3、举例：查询点（2，4.5）
+
+ 一个复杂点了例子如查找点为（2，4.5），具体步骤依次如下：
+
+    同样先进行二叉查找，先从（7,2）查找到（5,4）节点，在进行查找时是由y = 4为分割超平面的，由于查找点为y值为4.5，因此进入右子空间查找到（4,7），形成搜索路径<(7,2)，(5,4)，(4,7)>，但（4,7）与目标查找点的距离为3.202，而（5,4）与查找点之间的距离为3.041，所以（5,4）为查询点的最近点；
+    以（2，4.5）为圆心，以3.041为半径作圆，如下图所示。可见该圆和y = 4超平面交割，所以需要进入（5,4）左子空间进行查找，也就是将（2,3）节点加入搜索路径中得<(7,2)，(2,3)>；于是接着搜索至（2,3）叶子节点，（2,3）距离（2,4.5）比（5,4）要近，所以最近邻点更新为（2，3），最近距离更新为1.5；
+    回溯查找至（5,4），直到最后回溯到根结点（7,2）的时候，以（2,4.5）为圆心1.5为半径作圆，并不和x = 7分割超平面交割，如下图所示。至此，搜索路径回溯完，返回最近邻点（2,3），最近距离1.5。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377966743482553.png'/>
+
+  上述两次实例表明，当查询点的邻域与分割超平面两侧空间交割时，需要查找另一侧子空间，导致检索过程复杂，效率下降。
+
+
+  一般来讲，最临近搜索只需要检测几个叶子结点即可，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377987953868725.jpg'/>
+  但是，如果当实例点的分布比较糟糕时，几乎要遍历所有的结点，如下所示：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377990184519452.jpg'/>
+研究表明N个节点的K维k-d树搜索过程时间复杂度为：tworst=O（kN1-1/k）。
+
+    同时，以上为了介绍方便，讨论的是二维或三维情形。但在实际的应用中，如SIFT特征矢量128维，SURF特征矢量64维，维度都比较大，直接利用k-d树快速检索（维数不超过20）的性能急剧下降，几乎接近贪婪线性扫描。假设数据集的维数为D，一般来说要求数据的规模N满足N»2D，才能达到高效的搜索。所以这就引出了一系列对k-d树算法的改进：BBF算法，和一系列M树、VP树、MVP树等高维空间索引树(下文2.6节kd树近邻搜索算法的改进：BBF算法，与2.7节球树、M树、VP树、MVP树)。
+2.6、kd树近邻搜索算法的改进：BBF算法
+
+    咱们顺着上一节的思路，参考《统计学习方法》一书上的内容，再来总结下kd树的最近邻搜索算法：
+
+输入：以构造的kd树，目标点x；
+输出：x 的最近邻
+算法步骤如下：
+在kd树种找出包含目标点x的叶结点：从根结点出发，递归地向下搜索kd树。若目标点x当前维的坐标小于切分点的坐标，则移动到左子结点，否则移动到右子结点，直到子结点为叶结点为止。
+以此叶结点为“当前最近点”。
+递归的向上回溯，在每个结点进行以下操作：
+（a）如果该结点保存的实例点比当前最近点距离目标点更近，则更新“当前最近点”，也就是说以该实例点为“当前最近点”。
+（b）当前最近点一定存在于该结点一个子结点对应的区域，检查子结点的父结点的另一子结点对应的区域是否有更近的点。具体做法是，检查另一子结点对应的区域是否以目标点位球心，以目标点与“当前最近点”间的距离为半径的圆或超球体相交：
+如果相交，可能在另一个子结点对应的区域内存在距目标点更近的点，移动到另一个子结点，接着，继续递归地进行最近邻搜索；
+如果不相交，向上回溯。
+当回退到根结点时，搜索结束，最后的“当前最近点”即为x 的最近邻点。
+    如果实例点是随机分布的，那么kd树搜索的平均计算复杂度是O（logN），这里的N是训练实例树。所以说，kd树更适用于训练实例数远大于空间维数时的k近邻搜索，当空间维数接近训练实例数时，它的效率会迅速下降，一降降到“解放前”：线性扫描的速度。
+
+    也正因为上述k最近邻搜索算法的第4个步骤中的所述：“回退到根结点时，搜索结束”，每个最近邻点的查询比较完成过程最终都要回退到根结点而结束，而导致了许多不必要回溯访问和比较到的结点，这些多余的损耗在高维度数据查找的时候，搜索效率将变得相当之地下，那有什么办法可以改进这个原始的kd树最近邻搜索算法呢？
+
+    从上述标准的kd树查询过程可以看出其搜索过程中的“回溯”是由“查询路径”决定的，并没有考虑查询路径上一些数据点本身的一些性质。一个简单的改进思路就是将“查询路径”上的结点进行排序，如按各自分割超平面（也称bin）与查询点的距离排序，也就是说，回溯检查总是从优先级最高（Best Bin）的树结点开始。
+
+    针对此BBF机制，读者Feng&书童点评道：
+
+在某一层，分割面是第ki维，分割值是kv，那么 abs(q[ki]-kv) 就是没有选择的那个分支的优先级，也就是计算的是那一维上的距离；
+同时，从优先队列里面取节点只在某次搜索到叶节点后才发生，计算过距离的节点不会出现在队列的，比如1~10这10个节点，你第一次搜索到叶节点的路径是1-5-7，那么1，5，7是不会出现在优先队列的。换句话说，优先队列里面存的都是查询路径上节点对应的相反子节点，比如：搜索左子树，就把对应这一层的右节点存进队列。
+    如此，就引出了本节要讨论的kd树最近邻搜索算法的改进：BBF（Best-Bin-First）查询算法，它是由发明sift算法的David Lowe在1997的一篇文章中针对高维数据提出的一种近似算法，此算法能确保优先检索包含最近邻点可能性较高的空间，此外，BBF机制还设置了一个运行超时限定。采用了BBF查询机制后，kd树便可以有效的扩展到高维数据集上。
+
+    伪代码如下图所示（图取自图像局部不变特性特征与描述一书）：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377995731705864.jpg'/>
+ 还是以上面的查询（2,4.5）为例，搜索的算法流程为：
+
+将（7,2）压人优先队列中；
+提取优先队列中的（7,2），由于（2,4.5）位于（7,2）分割超平面的左侧，所以检索其左子结点（5,4）。同时，根据BBF机制”搜索左/右子树，就把对应这一层的兄弟结点即右/左结点存进队列”，将其（5,4）对应的兄弟结点即右子结点（9,6）压人优先队列中，此时优先队列为{（9,6）}，最佳点为（7,2）；然后一直检索到叶子结点（4,7），此时优先队列为{（2,3），（9,6）}，“最佳点”则为（5,4）；
+提取优先级最高的结点（2,3），重复步骤2，直到优先队列为空。
+
+    如你在下图所见到的那样（话说，用鼠标在图片上写字着实不好写）：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155377998951412539.jpg'/><img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378000183167311.jpg'/>
+2.7、球树、M树、VP树、MVP树
+
+2.7.1、球树
+
+    咱们来针对上文内容总结回顾下，针对下面这样一棵kd树：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378002590646627.jpg'/>
+现要找它的最近邻。
+
+    通过上文2.5节，总结来说，我们已经知道：
+
+	1、为了找到一个给定目标点的最近邻，需要从树的根结点开始向下沿树找出目标点所在的区域，如下图所示，给定目标点，用星号标示，我们似乎一眼看出，有一个点离目标点最近，因为它落在以目标点为圆心以较小长度为半径的虚线圆内，但为了确定是否可能还村庄一个最近的近邻，我们会先检查叶节点的同胞结点，然叶节点的同胞结点在图中所示的阴影部分，虚线圆并不与之相交，所以确定同胞叶结点不可能包含更近的近邻。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378006652438817.jpg'/>
+
+        2、于是我们回溯到父节点，并检查父节点的同胞结点，父节点的同胞结点覆盖了图中所有横线X轴上的区域。因为虚线圆与右上方的矩形(KD树把二维平面划分成一个一个矩形)相交...
+
+    如上，我们看到，KD树是可用于有效寻找最近邻的一个树结构，但这个树结构其实并不完美，当处理不均匀分布的数据集时便会呈现出一个基本冲突：既邀请树有完美的平衡结构，又要求待查找的区域近似方形，但不管是近似方形，还是矩形，甚至正方形，都不是最好的使用形状，因为他们都有角。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378009067949062.jpg'/>
+
+  什么意思呢？就是说，在上图中，如果黑色的实例点离目标点星点再远一点，那么势必那个虚线圆会如红线所示那样扩大，以致与左上方矩形的右下角相交，既然相交了，那么势必又必须检查这个左上方矩形，而实际上，最近的点离星点的距离很近，检查左上方矩形区域已是多余。于此我们看见，KD树把二维平面划分成一个一个矩形，但矩形区域的角却是个难以处理的问题。
+
+    解决的方案就是使用如下图所示的球树：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378011414155697.jpg'/>
+先从球中选择一个离球的中心最远的点，然后选择第二个点离第一个点最远，将球中所有的点分配到离这两个聚类中心最近的一个上，然后计算每个聚类的中心，以及聚类能够包含它所有数据点所需的最小半径。这种方法的优点是分裂一个包含n个殊绝点的球的成本只是随n呈线性增加
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415537801389805144.jpg'/>
+
+ 使用球树找出给定目标点的最近邻方法是，首先自上而下贯穿整棵树找出包含目标点所在的叶子，并在这个球里找出与目标点最靠近的点，这将确定出目标点距离它的最近邻点的一个上限值，然后跟KD树查找一样，检查同胞结点，如果目标点到同胞结点中心的距离超过同胞结点的半径与当前的上限值之和，那么同胞结点里不可能存在一个更近的点；否则的话，必须进一步检查位于同胞结点以下的子树。
+
+    如下图，目标点还是用一个星表示，黑色点是当前已知的的目标点的最近邻，灰色球里的所有内容将被排除，因为灰色球的中心点离的太远，所以它不可能包含一个更近的点，像这样，递归的向树的根结点进行回溯处理，检查所有可能包含一个更近于当前上限值的点的球。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378016798209104.jpg'/>
+
+ 球树是自上而下的建立，和KD树一样，根本问题就是要找到一个好的方法将包含数据点集的球分裂成两个，在实践中，不必等到叶子结点只有两个胡数据点时才停止，可以采用和KD树一样的方法，一旦结点上的数据点打到预先设置的最小数量时，便可提前停止建树过程。
+
+    也就是上面所述，先从球中选择一个离球的中心最远的点，然后选择第二个点离第一个点最远，将球中所有的点分配到离这两个聚类中心最近的一个上，然后计算每个聚类的中心，以及聚类能够包含它所有数据点所需的最小半径。这种方法的优点是分裂一个包含n个殊绝点的球的成本只是随n呈线性增加(注：本小节内容主要来自参考条目19：数据挖掘实用机器学习技术，[新西兰]Ian H.Witten 著，第4章4.7节)。
+
+2.7.2、VP树与MVP树简介
+
+    高维特征向量的距离索引问题是基于内容的图像检索的一项关键技术，目前经常采用的解决办法是首先对高维特征空间做降维处理，然后采用包括四叉树、kd树、R树族等在内的主流多维索引结构，这种方法的出发点是：目前的主流多维索引结构在处理维数较低的情况时具有比较好的效率，但对于维数很高的情况则显得力不从心(即所谓的维数危机) 。
+
+    实验结果表明当特征空间的维数超过20 的时候，效率明显降低，而可视化特征往往采用高维向量描述，一般情况下可以达到10^2的量级，甚至更高。在表示图像可视化特征的高维向量中各维信息的重要程度是不同的，通过降维技术去除属于次要信息的特征向量以及相关性较强的特征向量，从而降低特征空间的维数，这种方法已经得到了一些实际应用。
+
+    然而这种方法存在不足之处采用降维技术可能会导致有效信息的损失，尤其不适合于处理特征空间中的特征向量相关性很小的情况。另外主流的多维索引结构大都针对欧氏空间，设计需要利用到欧氏空间的几何性质，而图像的相似性计算很可能不限于基于欧氏距离。这种情况下人们越来越关注基于距离的度量空间高维索引结构可以直接应用于高维向量相似性查询问题。
+
+    度量空间中对象之间的距离度量只能利用三角不等式性质，而不能利用其他几何性质。向量空间可以看作由实数坐标串组成的特殊度量空间，目前针对度量空间的高维索引问题提出的索引结构有很多种大致可以作如下分类，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378019794521032.jpg'/>
+  其中，VP树和MVP树中特征向量的举例表示为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378021775105215.jpg'/>
+ 读者点评：
+
+UESTC_HN_AY_GUOBO：现在主要是在kdtree的基础上有了mtree或者mvptree，其实关键还是pivot的选择，以及度量空间中算法怎么减少距离计算；
+mandycool：mvp-tree，是利用三角形不等式来缩小搜索区域的，不过mvp-tree的目标稍有不同，查询的是到query点的距离小于某个值r的点；另外作者test的数据集只有20维，不知道上百维以后效果如何，而减少距离计算的一个思路是做embedding，通过不等式排除掉一部分点。
+    更多内容请参见论文1：DIST ANCE-BASED INDEXING FOR HIGH-DIMENSIONAL METRIC SP ACES，作者：Tolga Bozkaya & Meral Ozsoyoglu，及论文2：基于度量空间高维索引结构VP-tree及MVP-tree的图像检索，王志强，甘国辉，程起敏。
+
+    当然，如果你觉得上述论文还不够满足你胃口的话，这里有一大堆nearest neighbor algorithms相关的论文可供你看：http://scholar.google.com.hk/scholar?q=nearest+neighbor+algorithms&btnG=&hl=zh-CN&as_sdt=0&as_vis=1（其中，这篇可以看下：Spill-Trees，An investigation of practical approximate nearest neighbor algorithms）。
+
+第三部分、KD树的应用：SIFT+KD_BBF搜索算法
+
+3.1、SIFT特征匹配算法    
+
+    之前本blog内阐述过图像特征匹配SIFT算法，写过五篇文章，这五篇文章分别为：
+
+九、图像特征提取与匹配之SIFT算法      (sift算法系列五篇文章)
+九（续）、sift算法的编译与实现
+九（再续）、教你一步一步用c语言实现sift算法、上
+九（再续）、教你一步一步用c语言实现sift算法、下
+九（三续）：SIFT算法的应用--目标识别之Bag-of-words模型
+    不熟悉SIFT算法相关概念的可以看上述几篇文章，这里不再做赘述。与此同时，本文此部分也作为十五个经典算法研究系列里SIFT算法的九之四续。
+
+    OK，我们知道，在sift算法中，给定两幅图片图片，若要做特征匹配，一般会先提取出图片中的下列相关属性作为特征点：
+/**
+Structure to represent an affine invariant image feature.  The fields
+x, y, a, b, c represent the affine region around the feature:
+a(x-u)(x-u) + 2b(x-u)(y-v) + c(y-v)(y-v) = 1
+*/
+struct feature
+{
+	double x;                      /**< x coord */
+	double y;                      /**< y coord */
+	double a;                      /**< Oxford-type affine region parameter */
+	double b;                      /**< Oxford-type affine region parameter */
+	double c;                      /**< Oxford-type affine region parameter */
+	double scl;                    /**< scale of a Lowe-style feature */
+	double ori;                    /**< orientation of a Lowe-style feature */
+	int d;                         /**< descriptor length */
+	double descr[FEATURE_MAX_D];   /**< descriptor */
+	int type;                      /**< feature type, OXFD or LOWE */
+	int category;                  /**< all-purpose feature category */
+	struct feature* fwd_match;     /**< matching feature from forward image */
+	struct feature* bck_match;     /**< matching feature from backmward image */
+	struct feature* mdl_match;     /**< matching feature from model */
+	CvPoint2D64f img_pt;           /**< location in image */
+	CvPoint2D64f mdl_pt;           /**< location in model */
+	void* feature_data;            /**< user-definable data */
+	char dense;						/*表征特征点所处稠密程度*/
+};
+    而后在sift.h文件中定义两个关键函数，这里，我们把它们称之为函数一，和函数二，如下所示：
+函数一的声明：
+
+extern int sift_features( IplImage* img, struct feature** feat );
+函数一的实现：
+
+int sift_features( IplImage* img, struct feature** feat )
+{
+	return _sift_features( img, feat, SIFT_INTVLS, SIFT_SIGMA, SIFT_CONTR_THR,
+							SIFT_CURV_THR, SIFT_IMG_DBL, SIFT_DESCR_WIDTH,
+							SIFT_DESCR_HIST_BINS );
+}
+从上述函数一的实现中，我们可以看到，它内部实际上调用的是这个函数：_sift_features(..)，也就是下面马上要分析的函数二。
+函数二的声明：
+
+extern int _sift_features( IplImage* img, struct feature** feat, int intvls,
+						  double sigma, double contr_thr, int curv_thr,
+						  int img_dbl, int descr_width, int descr_hist_bins );
+函数二的实现：
+
+int _sift_features( IplImage* img, struct feature** feat, int intvls,
+				   double sigma, double contr_thr, int curv_thr,
+				   int img_dbl, int descr_width, int descr_hist_bins )
+{
+	IplImage* init_img;
+	IplImage*** gauss_pyr, *** dog_pyr;
+	CvMemStorage* storage;
+	CvSeq* features;
+	int octvs, i, n = 0,n0 = 0,n1 = 0,n2 = 0,n3 = 0,n4 = 0;
+	int start;
+ 
+	/* check arguments */
+	if( ! img )
+		fatal_error( "NULL pointer error, %s, line %d",  __FILE__, __LINE__ );
+ 
+	if( ! feat )
+		fatal_error( "NULL pointer error, %s, line %d",  __FILE__, __LINE__ );
+ 
+	/* build scale space pyramid; smallest dimension of top level is ~4 pixels */
+	start=GetTickCount();
+	init_img = create_init_img( img, img_dbl, sigma );
+	octvs = log( (float)(MIN( init_img->width, init_img->height )) ) / log((float)(2.0)) -5;
+	gauss_pyr = build_gauss_pyr( init_img, octvs, intvls, sigma );
+	dog_pyr = build_dog_pyr( gauss_pyr, octvs, intvls );
+	fprintf( stderr, " creat the pyramid use %d\n",GetTickCount()-start);
+ 
+	storage = cvCreateMemStorage( 0 );    //创建存储内存，0为默认64k
+	start=GetTickCount();
+	features = scale_space_extrema( dog_pyr, octvs, intvls, contr_thr,
+		curv_thr, storage );  //在DOG空间寻找极值点，确定关键点位置
+	fprintf( stderr, " find the extrum points in DOG use %d\n",GetTickCount()-start);
+ 
+	calc_feature_scales( features, sigma, intvls ); //计算关键点的尺度
+ 
+	if( img_dbl )
+		adjust_for_img_dbl( features );  //如果原始空间图扩大，特征点坐标就缩小
+	start=GetTickCount();
+	calc_feature_oris( features, gauss_pyr );  //在gaussian空间计算关键点的主方向和幅值
+	fprintf( stderr, " get the main oritation use %d\n",GetTickCount()-start);
+ 
+	start=GetTickCount();
+	compute_descriptors( features, gauss_pyr, descr_width, descr_hist_bins ); //建立关键点描述器
+	fprintf( stderr, " compute the descriptors use %d\n",GetTickCount()-start);
+ 
+	/* sort features by decreasing scale and move from CvSeq to array */
+	//start=GetTickCount();
+	//cvSeqSort( features, (CvCmpFunc)feature_cmp, NULL ); //?????
+	n = features->total;
+	*feat = (feature*)(calloc( n, sizeof(struct feature) ));
+	*feat = (feature*)(cvCvtSeqToArray( features, *feat, CV_WHOLE_SEQ )); //整条链表放在feat指向的内存
+ 
+	for( i = 0; i < n; i++ )
+	{
+		free( (*feat)[i].feature_data );
+		(*feat)[i].feature_data = NULL;  //释放ddata(r,c,octv,intvl,xi,scl_octv)
+		if((*feat)[i].dense == 4) ++n4;
+		else if((*feat)[i].dense == 3) ++n3;
+		else if((*feat)[i].dense == 2) ++n2;
+		else if((*feat)[i].dense == 1) ++n1;
+		else						 ++n0;
+	}
+ 
+	//fprintf( stderr, " move features from sequce to array use %d\n",GetTickCount()-start);
+	//start=GetTickCount();
+	fprintf( stderr, "In the total feature points the extent4 points is %d\n",n4);
+	fprintf( stderr, "In the total feature points the extent3 points is %d\n",n3);
+	fprintf( stderr, "In the total feature points the extent2 points is %d\n",n2);
+	fprintf( stderr, "In the total feature points the extent1 points is %d\n",n1);
+	fprintf( stderr, "In the total feature points the extent0 points is %d\n",n0);
+	cvReleaseMemStorage( &storage );
+	cvReleaseImage( &init_img );
+	release_pyr( &gauss_pyr, octvs, intvls + 3 );
+	release_pyr( &dog_pyr, octvs, intvls + 2 );
+	//fprintf( stderr, " free the pyramid use %d\n",GetTickCount()-start);
+	return n;
+}
+   说明：上面的函数二，包含了SIFT算法中几乎所有函数，是SIFT算法的核心。本文不打算一一分析上面所有函数，只会抽取其中涉及到BBF查询机制相关的函数。
+3.2、K个最小近邻的查找：大顶堆优先级队列
+
+    上文中一直在讲最近邻问题，也就是说只找最近的那唯一一个邻居，但如果现实中需要我们找到k个最近的邻居。该如何做呢？对的，之前blog内曾相近阐述过寻找最小的k个数的问题，显然，寻找k个最近邻与寻找最小的k个数的问题如出一辙。
+
+    回忆下寻找k个最小的数中关于构造大顶堆的解决方案：
+
+    “寻找最小的k个树，更好的办法是维护k个元素的最大堆，即用容量为k的最大堆存储最先遍历到的k个数，并假设它们即是最小的k个数，建堆费时O（k）后，有k1<k2<...<kmax（kmax设为大顶堆中最大元素）。继续遍历数列，每次遍历一个元素x，与堆顶元素比较，x<kmax，更新堆（用时logk），否则不更新堆。这样下来，总费时O（k+（n-k）*logk）=O（n*logk）。此方法得益于在堆中，查找等各项操作时间复杂度均为logk。”
+
+    根据上述方法，咱们来写大顶堆最小优先级队列相关代码实现：
+
+
+void* minpq_extract_min( struct min_pq* min_pq )
+{
+	void* data;
+ 
+	if( min_pq->n < 1 )
+	{
+		fprintf( stderr, "Warning: PQ empty, %s line %d\n", __FILE__, __LINE__ );
+		return NULL;
+	}
+	data = min_pq->pq_array[0].data; //root of tree
+	min_pq->n--;   //0
+	min_pq->pq_array[0] = min_pq->pq_array[min_pq->n];
+	restore_minpq_order( min_pq->pq_array, 0, min_pq->n );
+                                              //0
+	return data;
+}
+    上述函数中，restore_minpq_order的实现如下：
+static void restore_minpq_order( struct pq_node* pq_array, int i, int n )
+{                                                          //0     //0
+	struct pq_node tmp;
+	int l, r, min = i;
+ 
+	l = left( i ); //2*i+1,????????????
+	r = right( i );//2*i+2,????????????
+	if( l < n )
+		if( pq_array[l].key < pq_array[i].key )
+			min = l;
+	if( r < n )
+		if( pq_array[r].key < pq_array[min].key )
+			min = r;
+ 
+	if( min != i )
+	{
+		tmp = pq_array[min];
+		pq_array[min] = pq_array[i];
+		pq_array[i] = tmp;
+		restore_minpq_order( pq_array, min, n );
+	}
+}
+3.3、KD树近邻搜索改进之BBF算法
+
+    原理在上文第二部分已经阐述明白，结合大顶堆找最近的K个近邻思想，相关主体代码如下：
+
+//KD树近邻搜索改进之BBF算法
+int kdtree_bbf_knn( struct kd_node* kd_root, struct feature* feat, int k,
+					struct feature*** nbrs, int max_nn_chks )                  //2
+{                                               //200
+	struct kd_node* expl;
+	struct min_pq* min_pq;
+	struct feature* tree_feat, ** _nbrs;
+	struct bbf_data* bbf_data;
+	int i, t = 0, n = 0;
+ 
+	if( ! nbrs  ||  ! feat  ||  ! kd_root )
+	{
+		fprintf( stderr, "Warning: NULL pointer error, %s, line %d\n",
+				__FILE__, __LINE__ );
+		return -1;
+	}
+ 
+	_nbrs = (feature**)(calloc( k, sizeof( struct feature* ) )); //2
+	min_pq = minpq_init(); 
+	minpq_insert( min_pq, kd_root, 0 ); //把根节点加入搜索序列中
+ 
+	//队列有东西就继续搜，同时控制在t<200步内
+	while( min_pq->n > 0  &&  t < max_nn_chks )
+	{                 
+		//刚进来时,从kd树根节点搜索,exp1是根节点 
+		//后进来时,exp1是min_pq差值最小的未搜索节点入口
+		//同时按min_pq中父,子顺序依次检验,保证父节点的差值比子节点小.这样减少返回搜索时间
+		expl = (struct kd_node*)minpq_extract_min( min_pq );
+		if( ! expl )                                        
+		{                                                   
+			fprintf( stderr, "Warning: PQ unexpectedly empty, %s line %d\n",
+					__FILE__, __LINE__ );                         
+			goto fail;
+		}
+ 
+		//从根节点(或差值最小节点)搜索,根据目标点与节点模值的差值(小)
+		//确定在kd树的搜索路径,同时存储各个节点另一入口地址\\u540c级搜索路径差值.
+		//存储时比较父节点的差值,如果子节点差值比父节点差值小,交换两者存储位置,
+		//使未搜索节点差值小的存储在min_pq的前面,减小返回搜索的时间.
+		expl = explore_to_leaf( expl, feat, min_pq ); 
+		if( ! expl )                                  
+		{                                             
+			fprintf( stderr, "Warning: PQ unexpectedly empty, %s line %d\n",
+					__FILE__, __LINE__ );                   
+			goto fail;                                  
+		}                                             
+ 
+		for( i = 0; i < expl->n; i++ )
+		{ 
+			//使用exp1->n原因:如果是叶节点,exp1->n=1,如果是伪叶节点,exp1->n=0.
+			tree_feat = &expl->features[i];
+			bbf_data = (struct bbf_data*)(malloc( sizeof( struct bbf_data ) ));
+			if( ! bbf_data )
+			{
+				fprintf( stderr, "Warning: unable to allocate memory,"
+					" %s line %d\n", __FILE__, __LINE__ );
+				goto fail;
+			}
+			bbf_data->old_data = tree_feat->feature_data;
+			bbf_data->d = descr_dist_sq(feat, tree_feat); //计算两个关键点描述器差平方和
+			tree_feat->feature_data = bbf_data;
+ 
+			//取前k个
+			n += insert_into_nbr_array( tree_feat, _nbrs, n, k );//
+		}                                                  //2
+		t++;
+	}
+ 
+	minpq_release( &min_pq );
+	for( i = 0; i < n; i++ ) //bbf_data为何搞个old_data?
+	{
+		bbf_data = (struct bbf_data*)(_nbrs[i]->feature_data);
+		_nbrs[i]->feature_data = bbf_data->old_data;
+		free( bbf_data );
+	}
+	*nbrs = _nbrs;
+	return n;
+ 
+fail:
+	minpq_release( &min_pq );
+	for( i = 0; i < n; i++ )
+	{
+		bbf_data = (struct bbf_data*)(_nbrs[i]->feature_data);
+		_nbrs[i]->feature_data = bbf_data->old_data;
+		free( bbf_data );
+	}
+	free( _nbrs );
+	*nbrs = NULL;
+	return -1;
+}
+   依据上述函数kdtree_bbf_knn从上而下看下来，注意几点：
+
+    1、上述函数kdtree_bbf_knn中，explore_to_leaf的代码如下：
+
+static struct kd_node* explore_to_leaf( struct kd_node* kd_node, struct feature* feat,
+										struct min_pq* min_pq )       //kd tree          //the before 
+{
+	struct kd_node* unexpl, * expl = kd_node;
+	double kv;
+	int ki;
+ 
+	while( expl  &&  ! expl->leaf )
+	{                    //0
+		ki = expl->ki;
+		kv = expl->kv;
+ 
+		if( ki >= feat->d )
+		{
+			fprintf( stderr, "Warning: comparing imcompatible descriptors, %s" \
+					" line %d\n", __FILE__, __LINE__ );
+			return NULL;
+		}
+		if( feat->descr[ki] <= kv )  //由目标点描述器确定搜索向kd tree的左边或右边
+		{                            //如果目标点模值比节点小，搜索向tree的左边进行
+			unexpl = expl->kd_right;
+			expl = expl->kd_left;
+		}
+		else
+		{
+			unexpl = expl->kd_left;    //else 
+			expl = expl->kd_right;
+		}
+ 
+		//把未搜索数分支入口,差值存储在min_pq,
+		if( minpq_insert( min_pq, unexpl, ABS( kv - feat->descr[ki] ) ) )
+		{                                     
+			fprintf( stderr, "Warning: unable to insert into PQ, %s, line %d\n",
+					__FILE__, __LINE__ );
+			return NULL;
+		}
+	}
+	return expl;
+}
+    2、上述查找函数kdtree_bbf_knn中的参数k可调，代表的是要查找近邻的个数，即number of neighbors to find，在sift特征匹配中，k一般取2
+
+k = kdtree_bbf_knn( kd_root_0, feat, 2, &nbrs, KDTREE_BBF_MAX_NN_CHKS_0 );//点匹配函数(核心)
+		if( k == 2 ) //只有进行2次以上匹配过程,才算是正常匹配过程
+    3、上述函数kdtree_bbf_knn中“bbf_data->d = descr_dist_sq(feat, tree_feat); //计算两个关键点描述器差平方和”，使用的计算方法是本文第一部分1.2节中所述的欧氏距离。
+
+3.3、SIFT+BBF算法匹配效果
+
+    之前试了下sift + KD + BBF算法，用两幅不同的图片做了下匹配（当然，运行结果显示是不匹配的），效果还不错：http://weibo.com/1580904460/yDmzAEwcV#1348475194313。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378040822252041.jpg'/><img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155378042096461333.jpg'/>
+
+
+参考文献及推荐阅读
+1维基百科，http://en.wikipedia.org/wiki/K-nearest_neighbor_algorithm；
+2机器学习中的相似性度量，http://www.cnblogs.com/heaad/archive/2011/03/08/1977733.html；
+3杰卡德相似系数及距离，http://www.cnblogs.com/heaad/archive/2011/03/08/1977733.html；
+4统计学习方法，李航；
+5概率论与数理统计 第四版 盛骤等编，高教版；
+
+6《图像局部不变特性特征与描述》王永明 王贵锦 编著；
+7数据挖掘：实用机器学习技术，[新西兰]Ian H.Witten 著，第4章4.7节；
+8模式分类，第4章 非参数技术，[美] IRichard O. Duda / Peter E. Hart / David G. Stork 著；
+9http://underthehood.blog.51cto.com/2531780/687160；
+10http://grunt1223.iteye.com/blog/921371；
+
+11http://www.cnblogs.com/eyeszjwang/articles/2429382.html；
+12http://blog.csdn.net/ijuliet/article/details/4471311；
+13Rob Hess维护的sift库，http://blogs.oregonstate.edu/hess/code/sift/；
+14酷壳，http://coolshell.cn/articles/8052.html；
+15rubyist，http://segmentfault.com/q/1010000000094674；
+
+16皮尔逊相关系数维基百科页面，http://t.cn/zjy6Gpg；
+17皮尔逊相关系数的一个应用：http://www.sobuhu.com/archives/567；
+18http://blog.csdn.net/wsywl/article/details/5727327；
+19标准差，http://zh.wikipedia.org/wiki/æ åå·®；
+20协方差与相关性，http://t.cn/zjyXFRB ；
+
+21电子科大kd树电子课件：http://t.cn/zjbpXna；
+22编程艺术之寻找最小的k个数：http://blog.csdn.net/v_JULY_v/article/details/6403777；
+23机器学习那些事儿，http://vdisk.weibo.com/s/ix_9F；
+24大嘴巴漫谈数据挖掘，http://vdisk.weibo.com/s/bUbzJ；
+25http://www.codeproject.com/Articles/18113/KD-Tree-Searching-in-N-dimensions-Part-I；
+
+26一个库：http://docs.pointclouds.org/trunk/group__kdtree.html；
+273D上使用kd树：http://pointclouds.org/；
+28编辑数学公式：http://webdemo.visionobjects.com/equation.html?locale=zh_CN；
+29基于R树的最近邻查找：http://blog.sina.com.cn/s/blog_72e1c7550101dsc3.html；
+30包含一个demo：http://www.leexiang.com/kd-tree；
+
+31机器学习相关降维算法，http://www.cnblogs.com/xbinworld/category/337861.html；
+32Machine Learning相关topic，http://www.cnblogs.com/jerrylead/tag/Machine Learning/；
+33机器学习中的数学，http://www.cnblogs.com/LeftNotEasy/category/273623.html；
+34一堆概念性wikipedia页面；
+35基于度量空间高维索引结构VP-tree及MVP-tree的图像检索，王志强，甘国辉，程起敏；
+
+36Spill-Trees，An investigation of practical approximate nearest neighbor algorithms；
+37DIST ANCE-BASED INDEXING FOR HIGH-DIMENSIONAL METRIC SP ACES，作者：Tolga Bozkaya & Meral Ozsoyoglu；
+38“Multidimensional Binary Search Trees Used for Associative Searching”，Jon Louis Bentley。
+## 146.如何通俗理解贝叶斯方法和贝叶斯网络？
+本题解析来源于July在CSDN上阅读量超过10万的《从贝叶斯方法谈到贝叶斯网络》
+
+0 引言
+    事实上，介绍贝叶斯定理、贝叶斯方法、贝叶斯推断的资料、书籍不少，比如《数理统计学简史》，以及《统计决策论及贝叶斯分析 James O.Berger著》等等，然介绍贝叶斯网络的中文资料则非常少，中文书籍总共也没几本，有的多是英文资料，但初学者一上来就扔给他一堆英文论文，因无基础和语言的障碍而读得异常吃力导致无法继续读下去则是非常可惜的（当然，有了一定的基础后，便可阅读更多的英文资料）。
+
+    11月9日上午，机器学习班 第9次课讲贝叶斯网络，帮助大家提炼了贝叶斯网络的几个关键点：贝叶斯网络的定义、3种结构形式、因子图、以及Summary-Product算法等等，知道了贝叶斯网络是啥，怎么做，目标是啥之后，相信看英文论文也更好看懂了。
+
+    故本文结合课程讲义及相关参考资料写就，从贝叶斯方法讲起，重点阐述贝叶斯网络，依然可以定义为一篇读书笔记或学习笔记，有任何问题，欢迎随时不吝指出，thanks。
+
+
+1 贝叶斯方法
+    长久以来，人们对一件事情发生或不发生的概率，只有固定的0和1，即要么发生，要么不发生，从来不会去考虑某件事情发生的概率有多大，不发生的概率又是多大。而且概率虽然未知，但最起码是一个确定的值。比如如果问那时的人们一个问题：“有一个袋子，里面装着若干个白球和黑球，请问从袋子中取得白球的概率是多少？”他们会想都不用想，会立马告诉你，取出白球的概率就是1/2，要么取到白球，要么取不到白球，即θ只能有一个值，而且不论你取了多少次，取得白球的概率θ始终都是1/2，即不随观察结果X 的变化而变化。
+
+    这种频率派的观点长期统治着人们的观念，直到后来一个名叫Thomas Bayes的人物出现。
+
+1.1 贝叶斯方法的提出
+    托马斯·贝叶斯Thomas Bayes（1702-1763）在世时，并不为当时的人们所熟知，很少发表论文或出版著作，与当时学术界的人沟通交流也很少，用现在的话来说，贝叶斯就是活生生一民间学术“屌丝”，可这个“屌丝”最终发表了一篇名为“An essay towards solving a problem in the doctrine of chances”，翻译过来则是：机遇理论中一个问题的解。你可能觉得我要说：这篇论文的发表随机产生轰动效应，从而奠定贝叶斯在学术史上的地位。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385172674171677.jpg'/>
+
+事实上，上篇论文发表后，在当时并未产生多少影响，在20世纪后，这篇论文才逐渐被人们所重视。对此，与梵高何其类似，画的画生前一文不值，死后价值连城。
+
+回到上面的例子：“有一个袋子，里面装着若干个白球和黑球，请问从袋子中取得白球的概率θ是多少？”贝叶斯认为取得白球的概率是个不确定的值，因为其中含有机遇的成分。比如，一个朋友创业，你明明知道创业的结果就两种，即要么成功要么失败，但你依然会忍不住去估计他创业成功的几率有多大？你如果对他为人比较了解，而且有方法、思路清晰、有毅力、且能团结周围的人，你会不由自主的估计他创业成功的几率可能在80%以上。这种不同于最开始的“非黑即白、非0即1”的思考方式，便是贝叶斯式的思考方式。
+
+继续深入讲解贝叶斯方法之前，先简单总结下频率派与贝叶斯派各自不同的思考方式：
+
+频率派把需要推断的参数θ看做是固定的未知常数，即概率虽然是未知的，但最起码是确定的一个值，同时，样本X 是随机的，所以频率派重点研究样本空间，大部分的概率计算都是针对样本X 的分布；
+
+而贝叶斯派的观点则截然相反，他们认为参数是随机变量，而样本X 是固定的，由于样本是固定的，所以他们重点研究的是参数的分布。
+
+相对来说，频率派的观点容易理解，所以下文重点阐述贝叶斯派的观点。
+
+贝叶斯派既然把看做是一个随机变量，所以要计算的分布，便得事先知道的无条件分布，即在有样本之前（或观察到X之前），有着怎样的分布呢？
+
+比如往台球桌上扔一个球，这个球落会落在何处呢？如果是不偏不倚的把球抛出去，那么此球落在台球桌上的任一位置都有着相同的机会，即球落在台球桌上某一位置的概率服从均匀分布。这种在实验之前定下的属于基本前提性质的分布称为先验分布，或的无条件分布。
+
+至此，贝叶斯及贝叶斯派提出了一个思考问题的固定模式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415538517802943534.png'/>
+
+上述思考模式意味着，新观察到的样本信息将修正人们以前对事物的认知。换言之，在得到新的样本信息之前，人们对θ的认知是先验分布π（θ），在得到新的样本信息X后，人们对的认知为π（θ|X）。
+
+其中，先验信息一般来源于经验跟历史资料。比如林丹跟某选手对决，解说一般会根据林丹历次比赛的成绩对此次比赛的胜负做个大致的判断。再比如，某工厂每天都要对产品进行质检，以评估产品的不合格率θ，经过一段时间后便会积累大量的历史资料，这些历史资料便是先验知识，有了这些先验知识，便在决定对一个产品是否需要每天质检时便有了依据，如果以往的历史资料显示，某产品的不合格率只有0.01%，便可视为信得过产品或免检产品，只每月抽检一两次，从而省去大量的人力物力。
+
+而后验分布π（θ|X）一般也认为是在给定样本X的情况下的θ条件分布，而使π（θ|X）达到最大的值θMD称为最大后验估计，类似于经典统计学中的极大似然估计。
+
+综合起来看，则好比是人类刚开始时对大自然只有少得可怜的先验知识，但随着不断观察、实验获得更多的样本、结果，使得人们对自然界的规律摸得越来越透彻。所以，贝叶斯方法既符合人们日常生活的思考方式，也符合人们认识自然的规律，经过不断的发展，最终占据统计学领域的半壁江山，与经典统计学分庭抗礼。
+
+此外，贝叶斯除了提出上述思考模式之外，还特别提出了举世闻名的贝叶斯定理。
+
+1.2 贝叶斯定理
+在引出贝叶斯定理之前，先学习几个定义：
+
+条件概率（又称后验概率）就是事件A在另外一个事件B已经发生条件下的发生概率。条件概率表示为P(A|B)，读作“在B条件下A的概率”。
+
+比如，在同一个样本空间Ω中的事件或者子集A与B，如果随机从Ω中选出的一个元素属于B，那么这个随机选择的元素还属于A的概率就定义为在B的前提下A的条件概率，所以：P(A|B) = |A∩B|/|B|，接着分子、分母都除以|Ω|得到
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385183356818488.png'/>
+
+联合概率表示两个事件共同发生的概率。A与B的联合概率表示为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385221178700559.png'/>
+
+边缘概率（又称先验概率）是某个事件发生的概率。边缘概率是这样得到的：在联合概率中，把最终结果中那些不需要的事件通过合并成它们的全概率，而消去它们（对离散随机变量用求和得全概率，对连续随机变量用积分得全概率），这称为边缘化（marginalization），比如A的边缘概率表示为P(A)，B的边缘概率表示为P(B)。 
+
+接着，考虑一个问题：P(A|B)是在B发生的情况下A发生的可能性。
+
+1、首先，事件B发生之前，我们对事件A的发生有一个基本的概率判断，称为A的先验概率，用P(A)表示；
+2、其次，事件B发生之后，我们对事件A的发生概率重新评估，称为A的后验概率，用P(A|B)表示；
+3、类似的，事件A发生之前，我们对事件B的发生有一个基本的概率判断，称为B的先验概率，用P(B)表示；
+4、同样，事件A发生之后，我们对事件B的发生概率重新评估，称为B的后验概率，用P(B|A)表示。
+
+贝叶斯定理便是基于下述贝叶斯公式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385228728983458.png'/>
+
+上述公式的推导其实非常简单，就是从条件概率推出。
+
+根据条件概率的定义，在事件B发生的条件下事件A发生的概率是
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385230186759109.png'/>
+
+同样地，在事件A发生的条件下事件B发生的概率
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385231769042801.png'/>
+
+整理与合并上述两个方程式，便可以得到：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385232841261984.png'/>
+
+接着，上式两边同除以P(B)，若P(B)是非零的，我们便可以得到贝叶斯定理的公式表达式：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385235017335029.png'/>
+
+所以，贝叶斯公式可以直接根据条件概率的定义直接推出。即因为P(A,B) = P(A)P(B|A) = P(B)P(A|B)，所以P(A|B) = P(A)P(B|A)  / P(B)。
+
+1.3 应用：拼写检查
+经常在网上搜索东西的朋友知道，当你不小心输入一个不存在的单词时，搜索引擎会提示你是不是要输入某一个正确的单词，比如当你在Google中输入“Julw”时，系统会猜测你的意图：是不是要搜索“July”，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385240118112521.jpg'/>
+
+这叫做拼写检查。根据谷歌一员工写的文章显示，Google的拼写检查基于贝叶斯方法。下面我们就来看看，怎么利用贝叶斯方法，实现"拼写检查"的功能。
+
+用户输入一个单词时，可能拼写正确，也可能拼写错误。如果把拼写正确的情况记做c（代表correct），拼写错误的情况记做w（代表wrong），那么"拼写检查"要做的事情就是：在发生w的情况下，试图推断出c。换言之：已知w，然后在若干个备选方案中，找出可能性最大的那个c，也就是求
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385245438693755.png'/>
+
+而根据贝叶斯定理，有：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385247398280837.png'/>
+
+由于对于所有备选的c来说，对应的都是同一个w，所以它们的P(w)是相同的，因此我们只要最大化
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385248567322864.png'/>
+
+
+即可。其中：
+
+▶ P(c)表示某个正确的词的出现"概率"，它可以用"频率"代替。如果我们有一个足够大的文本库，那么这个文本库中每个单词的出现频率，就相当于它的发生概率。某个词的出现频率越高，P(c)就越大。比如在你输入一个错误的词“Julw”时，系统更倾向于去猜测你可能想输入的词是“July”，而不是“Jult”，因为“July”更常见。
+
+▶ P(w|c)表示在试图拼写c的情况下，出现拼写错误w的概率。为了简化问题，假定两个单词在字形上越接近，就有越可能拼错，P(w|c)就越大。举例来说，相差一个字母的拼法，就比相差两个字母的拼法，发生概率更高。你想拼写单词July，那么错误拼成Julw（相差一个字母）的可能性，就比拼成Jullw高（相差两个字母）。值得一提的是，一般把这种问题称为“编辑距离”，参见博客中的这篇文章。
+
+所以，我们比较所有拼写相近的词在文本库中的出现频率，再从中挑出出现频率最高的一个，即是用户最想输入的那个词。具体的计算过程及此方法的缺陷请参见这里。
+
+02 贝叶斯网络
+
+2.1 贝叶斯网络的定义
+
+贝叶斯网络(Bayesian network)，又称信念网络(Belief Network)，或有向无环图模型(directed acyclic graphical model)，是一种概率图模型，于1985年由Judea Pearl首先提出。它是一种模拟人类推理过程中因果关系的不确定性处理模型，其网络拓朴结构是一个有向无环图(DAG)。 
+
+贝叶斯网络的有向无环图中的节点表示随机变量
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385256579605313.png'/>
+
+它们可以是可观察到的变量，或隐变量、未知参数等。认为有因果关系（或非条件独立）的变量或命题则用箭头来连接。若两个节点间以一个单箭头连接在一起，表示其中一个节点是“因(parents)”，另一个是“果(children)”，两节点就会产生一个条件概率值。
+
+总而言之，连接两个节点的箭头代表此两个随机变量是具有因果关系，或非条件独立。
+
+例如，假设节点E直接影响到节点H，即E→H，则用从E指向H的箭头建立结点E到结点H的有向弧(E,H)，权值(即连接强度)用条件概率P(H|E)来表示，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385260415416726.png'/>
+
+简言之，把某个研究系统中涉及的随机变量，根据是否条件独立绘制在一个有向图中，就形成了贝叶斯网络。其主要用来描述随机变量之间的条件依赖，用圈表示随机变量(random variables)，用箭头表示条件依赖(conditional dependencies)。
+
+令G = (I,E)表示一个有向无环图(DAG)，其中I代表图形中所有的节点的集合，而E代表有向连接线段的集合，且令X = (Xi)i ∈ I为其有向无环图中的某一节点i所代表的随机变量，若节点X的联合概率可以表示成：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385265775019179.png'/>
+
+则称X为相对于一有向无环图G 的贝叶斯网络，其中，pa(i)表示节点i之“因”，或称pa(i)是i的parents（父母）。 
+
+此外，对于任意的随机变量，其联合概率可由各自的局部条件概率分布相乘而得出：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385267366527055.png'/>
+
+如下图所示，便是一个简单的贝叶斯网络：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385269071087906.png'/>
+
+因为a导致b，a和b导致c，所以有
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385270688293002.png'/>
+
+2.2 贝叶斯网络的3种结构形式
+
+给定如下图所示的一个贝叶斯网络：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385299198103994.jpg'/>
+
+从图上可以比较直观的看出：
+
+1. x1,x2,…x7的联合分布为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385300497444242.png'/>
+
+2. x1和x2独立（对应head-to-head）；
+
+3. x6和x7在x4给定的条件下独立（对应tail-to-tail）。
+
+根据上图，第1点可能很容易理解，但第2、3点中所述的条件独立是啥意思呢？其实第2、3点是贝叶斯网络中3种结构形式中的其中二种。为了说清楚这个问题，需要引入D-Separation（D-分离）这个概念。
+
+D-Separation是一种用来判断变量是否条件独立的图形化方法。换言之，对于一个DAG(有向无环图)E，D-Separation方法可以快速的判断出两个节点之间是否是条件独立的。
+
+2.2.1 形式1：head-to-head
+
+贝叶斯网络的第一种结构形式如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385304281092472.png'/>
+
+所以有：P(a,b,c) = P(a)*P(b)*P(c|a,b)成立，化简后可得：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385306039129571.png'/>
+
+即在c未知的条件下，a、b被阻断(blocked)，是独立的，称之为head-to-head条件独立，对应本节中最开始那张图中的“x1、x2独立”。
+
+2.2.2 形式2：tail-to-tail
+
+贝叶斯网络的第二种结构形式如下图所示
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385308065053106.png'/>
+
+考虑c未知，跟c已知这两种情况：
+
+1、在c未知的时候，有：P(a,b,c)=P(c)*P(a|c)*P(b|c)，此时，没法得出P(a,b) = P(a)P(b)，即c未知时，a、b不独立。
+
+2、在c已知的时候，有：P(a,b|c)=P(a,b,c)/P(c)，然后将P(a,b,c)=P(c)*P(a|c)*P(b|c)带入式子中，得到：P(a,b|c)=P(a,b,c)/P(c) = P(c)*P(a|c)*P(b|c) / P(c) = P(a|c)*P(b|c)，即c已知时，a、b独立。
+
+所以，在c给定的条件下，a，b被阻断(blocked)，是独立的，称之为tail-to-tail条件独立，对应本节中最开始那张图中的“x6和x7在x4给定的条件下独立”。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385310864196434.png'/>
+
+2.2.3 形式3：head-to-tail
+
+贝叶斯网络的第三种结构形式如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385312510915900.png'/>
+
+还是分c未知跟c已知这两种情况：
+
+1、c未知时，有：P(a,b,c)=P(a)*P(c|a)*P(b|c)，但无法推出P(a,b) = P(a)P(b)，即c未知时，a、b不独立。
+
+2、c已知时，有：P(a,b|c)=P(a,b,c)/P(c)，且根据P(a,c) = P(a)*P(c|a) = P(c)*P(a|c)，可化简得到：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385314416808319.jpg'/>
+
+所以，在c给定的条件下，a，b被阻断(blocked)，是独立的，称之为head-to-tail条件独立。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385316011918160.png'/>
+
+  插一句：这个head-to-tail其实就是一个链式网络，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385317268812285.png'/>
+
+根据之前对head-to-tail的讲解，我们已经知道，在xi给定的条件下，xi+1的分布和x1,x2…xi-1条件独立。意味着啥呢？意味着：xi+1的分布状态只和xi有关，和其他变量条件独立。通俗点说，当前状态只跟上一状态有关，跟上上或上上之前的状态无关。这种顺次演变的随机过程，就叫做马尔科夫链（Markov chain）。且有：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385319121575039.png'/>
+
+
+接着，将上述结点推广到结点集，则是：对于任意的结点集A，B，C，考察所有通过A中任意结点到B中任意结点的路径，若要求A，B条件独立，则需要所有的路径都被阻断(blocked)，即满足下列两个前提之一：
+
+A和B的“head-to-tail型”和“tail-to-tail型”路径都通过C；
+
+A和B的“head-to-head型”路径不通过C以及C的子孙；
+
+最后，举例说明上述D-Separation的3种情况（即贝叶斯网络的3种结构形式），则是如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385321025110571.jpg'/>
+
+上图中左边部分是head-to-tail，给定 T 时，A 和 X 独立；右边部分的右上角是tail-to-tail，给定S时，L和B独立；右边部分的右下角是head-to-head，未给定D时，L和B独立。
+
+03
+
+2.3 贝叶斯网络的实例
+
+给定如下图所示的贝叶斯网络：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415538532364527652.jpg'/>
+
+其中，各个单词、表达式表示的含义如下：
+
+▶ smoking表示吸烟，其概率用P(S)表示，lung Cancer表示的肺癌，一个人在吸烟的情况下得肺癌的概率用P(C|S)表示，X-ray表示需要照医学上的X光，肺癌可能会导致需要照X光，吸烟也有可能会导致需要照X光（所以smoking也是X-ray的一个因），所以，因吸烟且得肺癌而需要照X光的概率用P(X|C,S)表示。
+
+
+▶ Bronchitis表示支气管炎，一个人在吸烟的情况下得支气管炎的概率用P(B|S)，dyspnoea表示呼吸困难，支气管炎可能会导致呼吸困难，肺癌也有可能会导致呼吸困难（所以lung Cancer也是dyspnoea的一个因），因吸烟且得了支气管炎导致呼吸困难的概率用P(D|C,B)表示。
+
+lung Cancer简记为C，Bronchitis简记为B，dyspnoea简记为D，且C = 0表示lung Cancer不发生的概率，C = 1表示lung Cancer发生的概率，B等于0（B不发生）或1（B发生）也类似于C，同样的，D=1表示D发生的概率，D=0表示D不发生的概率，便可得到dyspnoea的一张概率表，如上图的最右下角所示。
+
+2.4 因子图
+
+回到2.3节中那个实例上，如下图所示：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385332134340720.jpg'/>
+
+对于上图，在一个人已经呼吸困难（dyspnoea）的情况下，其抽烟（smoking）的概率是多少呢？即：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385334831929198.png'/>
+
+咱们来一步步计算推导下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385336157575215.jpg'/>
+
+
+解释下上述式子推导过程：
+
+1、第二行：对联合概率关于b,x,c求和（在d=1的条件下），从而消去b,x,c，得到s和d=1的联合概率。
+
+2、第三行：最开始，所有变量都在sigma(d=1,b,x,c)的后面（sigma表示对“求和”的称谓），但由于P(s)和“d=1,b,x,c”都没关系，所以，可以提到式子的最前面。而且P(b|s)和x、c没关系，所以，也可以把它提出来，放到sigma(b)的后面，从而式子的右边剩下sigma(x)和sigma(c)。
+
+此外，图中Variable elimination表示的是变量消除的意思。为了更好的解决此类问题，咱们得引入因子图的概念。
+
+2.4.1 因子图的定义
+
+wikipedia上是这样定义因子图的：将一个具有多变量的全局函数因子分解，得到几个局部函数的乘积，以此为基础得到的一个双向图叫做因子图（Factor Graph）。
+
+比如，假定对于函数，有下述式子成立：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385339092497307.png'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385379589815378.png'/>
+
+正式的定义果然晦涩！我相信你没看懂。通俗来讲，所谓因子图就是对函数进行因子分解得到的一种概率图。一般内含两种节点：变量节点和函数节点。我们知道，一个全局函数通过因式分解能够分解为多个局部函数的乘积，这些局部函数和对应的变量关系就体现在因子图上。
+
+举个例子，现在有一个全局函数，其因式分解方程为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385436153555716.png'/>
+
+其中fA,fB,fC,fD,fE为各函数，表示变量之间的关系，可以是条件概率也可以是其他关系（如马尔可夫随机场Markov Random Fields中的势函数）。
+
+为了方便表示，可以写成：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385438292095494.png'/>
+
+其对应的因子图为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385445056239438.jpg'/>
+
+且上述因子图等价于：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385446168745485.png'/>
+
+所以，在因子图中，所有的顶点不是变量节点就是函数节点，边线表示它们之间的函数关系。
+
+但搞了半天，虽然知道了什么是因子图，但因子图到底是干嘛的呢？为何要引入因子图，其用途和意义何在？事实上，因子图跟贝叶斯网络和马尔科夫随机场（Markov Random Fields）一样，也是概率图的一种。
+
+既然提到了马尔科夫随机场，那顺便说下有向图、无向图，以及条件随机场等相关概念。
+
+我们已经知道，有向图模型，又称作贝叶斯网络（Directed Graphical Models, DGM, Bayesian Network）。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385449487511.png'/>
+
+但在有些情况下，强制对某些结点之间的边增加方向是不合适的。使用没有方向的无向边，形成了无向图模型（Undirected Graphical Model,UGM）, 又被称为马尔科夫随机场或者马尔科夫网络（Markov Random Field,  MRF or Markov network）。
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415538545181179588.png'/>
+
+
+设X=(X1,X2…Xn)和Y=(Y1,Y2…Ym)都是联合随机变量，若随机变量Y构成一个无向图 G=(V,E)表示的马尔科夫随机场（MRF），则条件概率分布P(Y|X)称为条件随机场（Conditional Random Field, 简称CRF，后续新的博客中可能会阐述CRF）。如下图所示，便是一个线性链条件随机场的无向图模型：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385453918339567.jpg'/>
+
+回到本文的主旨上来。在概率图中，求某个变量的边缘分布是常见的问题。这问题有很多求解方法，其中之一就是把贝叶斯网络或马尔科夫随机场转换成因子图，然后用sum-product算法求解。换言之，基于因子图可以用sum-product 算法高效的求各个变量的边缘分布。
+
+先通过一些例子分别说明如何把贝叶斯网络（和马尔科夫随机场），以及把马尔科夫链、隐马尔科夫模型转换成因子图后的情形，然后在2.4.2节，咱们再来看如何利用因子图的sum-product算法求边缘概率分布。
+
+给定下图所示的贝叶斯网络或马尔科夫随机场：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385455374368106.png'/>
+
+根据各个变量对应的关系，可得：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385456878454731.png'/>
+
+其对应的因子图为（以下两种因子图的表示方式皆可）：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385457989631356.png'/>
+
+
+由上述例子总结出由贝叶斯网络构造因子图的方法：
+
+1、贝叶斯网络中的一个因子对应因子图中的一个结点
+
+2、贝叶斯网络中的每一个变量在因子图上对应边或者半边
+
+3、结点g和边x相连当且仅当变量x出现在因子g中。
+
+再比如，对于下图所示的由马尔科夫链转换而成的因子图：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385461944235196.png'/>
+
+有：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385463299952781.png'/>
+
+而对于如下图所示的由隐马尔科夫模型转换而成的因子图：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385464488954140.png'/>
+
+有
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385465831327451.png'/>
+
+04
+
+2.4.2 Sum-product算法
+
+我们已经知道，对于下图所示的因子图：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385467867739828.png'/>
+
+有：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385469016438635.png'/>
+
+
+下面，咱们来考虑一个问题：即如何由联合概率分布求边缘概率分布。
+
+首先回顾下联合概率和边缘概率的定义，如下：
+
+•  联合概率表示两个事件共同发生的概率。A与B的联合概率表示为
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385472917787305.png'/>
+
+
+•  边缘概率（又称先验概率）是某个事件发生的概率。边缘概率是这样得到的：在联合概率中，把最终结果中不需要的那些事件合并成其事件的全概率而消失（对离散随机变量用求和得全概率，对连续随机变量用积分得全概率）。这称为边缘化（marginalization）。A的边缘概率表示为P(A)，B的边缘概率表示为P(B)。 
+
+事实上，某个随机变量fk的边缘概率可由x1,x2,x3, ..., xn的联合概率求到，具体公式为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385475821299411.png'/>
+
+啊哈，啥原理呢？原理很简单，还是它：对xk外的其它变量的概率求和，最终剩下xk的概率！
+
+此外，换言之，如果有
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385477674929521.png'/>
+
+那么
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385478735039181.png'/>
+
+上述式子如何进一步化简计算呢？考虑到我们小学所学到的乘法分配率，可知a*b + a*c = a*(b + c)，前者2次乘法1次加法，后者1次乘法，1次加法。我们这里的计算是否能借鉴到分配率呢？别急，且听下文慢慢道来。
+
+假定现在我们需要计算如下式子的结果：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385479949915980.png'/>
+
+同时，f 能被分解如下：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385481058975959.jpg'/>
+
+
+ 借鉴分配率，我们可以提取公因子：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385610689925800.jpg'/>
+
+因为变量的边缘概率等于所有与他相连的函数传递过来的消息的积，所以计算得到：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385616334325752.jpg'/>
+
+
+仔细观察上述计算过程，可以发现，其中用到了类似“消息传递”的观点，且总共两个步骤。
+
+第一步、对于f 的分解图，根据蓝色虚线框、红色虚线框围住的两个box外面的消息传递：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385618158183042.jpg'/>
+
+计算可得：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385619336404524.jpg'/>
+
+ 第二步、根据蓝色虚线框、红色虚线框围住的两个box内部的消息传递：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385620487045535.jpg'/>
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385644888188983.png'/>
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385656216065661.jpg'/>
+
+就这样，上述计算过程将一个概率分布写成两个因子的乘积，而这两个因子可以继续分解或者通过已知得到。这种利用消息传递的观念计算概率的方法便是sum-product算法。前面说过，基于因子图可以用sum-product算法可以高效的求各个变量的边缘分布。
+
+到底什么是sum-product算法呢？sum-product算法，也叫belief propagation，有两种消息：
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385659688535570.png'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415538566078298675.png'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385663010097352.png'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415538566415340586.png'/>
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385666524910144.png'/>
+
+以下是sum-product算法的总体框架：
+
+• 1、给定如下图所示的因子图：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385667118423730.png'/>
+
+
+• 2、sum-product 算法的消息计算规则为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415538567082520572.png'/>
+
+• 3、根据sum-product定理，如果因子图中的函数f 没有周期，则有：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385671859809461.png'/>
+
+值得一提的是：如果因子图是无环的，则一定可以准确的求出任意一个变量的边缘分布，如果是有环的，则无法用sum-product算法准确求出来边缘分布。
+
+比如，下图所示的贝叶斯网络：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385673182277861.jpg'/>
+
+其转换成因子图后，为：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385674551514810.png'/>
+
+可以发现，若贝叶斯网络中存在“环”（无向），则因此构造的因子图会得到环。而使用消息传递的思想，这个消息将无限传输下去，不利于概率计算。
+ 
+
+解决方法有3个：
+
+1、删除贝叶斯网络中的若干条边，使得它不含有无向环
+
+比如给定下图中左边部分所示的原贝叶斯网络，可以通过去掉C和E之间的边，使得它重新变成有向无环图，从而成为图中右边部分的近似树结构：
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155385675914217650.jpg'/>
+
+具体变换的过程为最大权生成树算法MSWT（详细建立过程请参阅此PPT 第60页），通过此算法，这课树的近似联合概率P'(x)和原贝叶斯网络的联合概率P(x)的相对熵（如果忘了什么叫相对熵，请参阅：最大熵模型中的数学推导）最小。
+
+2、重新构造没有环的贝叶斯网络
+
+3、选择loopy belief propagation算法（你可以简单理解为sum-product 算法的递归版本），此算法一般选择环中的某个消息，随机赋个初值，然后用sum-product算法，迭代下去，因为有环，一定会到达刚才赋初值的那个消息，然后更新那个消息，继续迭代，直到没有消息再改变为止。唯一的缺点是不确保收敛，当然，此算法在绝大多数情况下是收敛的。
+
+此外，除了这个sum-product算法，还有一个max-product 算法。但只要弄懂了sum-product，也就弄懂了max-product 算法。因为max-product 算法就在上面sum-product 算法的基础上把求和符号换成求最大值max的符号即可！
+
+最后，sum-product 和 max-product 算法也能应用到隐马尔科夫模型hidden Markov models上，后面有机会的话可以介绍。本文完。
+
+## 147.最大熵模型中的数学推导
+0 引言
+    写完SVM之后，一直想继续写机器学习的系列，无奈一直时间不稳定且对各个模型算法的理解尚不够，所以导致迟迟未动笔。无独有偶，重写KMP得益于今年4月个人组织的算法班，而动笔继续写这个机器学习系列，正得益于今年10月组织的机器学习班。
+
+    10月26日机器学习班第6次课，邹讲最大熵模型，从熵的概念，讲到为何要最大熵、最大熵的推导，以及求解参数的IIS方法，整个过程讲得非常流畅，特别是其中的数学推导。晚上我把上课PPT 在微博上公开分享了出来，但对于没有上过课的朋友直接看PPT 会感到非常跳跃，因此我打算针对机器学习班的某些次课写一系列博客，刚好也算继续博客中未完的机器学习系列。
+
+   综上，本文结合10月机器学习班最大熵模型的PPT和其它相关资料写就，可以看成是课程笔记或学习心得，着重推导。有何建议或意见，欢迎随时于本文评论下指出，thanks。
+
+
+
+1 预备知识
+    为了更好的理解本文，需要了解的概率必备知识有：
+大写字母X表示随机变量，小写字母x表示随机变量X的某个具体的取值；
+P(X)表示随机变量X的概率分布，P(X,Y)表示随机变量X、Y的联合概率分布，P(Y|X)表示已知随机变量X的情况下随机变量Y的条件概率分布；
+p(X = x)表示随机变量X取某个具体值的概率，简记为p(x)；
+p(X = x, Y = y) 表示联合概率，简记为p(x,y)，p(Y = y|X = x)表示条件概率，简记为p(y|x)，且有：p(x,y) = p(x) * p(y|x)。
+    需要了解的有关函数求导、求极值的知识点有：
+如果函数y=f(x)在[a, b]上连续，且其在(a,b)上可导，如果其导数f’(x) >0，则代表函数f(x)在[a,b]上单调递增，否则单调递减；如果函数的二阶导f&#39;&#39;(x) > 0，则函数在[a,b]上是凹的，反之，如果二阶导f&#39;&#39;(x) < 0，则函数在[a,b]上是凸的。
+设函数f(x)在x0处可导，且在x处取得极值，则函数的导数F’(x0) = 0。
+以二元函数z = f(x,y)为例，固定其中的y，把x看做唯一的自变量，此时，函数对x的导数称为二元函数z=f(x,y)对x的偏导数。
+为了把原带约束的极值问题转换为无约束的极值问题，一般引入拉格朗日乘子，建立拉格朗日函数，然后对拉格朗日函数求导，令求导结果等于0，得到极值。
+    更多请查看《高等数学上下册》、《概率论与数理统计》等教科书，或参考本博客中的：数据挖掘中所需的概率论与数理统计知识。
+
+
+
+2 何谓熵？
+    从名字上来看，熵给人一种很玄乎，不知道是啥的感觉。其实，熵的定义很简单，即用来表示随机变量的不确定性。之所以给人玄乎的感觉，大概是因为为何要取这样的名字，以及怎么用。
+
+    熵的概念最早起源于物理学，用于度量一个热力学系统的无序程度。在信息论里面，熵是对不确定性的测量。
+
+2.1 熵的引入
+    事实上，熵的英文原文为entropy，最初由德国物理学家鲁道夫·克劳修斯提出，其表达式为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470809410114123.png'/>
+
+   它表示一个系系统在不受外部干扰时，其内部最稳定的状态。后来一中国学者翻译entropy时，考虑到entropy是能量Q跟温度T的商，且跟火有关，便把entropy形象的翻译成“熵”。
+
+    我们知道，任何粒子的常态都是随机运动，也就是"无序运动"，如果让粒子呈现"有序化"，必须耗费能量。所以，温度（热能）可以被看作"有序化"的一种度量，而"熵"可以看作是"无序化"的度量。
+
+    如果没有外部能量输入，封闭系统趋向越来越混乱（熵越来越大）。比如，如果房间无人打扫，不可能越来越干净（有序化），只可能越来越乱（无序化）。而要让一个系统变得更有序，必须有外部能量的输入。
+
+    1948年，香农Claude E. Shannon引入信息（熵），将其定义为离散随机事件的出现概率。一个系统越是有序，信息熵就越低；反之，一个系统越是混乱，信息熵就越高。所以说，信息熵可以被认为是系统有序化程度的一个度量。
+    若无特别指出，下文中所有提到的熵均为信息熵。
+2.2 熵的定义
+    下面分别给出熵、联合熵、条件熵、相对熵、互信息的定义。
+    熵：如果一个随机变量X的可能取值为X = {x1, x2,…, xk}，其概率分布为P(X = xi) = pi（i = 1,2, ..., n），则随机变量X的熵定义为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470814637769761.png'/>
+
+   把最前面的负号放到最后，便成了：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470820316563137.png'/>
+
+ 上面两个熵的公式，无论用哪个都行，而且两者等价，一个意思（这两个公式在下文中都会用到）。
+    联合熵：两个随机变量X，Y的联合分布，可以形成联合熵Joint Entropy，用H(X,Y)表示。
+    条件熵：在随机变量X发生的前提下，随机变量Y发生所新带来的熵定义为Y的条件熵，用H(Y|X)表示，用来衡量在已知随机变量X的条件下随机变量Y的不确定性。
+
+    且有此式子成立：H(Y|X) = H(X,Y) – H(X)，整个式子表示(X,Y)发生所包含的熵减去X单独发生包含的熵。至于怎么得来的请看推导：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470864342163884.png'/> 简单解释下上面的推导过程。整个式子共6行，其中
+
+第二行推到第三行的依据是边缘分布p(x)等于联合分布p(x,y)的和；
+第三行推到第四行的依据是把公因子logp(x)乘进去，然后把x,y写在一起；
+第四行推到第五行的依据是：因为两个sigma都有p(x,y)，故提取公因子p(x,y)放到外边，然后把里边的-（log p(x,y) - log p(x)）写成- log (p(x,y)/p(x) ) ；
+第五行推到第六行的依据是：p(x,y) = p(x) * p(y|x)，故p(x,y) / p(x) =  p(y|x)。
+    相对熵：又称互熵，交叉熵，鉴别信息，Kullback熵，Kullback-Leible散度等。设p(x)、q(x)是X中取值的两个概率分布，则p对q的相对熵是：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470870864239901.png'/>
+
+ 在一定程度上，相对熵可以度量两个随机变量的“距离”，且有D(p||q) ≠D(q||p)。另外，值得一提的是，D(p||q)是必然大于等于0的。
+
+    互信息：两个随机变量X，Y的互信息定义为X，Y的联合分布和各自独立分布乘积的相对熵，用I(X,Y)表示：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470889982720089.png'/>
+
+   且有I(X,Y)=D(P(X,Y) || P(X)P(Y))。下面，咱们来计算下H(Y)-I(X,Y)的结果，如下：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470893268164527.png'/>
+
+   通过上面的计算过程，我们发现竟然有H(Y)-I(X,Y) = H(Y|X)。故通过条件熵的定义，有：H(Y|X) = H(X,Y) - H(X)，而根据互信息定义展开得到H(Y|X) = H(Y) - I(X,Y)，把前者跟后者结合起来，便有I(X,Y)= H(X) + H(Y) - H(X,Y)，此结论被多数文献作为互信息的定义。
+
+
+3 最大熵
+    熵是随机变量不确定性的度量，不确定性越大，熵值越大；若随机变量退化成定值，熵为0。如果没有外界干扰，随机变量总是趋向于无序，在经过足够时间的稳定演化，它应该能够达到的最大程度的熵。  
+    为了准确的估计随机变量的状态，我们一般习惯性最大化熵，认为在所有可能的概率模型（分布）的集合中，熵最大的模型是最好的模型。换言之，在已知部分知识的前提下，关于未知分布最合理的推断就是符合已知知识最不确定或最随机的推断，其原则是承认已知事物（知识），且对未知事物不做任何假设，没有任何偏见。
+    例如，投掷一个骰子，如果问"每个面朝上的概率分别是多少"，你会说是等概率，即各点出现的概率均为1/6。因为对这个"一无所知"的色子，什么都不确定，而假定它每一个朝上概率均等则是最合理的做法。从投资的角度来看，这是风险最小的做法，而从信息论的角度讲，就是保留了最大的不确定性，也就是说让熵达到最大。
+
+3.2 最大熵模型的表示
+    至此，有了目标函数跟约束条件，我们可以写出最大熵模型的一般表达式了，如下：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470898879803283.png'/>
+
+   其中，P={p | p是X上满足条件的概率分布}
+    继续阐述之前，先定义下特征、样本和特征函数。
+    特征：(x,y)
+y：这个特征中需要确定的信息
+x：这个特征中的上下文信息
+    样本：关于某个特征(x,y)的样本，特征所描述的语法现象在标准集合里的分布：(xi,yi)对，其中，yi是y的一个实例，xi是yi的上下文。
+    对于一个特征(x0,y0)，定义特征函数：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470904093839577.png'/>
+
+  特征函数关于经验分布<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470907870057784.png'/>在样本中的期望值是：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470910983054342.png'/>其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470914714712544.png'/>，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470917713157837.png'/>。
+  特征函数关于模型P(Y|X)与经验分布P-(X)的期望值为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470923692080637.png'/>换言之，如果能够获取训练数据中的信息，那么上述这两个期望值相等，即：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470927030651467.png'/>不过，因为实践中p(x)不好求，所以一般用样本中x出现的概率"p(x)-"代替x在总体中的分布概率“p(x)”，从而得到最大熵模型的完整表述如下：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470930072463333.png'/>
+
+ 其约束条件为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470933398661400.png'/>
+
+   该问题已知若干条件，要求若干变量的值使到目标函数（熵）最大，其数学本质是最优化问题（Optimization Problem），其约束条件是线性的等式，而目标函数是非线性的，所以该问题属于非线性规划（线性约束）(non-linear programming with linear constraints)问题，故可通过引入Lagrange函数将原带约束的最优化问题转换为无约束的最优化的对偶问题。<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470937121074359.png'/>3.3 凸优化中的对偶问题
+    考虑到机器学习里，不少问题都在围绕着一个“最优化”打转，而最优化中凸优化最为常见，所以为了过渡自然，这里简单阐述下凸优化中的对偶问题。
+
+    一般优化问题可以表示为下述式子：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470940735710994.png'/>其中，subject to导出的是约束条件，f(x)表示不等式约束，h(x)表示等式约束。
+
+    然后可通过引入拉格朗日乘子λ和v，建立拉格朗日函数，如下：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470943215993441.png'/>
+
+   对固定的x，Lagrange函数L(x,λ,v)为关于λ和v的仿射函数。
+
+3.4 对偶问题极大化的指数解
+    针对原问题，首先引入拉格朗日乘子λ0,λ1,λ2, ..., λi，定义拉格朗日函数，转换为对偶问题求其极大化：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547094599053860.png'/>
+
+  然后求偏导,：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470948974679016.png'/>
+
+ 注：上面这里是对P(y|x)求偏导，即只把P(y|x)当做未知数，其他都是常数。因此，求偏导时，只有跟P(y0|x0)相等的那个"(x0,y0)"才会起作用，其他的(x,y)都不是关于P(y0|x0)的系数，是常数项，而常数项一律被“偏导掉”了。
+
+    令上述的偏导结果等于0，解得：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470952841772412.png'/>
+
+  进一步转换：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547095559125457.png'/>
+
+ 其中，Z(x)称为规范化因子。
+
+根据之前的约束条件之一：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470958871417204.png'/>= 1，所以<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470961757542297.png'/>
+  从而有<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470966216739160.png'/>
+
+   现将求得的最优解P*(y|x)带回之前建立的拉格朗日函数L<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547096904847560.png'/>
+
+    得到关于λ的式子：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470972821418263.png'/>
+
+  注：最后一步的推导中，把之前得到的结果<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547097663329966.png'/>代入计算即可。
+
+    接下来，再回过头来看这个式子：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470978779905834.png'/>    可知，最大熵模型模型属于对数线性模型，因为其包含指数函数，所以几乎不可能有解析解。换言之，即便有了解析解，仍然需要数值解。那么，能不能找到另一种逼近？构造函数f(λ)，求其最大/最小值？
+
+    相当于问题转换成了寻找与样本的分布最接近的概率分布模型，如何寻找呢？你可能想到了极大似然估计。
+
+3.5 最大熵模型的极大似然估计
+    记得13年1月份在微博上说过：所谓最大似然，即最大可能，在“模型已定，参数θ未知”的情况下，通过观测数据估计参数θ的一种思想或方法，换言之，解决的是取怎样的参数θ使得产生已得观测数据的概率最大的问题。
+
+    举个例子，假设我们要统计全国人口的身高，首先假设这个身高服从服从正态分布，但是该分布的均值与方差未知。由于没有足够的人力和物力去统计全国每个人的身高，但是可以通过采样（所有的采样要求都是独立同分布的），获取部分人的身高，然后通过最大似然估计来获取上述假设中的正态分布的均值与方差。
+
+    极大似然估计MLE的一般形式表示为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470983330539099.png'/>
+
+ 其中，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470988518752965.png'/>是对模型进行估计的概率分布<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547098968251265.png'/>是实验结果得到的概率分布。
+
+    进一步转换，可得：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470992516042997.png'/>
+
+  对上式两边取对数可得：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470995218897808.png'/>
+
+   因上述式子最后结果的第二项是常数项（因为第二项是关于样本的联合概率和样本自变量的式子，都是定值），所以最终结果为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155470998596875803.png'/>
+
+ 至此，我们发现极大似然估计和条件熵的定义式具有极大的相似性，故可以大胆猜测它们极有可能殊途同归，使得它们建立的目标函数也是相同的。 我们来推导下，验证下这个猜测。
+
+    将之前得到的最大熵的解带入MLE，计算得到（右边在左边的基础上往下再多推导了几步）：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471001496048986.png'/>
+
+  注：其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471003757957887.png'/>，且P~(x,y) = P~(x) * P(y|x)，<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471006974649147.png'/>= 1。
+   然后拿这个通过极大似然估计得到的结果<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547101222322079.png'/>
+
+ 跟之前得到的对偶问题的极大化解<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547101623747235.png'/>
+
+  只差一个“-”号，所以只要把原对偶问题的极大化解也加个负号，等价转换为对偶问题的极小化解：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471019033132898.png'/>  则与极大似然估计的结果具有完全相同的目标函数。
+
+    换言之，之前最大熵模型的对偶问题的极小化等价于最大熵模型的极大似然估计。
+
+    且根据MLE的正确性，可以断定：最大熵的解（无偏的对待不确定性）同时是最符合样本数据分布的解，进一步证明了最大熵模型的合理性。两相对比，熵是表示不确定性的度量，似然表示的是与知识的吻合程度，进一步，最大熵模型是对不确定度的无偏分配，最大似然估计则是对知识的无偏理解。
+
+
+
+4 参数求解法：IIS
+    回顾下之前最大熵模型的解：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471022787249814.png'/>
+  其中<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471026067210372.png'/>
+
+ 对数似然函数为：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471028646548911.png'/>
+
+ 相当于现在的问题转换成：通过极大似然函数求解最大熵模型的参数，即求上述对数似然函数参数λ 的极大值。此时，通常通过迭代算法求解，比如改进的迭代尺度法IIS、梯度下降法、牛顿法或拟牛顿法。这里主要介绍下其中的改进的迭代尺度法IIS。
+
+    改进的迭代尺度法IIS的核心思想是：假设最大熵模型当前的参数向量是λ，希望找到一个新的参数向量λ+δ，使得当前模型的对数似然函数值L增加。重复这一过程，直至找到对数似然函数的最大值。
+
+    下面，咱们来计算下参数λ 变到λ+δ的过程中，对数似然函数的增加量，用L(λ+δ)-L(λ)表示，同时利用不等式：-lnx ≥1-x , x>0，可得到对数似然函数增加量的下界，如下：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471032676992069.png'/>
+
+ 将上述求得的下界结果记为A(δ | λ)，为了进一步降低这个下界，即缩小A(δ | λ)的值，引入一个变量：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471036183106197.png'/>
+
+  其中，f 是一个二值函数，故f#(x, y)表示的是所有特征(x, y)出现的次数，然后利用Jason不等式，可得：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471039997995442.png'/>
+
+  我们把上述式子求得的A(δ | λ)的下界记为B(δ | λ)：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471042738392483.png'/>相当于B(δ | λ)是对数似然函数增加量的一个新的下界，可记作：L(λ+δ)-L(λ)  >= B(δ | λ)。
+
+    接下来，对B(δ | λ)求偏导，得：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415547104607864366.png'/>
+
+ 此时得到的偏导结果只含δ，除δ之外不再含其它变量，令其为0，可得：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471051592204814.png'/>
+
+ 从而求得δ，问题得解。
+
+    值得一提的是，在求解δ的过程中，如果若f#(x,y)=M为常数，则<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471054227698664.png'/>
+
+  否则，用牛顿法解决：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471057316283555.png'/>
+
+ 求得了δ，便相当于求得权值λ，最终将λ 回代到下式中：<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64155471059827070338.png'/>
+
+   即得到最大熵模型的最优估计。
+
+5 参考文献
+1、一堆wikipedia，热力学熵：http://zh.wikipedia.org/zh-mo/%E7%86%B5，信息熵：http://zh.wikipedia.org/wiki/%E7%86%B5_(%E4%BF%A1%E6%81%AF%E8%AE%BA)，百度百科：http://baike.baidu.com/view/401605.htm；
+
+2、熵的社会学意义：http://www.ruanyifeng.com/blog/2013/04/entropy.html；
+
+3、北京10月机器学习班之邹博的最大熵模型PPT：http://pan.baidu.com/s/1qWLSehI；
+
+4、北京10月机器学习班之邹博的凸优化PPT：http://pan.baidu.com/s/1sjHMj2d；
+
+5、《统计学习方法 李航著》；
+
+6、最大熵学习笔记：http://blog.csdn.net/itplus/article/details/26549871；
+
+7、2013年在微博上关于极大似然估计的讨论：http://weibo.com/1580904460/zfUsAgCl2?type=comment#_rnd1414644053228；
+
+8、极大似然估计：http://www.cnblogs.com/liliu/archive/2010/11/22/1883702.html；
+
+9、数据挖掘中所需的概率论与数理统计知识：http://blog.csdn.net/v_july_v/article/details/8308762。
+
+10、数学之美系列十六--谈谈最大熵模型：http://www.cnblogs.com/kevinyang/archive/2009/02/01/1381798.html。
+## 148.关于xgboost使用泰勒展开式的优点？泰勒展开取得函数做自变量的二阶导数形式, 可以在不选定损失函数具体形式的情况下, 仅仅依靠输入数据的值就可以进行叶子分裂优化计算, 本质上也就把损失函数的选取和模型算法优化/参数选择分开了. 请问为什么在 可以在不选定损失函数具体形式的情况下, 仅仅依靠输入数据的值就可以进行叶子分裂优化计算？
+
+
+下图中，g和h都是和损失函数有关的，所以不可能完全不考虑损失函数，这个表述是错误的。
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64156896426914048500.png'/>
+## 149.你有自己用过别的模型然后调参之类的吗？能说一下基本的调参流程吗？XGBoost知道吗，以XGBoost为例子说一下调参流程吧。
+
+
+（个人的思路）：一般来说采用贝叶斯优化或者遗传算法等启发式的优化算法确定相对最佳参数（如果不熟悉的话用随机搜索也是可以的，或者网格搜索但是参数得到步长设置的很大，一步一步确定相对最优参数的区间），然后再根据实际的模型在验证集上的表现做一些微调，对于过拟合优先调整max_depth和树的数量，在实际使用过程中这两个参数对于模型的整体效果影响很大很明显。对于欠拟合，反着来就行了。
+
+
+## 150.XGBoost和GBDT的区别有哪些？
+
+
+1、算法层面：
+（1）损失函数的二阶泰勒展开；
+（2）树的正则化概念的引入，对叶节点数量和叶子节点输出进行了约束，方式是将二者形成的约束项加入损失函数中；
+（3）二阶泰勒展开与树正则化推出了新的叶子节点输出的计算公式而不是原始gbdt那样的简单平均；
+（4）
+        a、对于基础学习器的改进，
+        <img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase64158487431718378882.png'/>      分裂的时候自动根据是否产生正增益指导是否进行分裂，因为引入了正则项的概念，分裂的时候这个预剪枝更加严苛；
+        b、对于缺失值的处理，xgboost根据左右子节点的增益大小将缺失值分到增益大的节点中，而sklearn中的gbdt是无法处理缺失值的，因为sklearn中的gbdt是以sklearn中的cart为基学习器的，而sklearn中的cart也并没有实现对缺失值的处理功能。
+（5）学习率，Shrinkage，对每一颗树都乘以小于1的学习率，来削弱每一颗树的影响，这样的结果就是会引入更多的树来处理使得基学习器得数量变多，从而降低过拟合，不过其实sklearn中的gbdt也实现了。。。不知道为什么这么多人把这一点也列为不同；
+（6）引入了随机森林使用的列采样功能，便于降低过拟合；
+（7）引入了许多近似直方图之类的优化算法来进一步提高树的训练速度与抗过拟合的能力，这个比较复杂，因为实现了很多种算法，后面单独写一篇来总结；
+2、工程层面
+（1）对每个特征进行分块（block）并排序（pre_sort），将排序后的结构保存在内存中，这样后续分裂的时候就不需要重复对特征进行排序然后计算最佳分裂点了，并且能够进行并行化计算.这个结构加速了split finding的过程，只需要在建树前排序一次，后面节点分裂时直接根据索引得到梯度信息。
+（2）其它更复杂的工程优化处理：https://zhuanlan.zhihu.com/p/75217528
+
+
+## 151.XGB特征重要性程度是怎么判断的？
+
+
+<img  src='https://julyedu-img.oss-cn-beijing.aliyuncs.com/quesbase6415848743443201057.png'/>
+      官网上给出的方案，total_gain就是特征带来的总的分裂增益，也就是我们常规意义上的分裂总增益，weight，被用来作为分裂节点的次数，也就是我们常规意义上的分裂总次数，gain=total_gain/weight，计算的是每一次分裂带来的平均增益，total_cover表示特征分裂的样本数，举个例子，假设初始样本有10000个，第一次分裂的时候使用了特征A，也就是特征A在这10000个样本上分裂，则此时的cover值为10000，假设根据特征A分裂出左枝的样本有1000个，右边有9000个，而在左枝特征B是最优特征根据这1000个样本进行分裂，则B当前的cover是1000，依次类推最后求和。而cover显然就是total_cover/weight，也就是平均每次分裂所“负责”的样本数。
+
+
+## 152.GBDT与RF区别
+
+
+1、组成随机森林的树可以是分类树，也可以是回归树；而GBDT只由回归树组成，GBDT的会累加所有树的结果，而这种累加是无法通过分类完成的，因此GBDT的树都是CART回归树，而不是分类树（尽管GBDT调整后也可以用于分类但不代表GBDT的树为分类树）；
+2、组成随机森林的树可以并行生成；而GBDT只能是串行生成；
+3、对于最终的输出结果而言，随机森林采用多数投票或简单平均等；而GBDT则是将所有结果累加起来，或者加权累加起来（存在学习率）；
+4、随机森林对异常值不敏感，GBDT对异常值非常敏感；
+5、随机森林对训练集一视同仁，GBDT是基于权值的弱分类器的集成；
+6、随机森林是通过减少模型方差提高性能，GBDT是通过减少模型偏差提高性能，但是xgb引入了正则项和列采样等等正则化手段之后，可以在少量增加偏差的情况下大幅度缩减模型的方差。
+
+
+## 153.xgb的预排序算法是怎么做的呢？
+
+
+将原始特征进行排序之后以块的形式保存到内存中，在块里面保存排序后的特征值及对应样本的引用，以便于获取样本的一阶、二阶导数值，但意味着除了保存原始特征之外还要保存原始特征的排序结果，耗内存。
+
+
+## 154.RF和xgboost哪个对异常点更敏感
+
+
+xgb明显敏感的多，当然对rf也是有一定影响的，rf的每棵数的生成是独立的，异常点数量不多的情况下异常点常常和正常样本中的某些样本合并在一个分支里。但是xgb不一样，异常样本的t-1轮的预测值和真实标签计算出来的负梯度会一直很大。
+假设当到达某一轮的时候，所有正常样本的计算得到的负梯度都很小而异常样本的负梯度很大例如【0.0000001,0.0000001,0.0000001,0.0000001,0.0000001,10】,这个时候新树会可能会继续进行不正常的分裂为[0.0000001,0.0000001,0.0000001,0.0000001,0.0000001],[10]，而这样的分裂是不合理的，因为异常值本身可能是因为某些人为失误导致的数据记录错误，或者异常样本完全是属于另外一种分布，此时强制要进行模型训练会导致模型的结果有偏从而发生过拟合。当然异常样本数量很少比如10个以内的时候而正常样本有100000000个其实基本没什么影响，但是如果占比较高的话是会产生影响的。
+
+
+## 155.xgb何时停止分裂？
+
+
+人工设定的参数，max_depth,min_data_in_leaf等等，这类通过超参数形式限制树的复杂度的方法都会引发xgb的分裂的停止，也就是常说的预剪枝；人工不限制，自由生长的情况下，当分裂增益小于0则基学习器停止分裂
+
+
+## 156.对比一下XGB和lightGBM在节点分裂时候的区别
+
+
+xgb是level-wise，lgb是leaf-wise，level-wise指在树分裂的过程中，同一层的非叶子节点，只要继续分裂能够产生正的增益就继续分裂下去，而leaf-wise更苛刻一点，同一层的非叶子节点，仅仅选择分裂增益最大的叶子节点进行分裂。
+
+
+## 157.简要说一下Lightgbm相对于xgboost的优缺点
+
+
+优点：直方图算法—更高（效率）更快（速度）更低（内存占用）更泛化（分箱与之后的不精确分割也起到了一定防止过拟合的作用）；
+缺点：直方图较为粗糙，会损失一定精度，但是在gbm的框架下，基学习器的精度损失可以通过引入更多的tree来弥补。
+
+
+## 158.xgboost对特征缺失敏感吗，对缺失值做了什么操作，存在什么问题
+
+
+不敏感，可以自动处理，处理方式是将missing值分别加入左节点 右节点取分裂增益最大的节点将missing样本分裂进这个节点 。这种处理方式的问题在xgboost仅仅在特征的非缺失的值上进行分裂然后missing值直接放入其中一个节点，显然当缺失值很多的情况下，比如缺失80%，那么xgb分裂的时候仅仅在20%的特征值上分裂，这是非常容易过拟合的。
+
+
+## 159.xgb和lgb在特征、数据并行上存在什么差异？
+
+
+1）特征并行
+lgbm特征并行的前提是每个worker留有一份完整的数据集，但是每个worker仅在特征子集上进行最佳切分点的寻找；worker之间需要相互通信，通过比对损失来确定最佳切分点；然后将这个最佳切分点的位置进行全局广播，每个worker进行切分即可。xgb的特征并行与lgbm的最大不同在于xgb每个worker节点中仅有部分的列数据，也就是垂直切分，每个worker寻找局部最佳切分点，worker之间相互通信，然后在具有最佳切分点的worker上进行节点分裂，再由这个节点广播一下被切分到左右节点的样本索引号，其他worker才能开始分裂。二者的区别就导致了lgbm中worker间通信成本明显降低，只需通信一个特征分裂点即可，而xgb中要广播样本索引。
+
+2）数据并行
+当数据量很大，特征相对较少时，可采用数据并行策略。lgbm中先对数据水平切分，每个worker上的数据先建立起局部的直方图，然后合并成全局的直方图，采用直方图相减的方式，先计算样本量少的节点的样本索引，然后直接相减得到另一子节点的样本索引，这个直方图算法使得worker间的通信成本降低一倍，因为只用通信以此样本量少的节点。xgb中的数据并行也是水平切分，然后单个worker建立局部直方图，再合并为全局，不同在于根据全局直方图进行各个worker上的节点分裂时会单独计算子节点的样本索引，因此效率贼慢，每个worker间的通信量也就变得很大。
+
+3）投票并行（lgbm）
+当数据量和维度都很大时，选用投票并行，该方法是数据并行的一个改进。数据并行中的合并直方图的代价相对较大，尤其是当特征维度很大时。大致思想是：每个worker首先会找到本地的一些优秀的特征，然后进行全局投票，根据投票结果，选择top的特征进行直方图的合并，再寻求全局的最优分割点。这个方法我没有找到很好的解释，因此，面试过程中答出前面两种我觉得就ok了吧。
+
+
+## 160.为什么xgboost不用后剪枝？
+
+
+后剪枝计算代价太高了，合并一次叶节点就要计算一次测试集的表现，数据量大的情况下非常消耗时间，而且也并不是特别必要，因为这样很容易过拟合测试集。
+
+
